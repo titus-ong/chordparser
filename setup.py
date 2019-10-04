@@ -10,5 +10,5 @@ setup(name='chordparser',
       packages=['chordparser'],
       install_requires=[
           're',
-          ]
+          ],
       zip_safe=False)

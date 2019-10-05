@@ -10,3 +10,7 @@ def test_create_contents():
     with open("tests/sample_sheet.cho", 'r') as f:
         contents = f.readlines()
     assert sheet.contents == contents, "Sheet contents are incorrect"
+
+def test_create_invalid_format():
+    with pytest.raises(cp.chordsheet.ParseError):
+        sheet = cp.create("tests/")

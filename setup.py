@@ -1,11 +1,11 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 def readme():
     with open('README.md') as f:
         return f.read()
 
 setup(name='chordparser',
-      version='1.0',
+      version='1.2',
       description='Parse .cho (ChordPro) files',
       long_description=readme(),
       classifiers=[
@@ -19,7 +19,8 @@ setup(name='chordparser',
       author='Titus Ong',
       author_email='titusongyl@gmail.com',
       license='MIT',
-      packages=['chordparser'],
+      packages=find_packages(where='src'),
+      package_dir={'': 'src'},
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
       install_requires=[

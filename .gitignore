@@ -1,0 +1,8 @@
+*.[oa]
+*~
+dist/
+build/
+*.pytest_cache
+*.eggs
+*.egg-info
+__pycache__/

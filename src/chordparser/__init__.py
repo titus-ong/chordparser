@@ -2,8 +2,9 @@ from .chordsheet import Sheet, ParseError
 from os.path import splitext
 import re
 
+
 def create(file_path):
-    file_name, extension =splitext(file_path)
+    file_name, extension = splitext(file_path)
     print(extension)
     if not re.match(
                     "^.(cho|crd|chopro|chord|pro)$", extension

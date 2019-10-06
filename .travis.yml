@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.7"
+# command to install dependencies
+install:
+  - pip install -r requirements/tests.txt
+  - python setup.py install
+# command to run tests
+script:
+  - tox
+  - coverage run --source=chordparser -m py.test
+  - coverage report -m
+after_success:
+  - coveralls

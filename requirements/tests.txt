@@ -1,0 +1,6 @@
+pytest==5.2.0
+pytest-cov==2.8.0
+coveralls==1.8.2
+tox-travis==0.12
+tox==3.14.0
+pyyaml

@@ -1,5 +1,4 @@
-class Error(Exception):
-    pass
+from general import Error
 
 
 class ParseError(Error):
@@ -8,4 +7,4 @@ class ParseError(Error):
 
 class Sheet:
     def __init__(self, contents):
-        self.contents = contents
+        self.contents_raw = contents

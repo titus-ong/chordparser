@@ -1,7 +1,7 @@
 """
 Basis of chords. Only diatonic scales are included.
 """
-from general import Error
+from .general import Error
 
 
 class ModeError(Error):
@@ -19,15 +19,16 @@ class Scale:
         "aeolian": 5,
         "locrian": 6,
         }
+    _notes = ('C', 'D', 'E', 'F', 'G', 'A', 'B')
 
-    def __init__(mode="ionian"):
+    def __init__(self, mode="ionian"):
         self.mode = mode
-        self.intervals = _get_scale_intervals()
+        self.intervals = self._get_scale_intervals()
 
     def _get_scale_intervals(self):
         try:
-            shift = _SCALES[self.mode.lower()]
+            shift = Scale._SCALES[self.mode.lower()]
         except KeyError:
             raise ModeError("Mode cannot be found")
-        scale_intervals = _heptatonic_base[shift:] + _heptatonic_base[:shift]
+        scale_intervals = Scale._heptatonic_base[shift:] + Scale._heptatonic_base[:shift]
         return scale_intervals

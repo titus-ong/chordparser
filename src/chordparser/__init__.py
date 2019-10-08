@@ -2,6 +2,7 @@
 A package to parse Chordpro files.
 """
 from .chordsheet import Sheet, ParseError
+from .scales import Scale
 from os.path import splitext
 import re
 

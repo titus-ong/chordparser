@@ -1,4 +1,4 @@
-from general import Error
+from .general import Error
 
 
 class ParseError(Error):

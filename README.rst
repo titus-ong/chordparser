@@ -2,7 +2,7 @@
 chordparser
 ===========
 
-A Python 3 module to parse .cho (ChordPro) files
+A Python 3 module to parse ChordPro files
 
 .. image:: https://travis-ci.com/titus-ong/chordparser.svg
    :alt: build status

@@ -1,12 +1,14 @@
 from setuptools import setup, find_packages
 
+
 def readme():
     with open('README.rst') as f:
         return f.read()
 
+
 setup(name='chordparser',
-      version='1.2',
-      description='Parse .cho (ChordPro) files',
+      version='0.1.0',
+      description='Parse ChordPro files',
       long_description=readme(),
       classifiers=[
           'Development Status :: 3 - Alpha',

@@ -59,6 +59,15 @@ def test_note_shift_positive(shift, note):
     assert new_note.value == note
 
 
-def test_note_equality():
+@pytest.mark.parametrize(
+    "note", ['C', notes.Note('C')])
+def test_note_equality(note):
     new_note = notes.Note('C')
-    assert new_note == 'C'
+    assert new_note == note
+
+
+@pytest.mark.parametrize(
+    "note", ['CA', notes.Note('D'), True, 10])
+def test_note_inequality(note):
+    new_note = notes.Note('C')
+    assert new_note != note

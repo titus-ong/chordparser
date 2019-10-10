@@ -34,7 +34,7 @@ class Note:
         return self._value
 
     @value.setter
-    def value(self, value):
+    def value(self, value: str):
         if not isinstance(value, str):
             raise NoteError("Only strings are accepted")
         if not re.match(
@@ -44,7 +44,7 @@ class Note:
         else:
             self._value = value
 
-    def accidental(self, value):
+    def accidental(self, value: int):
         if not isinstance(value, int) or value not in {-2, -1, 0, 1, 2}:
             raise NoteSymbolError(
                 "Only integers between -2 and 2 are accepted"
@@ -52,7 +52,7 @@ class Note:
         else:
             self.value = self.value[0] + Note._symbols.get(value)
 
-    def shift(self, value):
+    def shift(self, value: int):
         if not isinstance(value, int) or value not in {-2, -1, 0, 1, 2}:
             raise NoteSymbolError(
                 "Only integers between -2 and 2 are accepted"
@@ -64,6 +64,22 @@ class Note:
                 "Only symbols up to doublesharps and doubleflats are accepted"
                 )
         self.value = self.value[0] + Note._symbols.get(value)
+
+    def letter(self):
+        return self.value[0]
+
+    def symbol(self) -> str:
+        if len(self.value) > 1:
+            return self.value[1]
+        else:
+            return None
+
+    def symbolvalue(self) -> int:
+        if len(self.value) > 1:
+            symbol = self.value[1]
+        else:
+            symbol = None
+        return Note._symbols.get(symbol)
 
     def __repr__(self):
         return self.value

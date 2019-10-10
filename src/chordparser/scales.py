@@ -2,15 +2,11 @@
 Accept key and mode, and return scale with notes.
 """
 from .general import Error
-from .notes import Note, NoteError
+from .notes import Note
 import re
 
 
 class ModeError(Error):
-    pass
-
-
-class KeySignatureError(Error):
     pass
 
 
@@ -38,17 +34,6 @@ class Scale:
     }
     _notes = ('C', 'D', 'E', 'F', 'G', 'A', 'B',
               'C', 'D', 'E', 'F', 'G', 'A', 'B')
-    _flat = '\u266d'
-    _sharp = '\u266f'
-    _doubleflat = '\U0001D12B'
-    _doublesharp = '\U0001D12A'
-    _symbols = {
-        _flat: -1, _doubleflat: -2,
-        _sharp: +1, _doublesharp: +2,
-        -1: _flat, -2: _doubleflat,
-        +1: _sharp, +2: _doublesharp,
-        0: '', None: 0,
-        }
 
     def __init__(self, key: str, mode: str = "major"):
         self.key = key  # Implement method to check if key is valid

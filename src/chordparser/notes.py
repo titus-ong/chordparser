@@ -50,20 +50,17 @@ class Note:
                 "Only integers between -2 and 2 are accepted"
                 )
         else:
-            self.value = self.value[0] + Note._symbols.get(value)
+            self.value = self.letter() + Note._symbols.get(value)
 
     def shift(self, value: int):
-        if not isinstance(value, int) or value not in {-2, -1, 0, 1, 2}:
-            raise NoteSymbolError(
-                "Only integers between -2 and 2 are accepted"
-                )
-        if len(self.value) > 1:
-            value += Note._symbols.get(self.value[1])
+        if not isinstance(value, int):
+            raise NoteSymbolError("Only integers are accepted")
+        value += self.symbolvalue()
         if value not in {-2, -1, 0, 1, 2}:
             raise NoteSymbolError(
                 "Only symbols up to doublesharps and doubleflats are accepted"
                 )
-        self.value = self.value[0] + Note._symbols.get(value)
+        self.value = self.letter() + Note._symbols.get(value)
 
     def letter(self):
         return self.value[0]

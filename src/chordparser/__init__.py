@@ -1,5 +1,5 @@
 """
-A package to parse Chordpro files.
+A package to parse ChordPro files.
 """
 from .chordsheet import Sheet, ParseError
 from os.path import splitext

@@ -1,5 +1,5 @@
 """
-Basis of chords. Only diatonic scales are included.
+Accept key and mode, and return scale with notes.
 """
 from .general import Error
 import re
@@ -52,6 +52,7 @@ class Scale:
     def __init__(self, key, mode="major"):
         self.key = key  # Implement method to check if key is valid
         # How to know Cmaj7 is major and Cm7 is minor?
+        # Or put this in chord?
         self.mode = mode
         self.intervals = self._get_scale_intervals()
         self.notes = self._get_notes()
@@ -69,6 +70,7 @@ class Scale:
         return scale_intervals
 
     def _get_notes(self):
+        # Possibly put key/chord detection in chord
         if not re.match(
                         '^[a-gA-G](\u266F|\u266D|\U0001D12B|\U0001D12A){0,1}$',
                         self.key, re.UNICODE):

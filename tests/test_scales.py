@@ -18,7 +18,11 @@ import pytest
     )
 def test_scale_modes(mode, intervals):
     scale = scales.Scale('C', mode)
-    assert scale.intervals == intervals, "Scale intervals are incorrect"
+    string = (
+        f'Scale intervals for {mode} are incorrect. '
+        + f'Expected {intervals} but got {scale.intervals} instead'
+        )
+    assert scale.intervals == intervals, string
 
 
 def test_scale_modes_fake():
@@ -46,7 +50,11 @@ def test_scale_modes_fake():
     )
 def test_scale_note_order(key, note_order):
     scale = scales.Scale(key)
-    assert scale._note_order == note_order, "Scale note order is incorrect"
+    string = (
+        f'Scale intervals for {key} are incorrect. '
+        + f'Expected {note_order} but got {scale._note_order} instead'
+        )
+    assert scale._note_order == note_order, string
 
 
 @pytest.mark.parametrize(
@@ -66,4 +74,8 @@ def test_scale_note_order(key, note_order):
         ])
 def test_scale_notes(key, mode, notes):
     scale = scales.Scale(key, mode)
-    assert scale.notes == notes, "Scale notes are incorrect"
+    string = (
+        f'Scale intervals for {key} {mode} are incorrect. '
+        + f'Expected {notes} but got {scale.notes} instead'
+        )
+    assert scale.notes == notes, string

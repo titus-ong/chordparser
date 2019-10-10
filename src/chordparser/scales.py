@@ -2,6 +2,7 @@
 Accept key and mode, and return scale with notes.
 """
 from .general import Error
+from .notes import Note, NoteError
 import re
 
 
@@ -46,10 +47,10 @@ class Scale:
         _sharp: +1, _doublesharp: +2,
         -1: _flat, -2: _doubleflat,
         +1: _sharp, +2: _doublesharp,
-        0: '',
+        0: '', None: 0,
         }
 
-    def __init__(self, key, mode="major"):
+    def __init__(self, key: str, mode: str = "major"):
         self.key = key  # Implement method to check if key is valid
         # How to know Cmaj7 is major and Cm7 is minor?
         # Or put this in chord?
@@ -57,12 +58,33 @@ class Scale:
         self.intervals = self._get_scale_intervals()
         self.notes = self._get_notes()
 
+    def __repr__(self):
+        return f'{self.key} {self.mode} scale'
+
+    @property
+    def key(self):
+        return self._key
+
+    @key.setter
+    def key(self, value: str):
+        self._key = Note(value)
+
+    @property
+    def mode(self):
+        return self._mode
+
+    @mode.setter
+    def mode(self, value: str):
+        if not isinstance(value, str):
+            raise ModeError("Only strings are accepted")
+        elif value.lower() not in Scale._SCALES:
+            raise ModeError("Mode could not be found")
+        else:
+            self._mode = value.lower()
+
     def _get_scale_intervals(self, custom_mode=None):
         mode = custom_mode or self.mode
-        try:
-            shift = Scale._SCALES[mode.lower()]
-        except KeyError:
-            raise ModeError("Mode cannot be found")
+        shift = Scale._SCALES[mode.lower()]
         scale_intervals = (
             Scale._heptatonic_base[shift:]
             + Scale._heptatonic_base[:shift]
@@ -70,12 +92,7 @@ class Scale:
         return scale_intervals
 
     def _get_notes(self):
-        # Possibly put key/chord detection in chord
-        if not re.match(
-                        '^[a-gA-G](\u266F|\u266D|\U0001D12B|\U0001D12A){0,1}$',
-                        self.key, re.UNICODE):
-            raise KeySignatureError("Key signature does not exist")
-        self.idx = Scale._notes.index(self.key[0])
+        self.idx = Scale._notes.index(self.key.letter())
         self._note_order = self._get_note_order()
         return self._add_note_symbols()
 
@@ -87,16 +104,15 @@ class Scale:
         base_intervals = self._get_scale_intervals(
                 Scale._SCALE_DEGREE[self.idx]
                 )
-        if len(self.key) > 1:
-            symbol_increment = Scale._symbols[self.key[1]]
-        else:
-            symbol_increment = 0
+        symbol_increment = self.key.symbolvalue()
         note_list = []
         for num, note in enumerate(self._note_order):
+            new_note = Note(note)
             total_increment = (
                 symbol_increment
                 + sum(self.intervals[:num])
                 - sum(base_intervals[:num])
                 )
-            note_list.append(note + Scale._symbols[total_increment])
+            new_note.shift(total_increment)
+            note_list.append(new_note)
         return tuple(note_list)

@@ -1,4 +1,5 @@
 import chordparser.scales as scales
+import chordparser.notes as notes
 import pytest
 
 
@@ -24,6 +25,18 @@ def test_scale_modes(mode, intervals):
 def test_scale_modes_fake(mode):
     with pytest.raises(scales.ModeError):
         scales.Scale('C', mode)
+
+@pytest.mark.parametrize(
+    "key", ["A", "C\u266f", "D\u266d", "B\U0001D12B", "F\U0001D12A"])
+def test_scale_keys(key):
+    new_scale = scales.Scale(key)
+    assert new_scale.key == notes.Note(key)
+
+@pytest.mark.parametrize(
+    "key", ["ABC", 1, True, "G\u266f\u266f", "H"])
+def test_scale_keys_fake(key):
+    with pytest.raises(notes.NoteError):
+        scales.Scale(key)
 
 
 @pytest.mark.parametrize(

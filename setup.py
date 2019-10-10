@@ -25,7 +25,5 @@ setup(name='chordparser',
       package_dir={'': 'src'},
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
-      install_requires=[
-          'pytest',
-          ],
+      install_requires=[],
       zip_safe=False)

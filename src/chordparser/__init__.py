@@ -1,9 +1,14 @@
 """
 A package to parse ChordPro files.
 """
-from .chordsheet import Sheet, ParseError
+from .chordsheet import Sheet
+from .general import Error
 from os.path import splitext
 import re
+
+
+class ParseError(Error):
+    pass
 
 
 def create(file_path):

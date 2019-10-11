@@ -59,6 +59,7 @@ def test_scale_keys_fake(key):
     )
 def test_scale_note_order(key, note_order):
     scale = scales.Scale(key)
+    scale.notes  # To generate note order
     assert scale._note_order == note_order
 
 

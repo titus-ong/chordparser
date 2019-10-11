@@ -3,6 +3,7 @@ Accept key and mode, and return scale with notes.
 """
 from .general import Error
 from .notes import Note
+from typing import Union
 import re
 
 
@@ -35,13 +36,11 @@ class Scale:
     _notes = ('C', 'D', 'E', 'F', 'G', 'A', 'B',
               'C', 'D', 'E', 'F', 'G', 'A', 'B')
 
-    def __init__(self, key: str, mode: str = "major"):
-        self.key = key  # Implement method to check if key is valid
-        # How to know Cmaj7 is major and Cm7 is minor?
-        # Or put this in chord?
+    def __init__(self, key: Union[str, Note], mode: str = "major"):
+        self.key = key
         self.mode = mode
         self.intervals = self._get_scale_intervals()
-        self.notes = self._get_notes()
+        self.notes = None
 
     def __repr__(self):
         return f'{self.key} {self.mode} scale'
@@ -51,15 +50,18 @@ class Scale:
         return self._key
 
     @key.setter
-    def key(self, value: str):
-        self._key = Note(value)
+    def key(self, value):
+        if isinstance(value, Note):
+            self._key = value
+        else:
+            self._key = Note(value)
 
     @property
     def mode(self):
         return self._mode
 
     @mode.setter
-    def mode(self, value: str):
+    def mode(self, value):
         if not isinstance(value, str):
             raise ModeError("Only strings are accepted")
         elif value.lower() not in Scale._SCALES:
@@ -76,10 +78,15 @@ class Scale:
             )
         return scale_intervals
 
-    def _get_notes(self):
+    @property
+    def notes(self):
+        return self._notes
+
+    @notes.setter
+    def notes(self, _):
         self.idx = Scale._notes.index(self.key.letter())
         self._note_order = self._get_note_order()
-        return self._add_note_symbols()
+        self._notes = self._add_note_symbols()
 
     def _get_note_order(self):
         note_order = Scale._notes[self.idx:] + Scale._notes[:self.idx]

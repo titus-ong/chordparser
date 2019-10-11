@@ -25,6 +25,13 @@ class Note:
         +1: _sharp, +2: _doublesharp,
         0: '', None: 0,
         }
+    _symbol_converter = {
+        _flat: _flat, _doubleflat: _doubleflat,
+        _sharp: _sharp, _doublesharp: _doublesharp,
+        'b': _flat, 'bb': _doubleflat,
+        '#': _sharp, '##': _doublesharp,
+        None: '',
+    }
 
     def __init__(self, value):
         self.value = value
@@ -37,12 +44,13 @@ class Note:
     def value(self, value: str):
         if not isinstance(value, str):
             raise NoteError("Only strings are accepted")
-        if not re.match(
-                '^[a-gA-G](\u266F|\u266D|\U0001D12B|\U0001D12A){0,1}$',
-                value, re.UNICODE):
-            raise NoteError("Note does not exist")
-        else:
-            self._value = value
+        pattern = '^([a-gA-G])(\u266F|\u266D|\U0001D12B|\U0001D12A|bb|##|b|#){0,1}$'
+        rgx = re.match(pattern, value, re.UNICODE)
+        if not rgx:
+            raise NoteError("Note is invalid")
+        letter_ = rgx.group(1).upper()
+        symbol_ = Note._symbol_converter.get(rgx.group(2))
+        self._value = letter_ + symbol_
 
     def accidental(self, value: int):
         if not isinstance(value, int) or value not in {-2, -1, 0, 1, 2}:
@@ -62,7 +70,7 @@ class Note:
                 )
         self.value = self.letter() + Note._symbols.get(value)
 
-    def letter(self):
+    def letter(self) -> str:
         return self.value[0]
 
     def symbol(self) -> str:

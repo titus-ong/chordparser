@@ -1,5 +1,5 @@
 """
-Accept key and mode, and return scale with notes.
+Accept key and mode, and return Scale class with notes.
 """
 from .general import Error, TransposeError
 from .notes import Note, Key

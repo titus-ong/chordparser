@@ -1,5 +1,6 @@
 import chordparser.scales as scales
 import chordparser.notes as notes
+from chordparser.general import TransposeError
 import pytest
 
 
@@ -22,7 +23,7 @@ def test_scale_modes(mode, intervals):
 
 @pytest.mark.parametrize(
     "mode", ["ionia", 1, True])
-def test_scale_modes_fake(mode):
+def test_scale_modes_error(mode):
     with pytest.raises(scales.ModeError):
         scales.Scale('C', mode)
 
@@ -34,7 +35,7 @@ def test_scale_keys(key):
 
 @pytest.mark.parametrize(
     "key", ["ABC", 1, True, "G\u266f\u266f", "H"])
-def test_scale_keys_fake(key):
+def test_scale_keys_error(key):
     with pytest.raises(notes.NoteError):
         scales.Scale(key)
 
@@ -83,3 +84,23 @@ def test_scale_note_order(key, note_order):
 def test_scale_notes(key, mode, notes):
     scale = scales.Scale(key, mode)
     assert scale.notes == notes
+
+
+@pytest.mark.parametrize(
+    "value", [
+        "H#", 10.0, "Z", len])
+def test_chord_transpose_error(value):
+    new_scale = scales.Scale('C')
+    with pytest.raises(TransposeError):
+        new_scale.transpose(value)
+
+
+@pytest.mark.parametrize(
+    "key, value, new_key", [
+        ('C', 3, 'D\u266f'),
+        ('D', -5, 'A'),
+        ('G', 12, 'G')])
+def test_chord_transpose(key, value, new_key):
+    new_scale = scales.Scale(key)
+    new_scale.transpose(value)
+    assert new_scale.notes[0] == new_key

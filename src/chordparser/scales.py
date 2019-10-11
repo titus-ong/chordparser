@@ -1,8 +1,8 @@
 """
 Accept key and mode, and return scale with notes.
 """
-from .general import Error
-from .notes import Note
+from .general import Error, TransposeError
+from .notes import Note, Key
 from typing import Union
 import re
 
@@ -42,9 +42,6 @@ class Scale:
         self.intervals = self._get_scale_intervals()
         self.notes = None
 
-    def __repr__(self):
-        return f'{self.key} {self.mode} scale'
-
     @property
     def key(self):
         return self._key
@@ -52,9 +49,9 @@ class Scale:
     @key.setter
     def key(self, value):
         if isinstance(value, Note):
-            self._key = value
+            self._key = Key(value.value)
         else:
-            self._key = Note(value)
+            self._key = Key(value)
 
     @property
     def mode(self):
@@ -108,3 +105,15 @@ class Scale:
             new_note.shift(total_increment)
             note_list.append(new_note)
         return tuple(note_list)
+
+    def transpose(self, value: int = 0, flats=False):
+        if not isinstance(value, int):
+            raise TransposeError("Only integers are accepted")
+        if flats:
+            self.key.use_flats()
+        self.key.transpose(value)
+        self.notes = None  # refresh notes
+        return self
+
+    def __repr__(self):
+        return f'{self.key} {self.mode} scale'

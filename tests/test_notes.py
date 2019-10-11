@@ -15,7 +15,7 @@ def test_note_creation_positive(note, expected):
 
 
 @pytest.mark.parametrize(
-    "note", ['CA', 'D\u266F\u266F', '\u266DG', 1, '\U0001D12A', 'Ebbb', 'F###'])
+    "note", ['CA', 'D\u266F\u266F', '\u266DG', 1, '\U0001D12A', 'F###'])
 def test_note_creation_negative(note):
     with pytest.raises(notes.NoteError):
         new_note = notes.Note(note)
@@ -107,3 +107,41 @@ def test_note_equality(note):
 def test_note_inequality(note):
     new_note = notes.Note('C')
     assert new_note != note
+
+
+@pytest.mark.parametrize(
+    "key, value, new_key", [
+        ('C', 2, 'D'), ('G\u266d', -5, 'C\u266f'), ('A\U0001D12A', 1, 'C')])
+def test_key_transpose(key, value, new_key):
+    nkey = notes.Key(key)
+    nkey.transpose(value)
+    assert nkey.value == new_key
+
+
+@pytest.mark.parametrize(
+    "key, value, new_key", [
+        ('C', -2, 'A\u266f'), ('F\u266f', -5, 'C\u266f'), ('F', -2, 'D\u266f')])
+def test_key_sharps(key, value, new_key):
+    nkey = notes.Key(key)
+    nkey.use_flats()
+    nkey.use_sharps()
+    nkey.transpose(value)
+    assert nkey.value == new_key
+
+
+@pytest.mark.parametrize(
+    "key, value, new_key", [
+        ('C', -2, 'B\u266d'), ('F\u266f', -5, 'D\u266d'), ('F', -2, 'E\u266d')])
+def test_key_flat(key, value, new_key):
+    nkey = notes.Key(key)
+    nkey.use_flats()
+    nkey.transpose(value)
+    assert nkey.value == new_key
+
+
+@pytest.mark.parametrize(
+    "value", ['hello', 2.0, len])
+def test_key_non_int(value):
+    nkey = notes.Key('C')
+    with pytest.raises(notes.KeySignatureError):
+        nkey.transpose(value)

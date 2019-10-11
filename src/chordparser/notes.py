@@ -1,5 +1,5 @@
 """
-Note class.
+Note and Key classes.
 """
 from .general import Error
 import re
@@ -10,6 +10,10 @@ class NoteError(Error):
 
 
 class NoteSymbolError(Error):
+    pass
+
+
+class KeySignatureError(Error):
     pass
 
 
@@ -96,3 +100,70 @@ class Note:
             return self.value == other
         else:
             return NotImplemented
+
+
+class Key(Note):
+    _note_values = {
+        ('C' + Note._doubleflat): 10,
+        ('C' + Note._flat): 11,
+        'C': 0,
+        ('C' + Note._sharp): 1,
+        ('C' + Note._doublesharp): 2,
+        ('D' + Note._doubleflat): 0,
+        ('D' + Note._flat): 1,
+        'D': 2,
+        ('D' + Note._sharp): 3,
+        ('D' + Note._doublesharp): 4,
+        ('E' + Note._doubleflat): 2,
+        ('E' + Note._flat): 3,
+        'E': 4,
+        ('E' + Note._sharp): 5,
+        ('E' + Note._doublesharp): 6,
+        ('F' + Note._doubleflat): 3,
+        ('F' + Note._flat): 4,
+        'F': 5,
+        ('F' + Note._sharp): 6,
+        ('F' + Note._doublesharp): 7,
+        ('G' + Note._doubleflat): 5,
+        ('G' + Note._flat): 6,
+        'G': 7,
+        ('G' + Note._sharp): 8,
+        ('G' + Note._doublesharp): 9,
+        ('A' + Note._doubleflat): 7,
+        ('A' + Note._flat): 8,
+        'A': 9,
+        ('A' + Note._sharp): 10,
+        ('A' + Note._doublesharp): 11,
+        ('B' + Note._doubleflat): 9,
+        ('B' + Note._flat): 10,
+        'B': 11,
+        ('B' + Note._sharp): 0,
+        ('B' + Note._doublesharp): 1,
+    }
+    _sharp_scale = (
+        'C', 'C\u266f', 'D', 'D\u266f', 'E', 'F', 'F\u266f',
+        'G', 'G\u266f', 'A', 'A\u266f', 'B')
+    _flat_scale = (
+        'C', 'D\u266d', 'D', 'E\u266d', 'E', 'F',
+        'G\u266d', 'G', 'A\u266d', 'A', 'B\u266d', 'B')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.flats_on = False
+
+    def transpose(self, value=0):
+        if not isinstance(value, int):
+            raise KeySignatureError("Only integers are accepted")
+        number = Key._note_values.get(self.value)
+        number += value
+        if self.flats_on:
+            dic = Key._flat_scale
+        else:
+            dic = Key._sharp_scale
+        self.value = dic[number % 12]
+
+    def use_flats(self):
+        self.flats_on = True
+
+    def use_sharps(self):
+        self.flats_on = False

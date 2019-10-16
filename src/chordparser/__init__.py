@@ -7,7 +7,7 @@ from os.path import splitext
 import re
 
 
-class ParseError(Error):
+class FormatError(Error):
     pass
 
 
@@ -20,7 +20,7 @@ class Parser:
         print(extension)
         if not re.match(
                 "^.(cho|crd|chopro|chord|pro)$", extension):
-            raise ParseError("File format cannot be read")
+            raise FormatError("File format cannot be read")
         with open(file_path, 'r') as f:
             contents = f.readlines()
         return Sheet(contents)

@@ -1,17 +1,24 @@
-"""
-Accept key and mode, and return Scale class with notes.
-"""
 from .general import Error, TransposeError
-from .notes import Note, Key
+from .notes import Note, Key, ModeError
 from typing import Union
 import re
 
 
-class ModeError(Error):
+class ScaleError(Error):
     pass
 
 
 class Scale:
+    """
+    Scale class that composes of a Key and Notes.
+
+    Arguments:
+    key -- the key of the Scale (Key)
+
+    The Scale class accepts a Key and generates a 2-octave Note tuple in its 'notes' attribute. The Scale can be changed by setting its 'key' attribute, or by transposing it using the 'transpose' method.
+
+    The 'notes' attribute can also be set manually with a sequence (e.g. tuple).
+    """
     _heptatonic_base = (2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1)
     _SCALES = {
         "major": 0,
@@ -33,14 +40,18 @@ class Scale:
         5: "aeolian",
         6: "locrian",
     }
-    _notes = ('C', 'D', 'E', 'F', 'G', 'A', 'B',
-              'C', 'D', 'E', 'F', 'G', 'A', 'B')
+    _submodes = {
+        None: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        "natural": (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        "melodic": (0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0, 1, 0, -1),
+        "harmonic": (0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 1, -1),
+    }
+    _notes_tuple = (
+        'C', 'D', 'E', 'F', 'G', 'A', 'B',
+        'C', 'D', 'E', 'F', 'G', 'A', 'B')
 
-    def __init__(self, key: Union[str, Note], mode: str = "major"):
+    def __init__(self, key: Key):
         self.key = key
-        self.mode = mode
-        self.intervals = self._get_scale_intervals()
-        self.notes = None
 
     @property
     def key(self):
@@ -48,50 +59,63 @@ class Scale:
 
     @key.setter
     def key(self, value):
-        if isinstance(value, Note):
-            self._key = Key(value.value)
+        if not isinstance(value, Key):
+            raise ScaleError("Only type Key is accepted")
         else:
-            self._key = Key(value)
+            self._key = value
+            self._refresh()
 
-    @property
-    def mode(self):
-        return self._mode
-
-    @mode.setter
-    def mode(self, value):
-        if not isinstance(value, str):
-            raise ModeError("Only strings are accepted")
-        elif value.lower() not in Scale._SCALES:
-            raise ModeError("Mode could not be found")
-        else:
-            self._mode = value.lower()
-
-    def _get_scale_intervals(self, custom_mode=None):
-        mode = custom_mode or self.mode
-        shift = Scale._SCALES[mode.lower()]
-        scale_intervals = (
-            Scale._heptatonic_base[shift:]
-            + Scale._heptatonic_base[:shift]
-            )
-        return scale_intervals
+    def _refresh(self):
+        self.notes = self._get_notes()
 
     @property
     def notes(self):
         return self._notes
 
     @notes.setter
-    def notes(self, _):
-        self.idx = Scale._notes.index(self.key.letter())
+    def notes(self, value):
+        notelist = []
+        for note in value:
+            if isinstance(note, Note):
+                notelist.append(note)
+            else:
+                notelist.append(Note(note))
+        self._notes = tuple(notelist)
+
+    def _get_notes(self):
+        self.scale_intervals = self._get_scale_intervals()
+        note_no_symbol = Note(self.key.letter())
+        self._idx = Scale._notes_tuple.index(note_no_symbol)
         self._note_order = self._get_note_order()
-        self._notes = self._add_note_symbols()
+        notes = self._shift_notes()
+        return notes
+
+    def _get_scale_intervals(self):
+        intervals = self._get_intervals(self.key.mode)
+        submode_intervals = Scale._submodes.get(self.key.submode)
+        scale_intervals = []
+        for scale, subm in zip(intervals, submode_intervals):
+            scale_intervals.append(scale + subm)
+        return tuple(scale_intervals)
+
+    def _get_intervals(self, mode):
+        shift = Scale._SCALES[mode]
+        intervals = (
+            Scale._heptatonic_base[shift:]
+            + Scale._heptatonic_base[:shift]
+            )
+        return intervals
 
     def _get_note_order(self):
-        note_order = Scale._notes[self.idx:] + Scale._notes[:self.idx]
+        note_order = (
+            Scale._notes_tuple[self._idx:]
+            + Scale._notes_tuple[:self._idx]
+            )
         return note_order
 
-    def _add_note_symbols(self):
-        base_intervals = self._get_scale_intervals(
-                Scale._SCALE_DEGREE[self.idx]
+    def _shift_notes(self):
+        base_intervals = self._get_intervals(
+                Scale._SCALE_DEGREE[self._idx]
                 )
         symbol_increment = self.key.symbolvalue()
         note_list = []
@@ -99,7 +123,7 @@ class Scale:
             new_note = Note(note)
             total_increment = (
                 symbol_increment
-                + sum(self.intervals[:num])
+                + sum(self.scale_intervals[:num])
                 - sum(base_intervals[:num])
                 )
             new_note.shift(total_increment)
@@ -112,8 +136,7 @@ class Scale:
         if flats:
             self.key.use_flats()
         self.key.transpose(value)
-        self.notes = None  # refresh notes
         return self
 
     def __repr__(self):
-        return f'{self.key} {self.mode} scale'
+        return f'{self.key} scale'

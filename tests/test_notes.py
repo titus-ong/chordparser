@@ -108,6 +108,12 @@ def test_note_inequality(note):
     new_note = notes.Note('C')
     assert new_note != note
 
+@pytest.mark.parametrize(
+    "key", ["ABC", 1, True, "G\u266f\u266f", "H"])
+def test_keys_error(key):
+    with pytest.raises(notes.NoteError):
+        nkey = notes.Key(key)
+
 
 @pytest.mark.parametrize(
     "key, value, new_key", [
@@ -115,7 +121,16 @@ def test_note_inequality(note):
 def test_key_transpose(key, value, new_key):
     nkey = notes.Key(key)
     nkey.transpose(value)
-    assert nkey.value == new_key
+    assert nkey.note == new_key
+
+
+@pytest.mark.parametrize(
+    "value", [
+        "H#", 10.0, "Z", len])
+def test_key_transpose_error(value):
+    nkey = notes.Key('C')
+    with pytest.raises(notes.TransposeError):
+        nkey.transpose(value)
 
 
 @pytest.mark.parametrize(
@@ -126,7 +141,7 @@ def test_key_sharps(key, value, new_key):
     nkey.use_flats()
     nkey.use_sharps()
     nkey.transpose(value)
-    assert nkey.value == new_key
+    assert nkey.note == new_key
 
 
 @pytest.mark.parametrize(
@@ -136,12 +151,40 @@ def test_key_flat(key, value, new_key):
     nkey = notes.Key(key)
     nkey.use_flats()
     nkey.transpose(value)
-    assert nkey.value == new_key
+    assert nkey.note == new_key
 
 
 @pytest.mark.parametrize(
     "value", ['hello', 2.0, len])
 def test_key_non_int(value):
     nkey = notes.Key('C')
-    with pytest.raises(notes.KeySignatureError):
+    with pytest.raises(notes.TransposeError):
         nkey.transpose(value)
+
+
+@pytest.mark.parametrize(
+    "mode, submode", [
+        ("major", None), ("mInoR", None), ("MINOR", "harmonic"),
+        ("minor", "melodic"), ("minor", "natural"), ("ionian", None),
+        ("dorian", None), ("phrygian", None), ("lydian", None),
+        ("mixolydian", None), ("aeolian", None), ("locrian", None)])
+def test_key_mode_submode(mode, submode):
+    nkey = notes.Key('C', mode=mode, submode=submode)
+    if not submode:
+        assert str(nkey) == f'C {mode.lower()}'
+    else:
+        assert str(nkey) == f'C {submode.lower()} {mode.lower()}'
+
+
+@pytest.mark.parametrize(
+    "mode", ["ionia", 1, True])
+def test_key_mode_error(mode):
+    with pytest.raises(notes.ModeError):
+        nkey = notes.Key('C', mode)
+
+
+@pytest.mark.parametrize(
+    "mode, submode", [("major", "harmonic"), ("minor", "nothing")])
+def test_key_submode_error(mode, submode):
+    with pytest.raises(notes.SubmodeError):
+        nkey = notes.Key('C', mode, submode)

@@ -9,3 +9,5 @@ __pycache__/
 .coveralls.yml
 .tox/
 .coverage
+chords.py
+test_chords.py

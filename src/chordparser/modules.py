@@ -45,9 +45,9 @@ class Directiver:
         self.instructions.update(directive.instruction())
 
 
-class Converter:
-    def chord2scale(chord: Chord):
-        return Scale(chord.key, chord.quality)
+# class Converter:
+#     def chord2scale(chord: Chord):
+#         return Scale(chord.key, chord.quality)
 
 
 class Transposer:

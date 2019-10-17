@@ -1,11 +1,11 @@
 """
 Contains client classes to manipulate other classes.
 """
-from .chords import Chord
 from .scales import Scale
 from .general import Error
 from .directives import *
 import re
+# from .chords import Chord
 
 
 class Directiver:

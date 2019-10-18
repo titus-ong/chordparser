@@ -4,7 +4,7 @@ chordparser
 
 A simple Python 3 package to parse ChordPro files.
 
-.. image:: https://travis-ci.com/titus-ong/chordparser.svg?branch=master
+.. image:: https://travis-ci.org/titus-ong/chordparser.svg?branch=master
    :alt: build status
    :target: https://travis-ci.org/titus-ong/chordparser
 

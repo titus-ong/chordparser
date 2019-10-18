@@ -1,11 +1,6 @@
-from .general import Error, TransposeError
-from .notes import Note, Key, ModeError
+from .notes import Note, Key
 from typing import Union
 import re
-
-
-class ScaleError(Error):
-    pass
 
 
 class Scale:
@@ -60,10 +55,12 @@ class Scale:
     @key.setter
     def key(self, value):
         if not isinstance(value, Key):
-            raise ScaleError("Only type Key is accepted")
-        else:
-            self._key = value
-            self._refresh()
+            try:
+                self._key = Key(value)
+            except TypeError:
+                raise TypeError("Only Keys, Notes and strings are accepted")
+        self._key = value
+        self._refresh()
 
     def _refresh(self):
         self.notes = self._get_notes()
@@ -130,12 +127,10 @@ class Scale:
             note_list.append(new_note)
         return tuple(note_list)
 
-    def transpose(self, value: int = 0, flats=False):
+    def transpose(self, value: int = 0, use_flats: bool = False):
         if not isinstance(value, int):
-            raise TransposeError("Only integers are accepted")
-        if flats:
-            self.key.use_flats()
-        self.key.transpose(value)
+            raise TypeError("Only integers are accepted")
+        self.key.transpose(value, use_flats=use_flats)
         return self
 
     def __repr__(self):

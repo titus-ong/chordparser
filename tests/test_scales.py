@@ -1,6 +1,5 @@
 import chordparser.scales as scales
 import chordparser.notes as notes
-from chordparser.general import TransposeError
 import pytest
 
 
@@ -25,12 +24,20 @@ def test_scale_modes(mode, submode, intervals):
     scale = scales.Scale(nkey)
     assert scale.scale_intervals == intervals
 
+
 @pytest.mark.parametrize(
     "key", ["A", "C\u266f", "D\u266d", "B\U0001D12B", "F\U0001D12A"])
 def test_scale_keys(key):
     nkey = notes.Key(key)
     new_scale = scales.Scale(nkey)
     assert new_scale.key == notes.Key(key)
+
+
+@pytest.mark.parametrize(
+    "key", [1, True, len])
+def test_scale_keys_typeerror(key):
+    with pytest.raises(TypeError):
+        scales.Scale(key)
 
 
 @pytest.mark.parametrize(
@@ -104,7 +111,7 @@ def test_scale_submode_notes(key, mode, submode, note):
 def test_scale_transpose_error(value):
     nkey = notes.Key('C')
     new_scale = scales.Scale(nkey)
-    with pytest.raises(TransposeError):
+    with pytest.raises(TypeError):
         new_scale.transpose(value)
 
 
@@ -113,8 +120,19 @@ def test_scale_transpose_error(value):
         ('C', 3, 'D\u266f'),
         ('D', -5, 'A'),
         ('G', 12, 'G')])
-def test_scale_transpose(key, value, new_key):
+def test_scale_transpose_sharps(key, value, new_key):
     nkey = notes.Key(key)
     new_scale = scales.Scale(nkey)
     new_scale.transpose(value)
+    assert new_scale.key == notes.Key(new_key)
+
+
+@pytest.mark.parametrize(
+    "key, value, new_key", [
+        ('C', 3, 'E\u266d'),
+        ('D', -4, 'B\u266d')])
+def test_scale_transpose_flats(key, value, new_key):
+    nkey = notes.Key(key)
+    new_scale = scales.Scale(nkey)
+    new_scale.transpose(value, use_flats=True)
     assert new_scale.key == notes.Key(new_key)

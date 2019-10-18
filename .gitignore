@@ -6,6 +6,7 @@ build/
 *.eggs
 *.egg-info
 __pycache__/
+.coveralls.yml
 .tox/
 .coverage
 hidden_py/

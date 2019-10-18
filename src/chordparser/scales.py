@@ -131,7 +131,7 @@ class Scale:
     def _get_chords(self):
         chords = []
         for i in range(7):
-            chords.append(self.notes[i], self.notes[i+2], self.notes[i+4])
+            chords.append((self.notes[i], self.notes[i+2], self.notes[i+4]))
         return tuple(chords)
 
     def transpose(self, value: int = 0, use_flats: bool = False):

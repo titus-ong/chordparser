@@ -9,5 +9,4 @@ __pycache__/
 .coveralls.yml
 .tox/
 .coverage
-src/chordparser/chords.py
-tests/test_chords.py
+hidden_py/

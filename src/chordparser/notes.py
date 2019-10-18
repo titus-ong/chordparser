@@ -1,22 +1,5 @@
-from .general import Error, TransposeError
 from typing import Union
 import re
-
-
-class NoteError(Error):
-    pass
-
-
-class NoteSymbolError(Error):
-    pass
-
-
-class ModeError(Error):
-    pass
-
-
-class SubmodeError(Error):
-    pass
 
 
 class Note:
@@ -48,6 +31,51 @@ class Note:
         '#': _sharp, '##': _doublesharp,
         None: '',
     }
+    _note_values = {
+        ('C' + _doubleflat): 10,
+        ('C' + _flat): 11,
+        'C': 0,
+        ('C' + _sharp): 1,
+        ('C' + _doublesharp): 2,
+        ('D' + _doubleflat): 0,
+        ('D' + _flat): 1,
+        'D': 2,
+        ('D' + _sharp): 3,
+        ('D' + _doublesharp): 4,
+        ('E' + _doubleflat): 2,
+        ('E' + _flat): 3,
+        'E': 4,
+        ('E' + _sharp): 5,
+        ('E' + _doublesharp): 6,
+        ('F' + _doubleflat): 3,
+        ('F' + _flat): 4,
+        'F': 5,
+        ('F' + _sharp): 6,
+        ('F' + _doublesharp): 7,
+        ('G' + _doubleflat): 5,
+        ('G' + _flat): 6,
+        'G': 7,
+        ('G' + _sharp): 8,
+        ('G' + _doublesharp): 9,
+        ('A' + _doubleflat): 7,
+        ('A' + _flat): 8,
+        'A': 9,
+        ('A' + _sharp): 10,
+        ('A' + _doublesharp): 11,
+        ('B' + _doubleflat): 9,
+        ('B' + _flat): 10,
+        'B': 11,
+        ('B' + _sharp): 0,
+        ('B' + _doublesharp): 1,
+        }
+    _sharp_scale = (
+        'C', 'C\u266f', 'D', 'D\u266f', 'E', 'F', 'F\u266f',
+        'G', 'G\u266f', 'A', 'A\u266f', 'B'
+        )
+    _flat_scale = (
+        'C', 'D\u266d', 'D', 'E\u266d', 'E', 'F',
+        'G\u266d', 'G', 'A\u266d', 'A', 'B\u266d', 'B'
+        )
 
     def __init__(self, value):
         self.value = value
@@ -59,35 +87,38 @@ class Note:
     @value.setter
     def value(self, value: str):
         if not isinstance(value, str):
-            raise NoteError("Only strings are accepted")
+            raise TypeError("Only strings are accepted")
         pattern = (
             '^([a-gA-G])(\u266F|\u266D|\U0001D12B|\U0001D12A'
             '|bb|##|b|#){0,1}$'
             )
         rgx = re.match(pattern, value, re.UNICODE)
         if not rgx:
-            raise NoteError("Note is invalid")
+            raise ValueError("Note is invalid")
         letter_ = rgx.group(1).upper()
         symbol_ = Note._symbol_converter.get(rgx.group(2))
         self._value = letter_ + symbol_
 
     def accidental(self, value: int):
-        if not isinstance(value, int) or value not in {-2, -1, 0, 1, 2}:
-            raise NoteSymbolError(
+        if not isinstance(value, int):
+            raise TypeError("Only integers are accepted")
+        if value not in {-2, -1, 0, 1, 2}:
+            raise ValueError(
                 "Only integers between -2 and 2 are accepted"
                 )
-        else:
-            self.value = self.letter() + Note._symbols.get(value)
+        self.value = self.letter() + Note._symbols.get(value)
+        return self
 
     def shift(self, value: int):
         if not isinstance(value, int):
-            raise NoteSymbolError("Only integers are accepted")
+            raise TypeError("Only integers are accepted")
         value += self.symbolvalue()
         if value not in {-2, -1, 0, 1, 2}:
-            raise NoteSymbolError(
+            raise ValueError(
                 "Only symbols up to doublesharps and doubleflats are accepted"
                 )
         self.value = self.letter() + Note._symbols.get(value)
+        return self
 
     def letter(self) -> str:
         return self.value[0]
@@ -95,8 +126,7 @@ class Note:
     def symbol(self) -> str:
         if len(self.value) > 1:
             return self.value[1]
-        else:
-            return None
+        return None
 
     def symbolvalue(self) -> int:
         if len(self.value) > 1:
@@ -116,6 +146,18 @@ class Note:
         else:
             return NotImplemented
 
+    def transpose(self, value=0, use_flats: bool = False):
+        if not isinstance(value, int):
+            raise TypeError("Only integers are accepted")
+        number = Note._note_values.get(self.value)
+        number += value
+        if use_flats:
+            dic = Note._flat_scale
+        else:
+            dic = Note._sharp_scale
+        self.value = dic[number % 12]
+        return self
+
 
 class Key:
     """
@@ -132,51 +174,6 @@ class Key:
 
     The Key class only accepts the western heptatonic modes and submodes for now.
     """
-    _note_values = {
-        ('C' + Note._doubleflat): 10,
-        ('C' + Note._flat): 11,
-        'C': 0,
-        ('C' + Note._sharp): 1,
-        ('C' + Note._doublesharp): 2,
-        ('D' + Note._doubleflat): 0,
-        ('D' + Note._flat): 1,
-        'D': 2,
-        ('D' + Note._sharp): 3,
-        ('D' + Note._doublesharp): 4,
-        ('E' + Note._doubleflat): 2,
-        ('E' + Note._flat): 3,
-        'E': 4,
-        ('E' + Note._sharp): 5,
-        ('E' + Note._doublesharp): 6,
-        ('F' + Note._doubleflat): 3,
-        ('F' + Note._flat): 4,
-        'F': 5,
-        ('F' + Note._sharp): 6,
-        ('F' + Note._doublesharp): 7,
-        ('G' + Note._doubleflat): 5,
-        ('G' + Note._flat): 6,
-        'G': 7,
-        ('G' + Note._sharp): 8,
-        ('G' + Note._doublesharp): 9,
-        ('A' + Note._doubleflat): 7,
-        ('A' + Note._flat): 8,
-        'A': 9,
-        ('A' + Note._sharp): 10,
-        ('A' + Note._doublesharp): 11,
-        ('B' + Note._doubleflat): 9,
-        ('B' + Note._flat): 10,
-        'B': 11,
-        ('B' + Note._sharp): 0,
-        ('B' + Note._doublesharp): 1,
-        }
-    _sharp_scale = (
-        'C', 'C\u266f', 'D', 'D\u266f', 'E', 'F', 'F\u266f',
-        'G', 'G\u266f', 'A', 'A\u266f', 'B'
-        )
-    _flat_scale = (
-        'C', 'D\u266d', 'D', 'E\u266d', 'E', 'F',
-        'G\u266d', 'G', 'A\u266d', 'A', 'B\u266d', 'B'
-        )
     _modes = (
         'major', 'minor', 'ionian', 'dorian', 'phrygian',
         'lydian', 'mixolydian', 'aeolian', 'locrian'
@@ -186,10 +183,23 @@ class Key:
     def __init__(
             self, value, mode: str = 'major',
             submode: Union[str, None] = None):
-        self.note = Note(value)
+        self.root = value
         self.mode = mode
         self.submode = submode
-        self.flats_on = False
+
+    @property
+    def root(self):
+        return self._root
+
+    @root.setter
+    def root(self, value):
+        if not isinstance(value, Note):
+            try:
+                self._root = Note(value)
+            except TypeError:
+                raise TypeError("Only Notes and strings are accepted")
+        else:
+            self._root = value
 
     @property
     def mode(self):
@@ -198,11 +208,10 @@ class Key:
     @mode.setter
     def mode(self, value):
         if not isinstance(value, str):
-            raise ModeError("Only strings are accepted")
+            raise TypeError("Only strings are accepted")
         if value.lower() not in Key._modes:
-            raise ModeError("Mode could not be found")
-        else:
-            self._mode = value.lower()
+            raise KeyError("Mode could not be found")
+        self._mode = value.lower()
 
     @property
     def submode(self):
@@ -213,50 +222,30 @@ class Key:
         if value is None:
             self._submode = value
             return
-        elif not isinstance(value, str):
-            raise SubmodeError("Only strings are accepted")
+        if not isinstance(value, str):
+            raise TypeError("Only strings are accepted")
         submode_tuple = Key._submodes.get(self.mode)
         if submode_tuple is None:
-            raise SubmodeError("Mode does not have any submodes")
+            raise KeyError("Mode does not have any submodes")
         if value.lower() not in submode_tuple:
-            raise SubmodeError("Submode could not be found")
-        else:
-            self._submode = value.lower()
-
-    def transpose(self, value=0):
-        if not isinstance(value, int):
-            raise TransposeError("Only integers are accepted")
-        number = Key._note_values.get(self.note.value)
-        number += value
-        if self.flats_on:
-            dic = Key._flat_scale
-        else:
-            dic = Key._sharp_scale
-        self.note.value = dic[number % 12]
-
-    def use_flats(self):
-        self.flats_on = True
-
-    def use_sharps(self):
-        self.flats_on = False
+            raise KeyError("Submode could not be found")
+        self._submode = value.lower()
 
     def __getattr__(self, attribute):
+        # So Note methods can be used on Key
         if attribute in Note.__dict__:
-            # So Note methods can be used on Key
-            return getattr(self.note, attribute)
+            return getattr(self.root, attribute)
 
     def __repr__(self):
         if not self.submode:
-            return f'{self.note} {self.mode}'
-        else:
-            return f'{self.note} {self.submode} {self.mode}'
+            return f'{self.root} {self.mode}'
+        return f'{self.root} {self.submode} {self.mode}'
 
     def __eq__(self, other):
         if not isinstance(other, Key):
             return NotImplemented
-        else:
-            return (
-                self.note == other.note
+        return (
+                self.root == other.root
                 and self.mode == other.mode
                 and self.submode == other.submode
                 )

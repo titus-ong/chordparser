@@ -15,17 +15,24 @@ def test_note_creation_positive(note, expected):
 
 
 @pytest.mark.parametrize(
-    "note", ['CA', 'D\u266F\u266F', '\u266DG', 1, '\U0001D12A', 'F###'])
-def test_note_creation_negative(note):
-    with pytest.raises(notes.NoteError):
+    "note", [True, 1, len, [], ()])
+def test_note_creation_typeerror(note):
+    with pytest.raises(TypeError):
         new_note = notes.Note(note)
 
 
 @pytest.mark.parametrize(
-    "accidental", ['CA', 'D\u266F', 300, -10, 2.0])
+    "note", ['CA', 'D\u266F\u266F', '\u266DG', '\U0001D12A', 'F###'])
+def test_note_creation_valueerror(note):
+    with pytest.raises(ValueError):
+        new_note = notes.Note(note)
+
+
+@pytest.mark.parametrize(
+    "accidental", ['CA', 'D\u266F', 2.0])
 def test_note_accidental_negative(accidental):
     new_note = notes.Note('C')
-    with pytest.raises(notes.NoteSymbolError):
+    with pytest.raises(TypeError):
         new_note.accidental(accidental)
 
 
@@ -40,10 +47,18 @@ def test_note_accidental_positive(accidental, note):
 
 
 @pytest.mark.parametrize(
-    "shift", ['CA', 'D\u266F', 300, -10, 2.0, 3, -3])
+    "shift", ['CA', 'D\u266F', 2.0, len, [], ()])
 def test_note_shift_negative(shift):
     new_note = notes.Note('C')
-    with pytest.raises(notes.NoteSymbolError):
+    with pytest.raises(TypeError):
+        new_note.shift(shift)
+
+
+@pytest.mark.parametrize(
+    "shift", [300, -10, 3, -3])
+def test_note_shift_negative(shift):
+    new_note = notes.Note('C')
+    with pytest.raises(ValueError):
         new_note.shift(shift)
 
 
@@ -108,20 +123,64 @@ def test_note_inequality(note):
     new_note = notes.Note('C')
     assert new_note != note
 
+
 @pytest.mark.parametrize(
-    "key", ["ABC", 1, True, "G\u266f\u266f", "H"])
-def test_keys_error(key):
-    with pytest.raises(notes.NoteError):
+    "note, value, new_note", [
+        ('C', 2, 'D'), ('G\u266d', -5, 'C\u266f'), ('A\U0001D12A', 1, 'C')])
+def test_note_transpose_sharps(note, value, new_note):
+    nnote = notes.Note(note)
+    nnote.transpose(value)
+    assert nnote == new_note
+
+
+@pytest.mark.parametrize(
+    "note, value, new_note", [
+        ('C', -2, 'B\u266d'), ('F\u266f', -5, 'D\u266d'), ('F', -2, 'E\u266d')])
+def test_root_transpose_flat(note, value, new_note):
+    nnote = notes.Note(note)
+    nnote.transpose(value, use_flats=True)
+    assert nnote == new_note
+
+
+@pytest.mark.parametrize(
+    "value", [
+        "H#", 10.0, "Z", len])
+def test_root_transpose_error(value):
+    nnote = notes.Note('C')
+    with pytest.raises(TypeError):
+        nnote.transpose(value)
+
+
+@pytest.mark.parametrize(
+    "key", [1, True, len, [], ()])
+def test_keys_typeerror(key):
+    with pytest.raises(TypeError):
+        nkey = notes.Key(key)
+
+
+@pytest.mark.parametrize(
+    "key", ["ABC", "G\u266f\u266f", "H"])
+def test_keys_valueerror(key):
+    with pytest.raises(ValueError):
         nkey = notes.Key(key)
 
 
 @pytest.mark.parametrize(
     "key, value, new_key", [
         ('C', 2, 'D'), ('G\u266d', -5, 'C\u266f'), ('A\U0001D12A', 1, 'C')])
-def test_key_transpose(key, value, new_key):
+def test_key_transpose_sharps(key, value, new_key):
     nkey = notes.Key(key)
     nkey.transpose(value)
-    assert nkey.note == new_key
+    assert nkey.root == new_key
+
+
+@pytest.mark.parametrize(
+    "key, value, new_key", [
+        ('C', -2, 'B\u266d'), ('F\u266f', -5, 'D\u266d'), ('F', -2, 'E\u266d')])
+def test_key_transpose_flat(key, value, new_key):
+    nkey = notes.Key(key)
+    nkey.transpose(value, use_flats=True)
+    assert nkey.root == new_key
 
 
 @pytest.mark.parametrize(
@@ -129,36 +188,7 @@ def test_key_transpose(key, value, new_key):
         "H#", 10.0, "Z", len])
 def test_key_transpose_error(value):
     nkey = notes.Key('C')
-    with pytest.raises(notes.TransposeError):
-        nkey.transpose(value)
-
-
-@pytest.mark.parametrize(
-    "key, value, new_key", [
-        ('C', -2, 'A\u266f'), ('F\u266f', -5, 'C\u266f'), ('F', -2, 'D\u266f')])
-def test_key_sharps(key, value, new_key):
-    nkey = notes.Key(key)
-    nkey.use_flats()
-    nkey.use_sharps()
-    nkey.transpose(value)
-    assert nkey.note == new_key
-
-
-@pytest.mark.parametrize(
-    "key, value, new_key", [
-        ('C', -2, 'B\u266d'), ('F\u266f', -5, 'D\u266d'), ('F', -2, 'E\u266d')])
-def test_key_flat(key, value, new_key):
-    nkey = notes.Key(key)
-    nkey.use_flats()
-    nkey.transpose(value)
-    assert nkey.note == new_key
-
-
-@pytest.mark.parametrize(
-    "value", ['hello', 2.0, len])
-def test_key_non_int(value):
-    nkey = notes.Key('C')
-    with pytest.raises(notes.TransposeError):
+    with pytest.raises(TypeError):
         nkey.transpose(value)
 
 
@@ -177,14 +207,28 @@ def test_key_mode_submode(mode, submode):
 
 
 @pytest.mark.parametrize(
-    "mode", ["ionia", 1, True])
+    "mode", [1, True, len])
+def test_key_mode_typeerror(mode):
+    with pytest.raises(TypeError):
+        nkey = notes.Key('C', mode)
+
+
+@pytest.mark.parametrize(
+    "mode", ["ionia", "hello", "1rh9"])
 def test_key_mode_error(mode):
-    with pytest.raises(notes.ModeError):
+    with pytest.raises(KeyError):
         nkey = notes.Key('C', mode)
 
 
 @pytest.mark.parametrize(
     "mode, submode", [("major", "harmonic"), ("minor", "nothing")])
 def test_key_submode_error(mode, submode):
-    with pytest.raises(notes.SubmodeError):
+    with pytest.raises(KeyError):
+        nkey = notes.Key('C', mode, submode)
+
+
+@pytest.mark.parametrize(
+    "mode, submode", [("major", 1), ("minor", True)])
+def test_key_submode_error(mode, submode):
+    with pytest.raises(TypeError):
         nkey = notes.Key('C', mode, submode)

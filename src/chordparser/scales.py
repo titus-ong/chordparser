@@ -64,6 +64,7 @@ class Scale:
 
     def _refresh(self):
         self.notes = self._get_notes()
+        self.diatonic_chords = self._get_chords()
 
     @property
     def notes(self):
@@ -126,6 +127,12 @@ class Scale:
             new_note.shift(total_increment)
             note_list.append(new_note)
         return tuple(note_list)
+
+    def _get_chords(self):
+        chords = []
+        for i in range(7):
+            chords.append(self.notes[i], self.notes[i+2], self.notes[i+4])
+        return tuple(chords)
 
     def transpose(self, value: int = 0, use_flats: bool = False):
         if not isinstance(value, int):

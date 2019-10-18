@@ -1,26 +1,8 @@
 """
 A package to parse ChordPro files.
 """
-from .chordsheet import Sheet
-from .general import Error
-from os.path import splitext
-import re
+from .chords import Chord
+from .notes import Note, Key
+from .scales import Scale
 
-
-class FormatError(Error):
-    pass
-
-
-class Parser:
-    def __init__(self):
-        pass
-
-    def parse(self, file_path):
-        file_name, extension = splitext(file_path)
-        print(extension)
-        if not re.match(
-                "^.(cho|crd|chopro|chord|pro)$", extension):
-            raise FormatError("File format cannot be read")
-        with open(file_path, 'r') as f:
-            contents = f.readlines()
-        return Sheet(contents)
+__all__ = ['chords.py', 'scales.py', 'notes.py']

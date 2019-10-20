@@ -31,3 +31,14 @@ Install
 .. code-block:: python
 
     >>> pip -install chordparser
+
+----------------
+Current Features
+----------------
+
+* Parse notes
+* Parse keys with different modes and submodes (e.g. harmonic/natural/melodic for minor)
+* Scale with automatically-generated notes and diatonic chords
+* Ability to transpose notes, keys and scales
+* Parse chords
+    * Root note, quality, triad, bass note

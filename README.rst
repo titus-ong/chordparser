@@ -20,7 +20,7 @@ A simple Python 3 package to analyse chords.
    :target: https://pypi.org/pypi/chordparser
    :alt: downloads
 
-This package aims to parse chord notation (e.g. in ChordPro file formats), and provide harmonic analysis of chords based on the key and nearby chords. This helps in understanding how each chord functions, and allows for conversion to roman numeral chords.
+This package aims to parse chord notation (e.g. in ChordPro file formats), and provide harmonic analysis of chords based on the key and nearby chords. This helps in understanding how each chord functions, and allows for conversion to roman numeral chord notation.
 
 This package will provide a simple ChordPro parser for demonstration of its chord analysis functions. It is not as full-featured as the `official ChordPro program <https://github.com/ChordPro/chordpro>`_, and does not aim to be. Rather, it serves as a proof-of-concept for analysing chords within the chord progression of songs.
 
@@ -41,4 +41,4 @@ Current Features
 * Scale with automatically-generated notes and diatonic chords
 * Ability to transpose notes, keys and scales
 * Parse chords
-    * Root note, quality, triad, bass note
+    - Root note, quality, triad, bass note

@@ -41,4 +41,5 @@ Current Features
 * Scale with automatically-generated notes and diatonic chords
 * Ability to transpose notes, keys and scales
 * Parse chords
-    - Root note, quality, triad, bass note
+
+  - Root note, quality, triad, bass note

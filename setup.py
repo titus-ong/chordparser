@@ -7,16 +7,18 @@ def readme():
 
 
 setup(name='chordparser',
-      version='0.1.0',
-      description='Parse ChordPro files',
+      version='0.1.1',
+      description='Parse and analyse chords',
       long_description=readme(),
       classifiers=[
           'Development Status :: 3 - Alpha',
           'License :: OSI Approved :: MIT License',
+          'Programming Language :: Python :: 3.8',
           'Programming Language :: Python :: 3.7',
-          'Topic :: Text Processing :: Markup',
+          'Programming Language :: Python :: 3.6',
+          'Topic :: Text Processing',
           ],
-      keywords='chord sheet music parse',
+      keywords='chord music parse notation',
       url='http://github.com/titus-ong/chordparser',
       author='Titus Ong',
       author_email='titusongyl@gmail.com',

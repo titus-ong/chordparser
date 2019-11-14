@@ -8,6 +8,16 @@ import re
 
 
 class Chord:
+    """
+    Chord class that is composed of a root, chord quality, base triad, and optionally a bass note and altered or added notes.
+
+    Arguments:
+    value -- the chord notation (str)
+
+    The Chord class is built from the chord notation. It parses the notation and provides the 'root', 'quality' and 'base_triad' attributes for the root, chord quality and base triad respectively. The bass note and additional alterations to the chord can be accessed via the 'bass_note' and 'other' attributes.
+
+    The Chord class can be transposed using the 'transpose' method. Its string form can also be altered using the 'format' method.
+    """
     note_pattern = '([a-gA-G])'
     symbol_pattern = '(\u266F|\u266D|\U0001D12B|\U0001D12A|bb|##|b|#)'
     major_pattern = '(Maj|Ma|M|maj|\u0394)'
@@ -32,19 +42,22 @@ class Chord:
         self._parse_rgx()
 
     def _parse_rgx(self):
+        """Parse chord notation regex."""
         self.root = self._parse_root()
         self.quality = self._parse_quality()
         self.base_triad = self._parse_base_triad()
         self.other, self.bass_note = self._split_other_bass()
-        self._parse_notes()
+        self._parse_other_bass()
         self.quality_short = self._parse_qual()
 
     def _parse_root(self):
+        """Return chord root."""
         note = self.rgx.group(1)
         accidental = self.rgx.group(2) or ''
         return Note(note + accidental)
 
     def _parse_quality(self):
+        """Return chord quality."""
         if not self.rgx.group(3) and self.rgx.group(1).isupper():
             if re.match('7', self.rgx.group(10)):
                 # E.g. C7
@@ -70,6 +83,7 @@ class Chord:
             raise SyntaxError("Quality could not be parsed")
 
     def _split_other_bass(self):
+        """Return other alterations and bass note. Return None, None if they do not exist."""
         if not self.rgx.group(10):
             return None, None
         pattern = f'/{Chord.note_pattern}{Chord.symbol_pattern}''{0,1}$'
@@ -101,6 +115,7 @@ class Chord:
         return qualities[self.quality + string]
 
     def _parse_base_triad(self):
+        """Return base triad."""
         base_quality = {
             'major': ("major", 0),
             'minor': ("minor", 0),
@@ -118,19 +133,23 @@ class Chord:
             self._scale.notes[4].shift(info[1])
             )
 
-    def _parse_notes(self):
+    def _parse_other_bass(self):
+        """Modify notes based on other and bass attributes."""
         self._parse_other()
         self._parse_bass()
         return
         # then read other and bass to modify it - notes
 
     def _parse_other(self):
-        rgx = ""
+        """Modify notes based on other."""
+        pass
 
     def _parse_bass(self):
+        """Modify notes to put bass note on the bass."""
         pass
 
     def transpose(self, value: int = 0, use_flats: bool = False):
+        """Transpose chord and bass note."""
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")
         self.root.transpose(value, use_flats=use_flats)
@@ -142,10 +161,11 @@ class Chord:
         return self
 
     def format(self, options):
-        pass  # To format string output
+        """Specify options to format string output."""
+        pass
 
     def _xstr(self, value):
-        # To print blank space for None values
+        # To print blank for None values
         if value is None:
             return ''
         return value

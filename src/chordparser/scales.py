@@ -10,7 +10,9 @@ class Scale:
     Arguments:
     key -- the key of the Scale (Key)
 
-    The Scale class accepts a Key and generates a 2-octave Note tuple in its 'notes' attribute. The Scale can be changed by setting its 'key' attribute, or by transposing it using the 'transpose' method.
+    The Scale class accepts a Key and generates a 2-octave Note tuple in its 'notes' attribute, as well as diatonic chords with its 'diatonic_chords' attribute.
+
+    The Scale can be changed by setting its 'key' attribute, or by transposing it using the 'transpose' method.
 
     The 'notes' attribute can also be set manually with a sequence (e.g. tuple).
     """
@@ -50,10 +52,12 @@ class Scale:
 
     @property
     def key(self):
+        """Key getter."""
         return self._key
 
     @key.setter
     def key(self, value):
+        """Key setter - check if key is valid and re-create the scale."""
         if not isinstance(value, Key):
             try:
                 self._key = Key(value)
@@ -63,15 +67,18 @@ class Scale:
         self._refresh()
 
     def _refresh(self):
+        """Re-create the scale."""
         self.notes = self._get_notes()
-        self.diatonic_chords = self._get_chords()
+        self.diatonic_chords = self._get_diatonic()
 
     @property
     def notes(self):
+        """Notes getter."""
         return self._notes
 
     @notes.setter
     def notes(self, value):
+        """Notes setter - check if notes are valid."""
         notelist = []
         for note in value:
             if isinstance(note, Note):
@@ -81,6 +88,7 @@ class Scale:
         self._notes = tuple(notelist)
 
     def _get_notes(self):
+        """Get notes in the scale."""
         self.scale_intervals = self._get_scale_intervals()
         note_no_symbol = Note(self.key.letter())
         self._idx = Scale._notes_tuple.index(note_no_symbol)
@@ -89,7 +97,9 @@ class Scale:
         return notes
 
     def _get_scale_intervals(self):
+        """Get note-by-note intervals in the scale."""
         intervals = self._get_intervals(self.key.mode)
+        # Account for submode
         submode_intervals = Scale._submodes.get(self.key.submode)
         scale_intervals = []
         for scale, subm in zip(intervals, submode_intervals):
@@ -97,6 +107,7 @@ class Scale:
         return tuple(scale_intervals)
 
     def _get_intervals(self, mode):
+        """Get intervals based on mode."""
         shift = Scale._SCALES[mode]
         intervals = (
             Scale._heptatonic_base[shift:]
@@ -105,6 +116,7 @@ class Scale:
         return intervals
 
     def _get_note_order(self):
+        """Re-arrange note order based on key."""
         note_order = (
             Scale._notes_tuple[self._idx:]
             + Scale._notes_tuple[:self._idx]
@@ -112,6 +124,7 @@ class Scale:
         return note_order
 
     def _shift_notes(self):
+        """Shift notes with reference to original mode intervals."""
         base_intervals = self._get_intervals(
                 Scale._SCALE_DEGREE[self._idx]
                 )
@@ -128,13 +141,15 @@ class Scale:
             note_list.append(new_note)
         return tuple(note_list)
 
-    def _get_chords(self):
+    def _get_diatonic(self):
+        """Get tuple array of diatonic chords."""
         chords = []
         for i in range(7):
             chords.append((self.notes[i], self.notes[i+2], self.notes[i+4]))
         return tuple(chords)
 
     def transpose(self, value: int = 0, use_flats: bool = False):
+        """Transpose key of the scale."""
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")
         self.key.transpose(value, use_flats=use_flats)

@@ -4,7 +4,7 @@ import re
 
 class Note:
     """
-    Create a Note.
+    Note class that composes of a note value.
 
     Arguments:
     value -- the Note value (str)
@@ -82,10 +82,12 @@ class Note:
 
     @property
     def value(self):
+        """Value getter."""
         return self._value
 
     @value.setter
     def value(self, value: str):
+        """Value setter - check if string is valid."""
         if not isinstance(value, str):
             raise TypeError("Only strings are accepted")
         pattern = (
@@ -100,6 +102,7 @@ class Note:
         self._value = letter_ + symbol_
 
     def accidental(self, value: int):
+        """Change a note's accidental by specifying a value from -2(doubleflat) to 2(doublesharp)."""
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")
         if value not in {-2, -1, 0, 1, 2}:
@@ -110,6 +113,7 @@ class Note:
         return self
 
     def shift(self, value: int):
+        """Shift a note's accidental by specifying a value."""
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")
         value += self.symbolvalue()
@@ -121,32 +125,25 @@ class Note:
         return self
 
     def letter(self) -> str:
+        """Return note letter."""
         return self.value[0]
 
     def symbol(self) -> str:
+        """Return note symbol."""
         if len(self.value) > 1:
             return self.value[1]
         return None
 
     def symbolvalue(self) -> int:
+        """Return note symbol as a integer value."""
         if len(self.value) > 1:
             symbol = self.value[1]
         else:
             symbol = None
         return Note._symbols.get(symbol)
 
-    def __repr__(self):
-        return self.value
-
-    def __eq__(self, other):
-        if isinstance(other, Note):
-            return self.value == other.value
-        elif isinstance(other, str):
-            return self.value == other
-        else:
-            return NotImplemented
-
     def transpose(self, value=0, use_flats: bool = False):
+        """Transpose a note by specifying a value. Use flats if use_flats=True."""
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")
         number = Note._note_values.get(self.value)
@@ -158,10 +155,22 @@ class Note:
         self.value = dic[number % 12]
         return self
 
+    def __repr__(self):
+        return self.value
+
+    def __eq__(self, other):
+        # Allow comparison between note values
+        if isinstance(other, Note):
+            return self.value == other.value
+        elif isinstance(other, str):
+            return self.value == other
+        else:
+            return NotImplemented
+
 
 class Key:
     """
-    Create a Key.
+    Key class that composes of a note as the root, and its mode and submode.
 
     Arguments:
     value -- the note of the Key (str)
@@ -189,10 +198,12 @@ class Key:
 
     @property
     def root(self):
+        """Root getter."""
         return self._root
 
     @root.setter
     def root(self, value):
+        """Root setter - check if root is a valid Note."""
         if not isinstance(value, Note):
             try:
                 self._root = Note(value)
@@ -203,10 +214,12 @@ class Key:
 
     @property
     def mode(self):
+        """Mode getter"""
         return self._mode
 
     @mode.setter
     def mode(self, value):
+        """Mode setter - check if mode is valid."""
         if not isinstance(value, str):
             raise TypeError("Only strings are accepted")
         if value.lower() not in Key._modes:
@@ -215,10 +228,12 @@ class Key:
 
     @property
     def submode(self):
+        """Submode getter."""
         return self._submode
 
     @submode.setter
     def submode(self, value):
+        """Submode setter - check if submode is valid with reference to mode."""
         if value is None:
             self._submode = value
             return
@@ -242,6 +257,7 @@ class Key:
         return f'{self.root} {self.submode} {self.mode}'
 
     def __eq__(self, other):
+        # Allow comparison between Keys by checking their basic attributes
         if not isinstance(other, Key):
             return NotImplemented
         return (

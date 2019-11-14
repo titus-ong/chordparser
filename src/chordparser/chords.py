@@ -45,7 +45,7 @@ class Chord:
     def __init__(self, value):
         if not isinstance(value, str):
             raise TypeError("Only strings are accepted")
-        self.rgx = re.match(Chord.pattern, value, re.UNICODE)
+        self.rgx = re.match(Chord._pattern, value, re.UNICODE)
         if not self.rgx:
             raise ValueError("Chord could not be recognised")
         self._parse_rgx()

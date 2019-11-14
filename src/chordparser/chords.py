@@ -68,7 +68,7 @@ class Chord:
         """Return other alterations and bass note. Return None, None if they do not exist."""
         if not self.rgx.group(10):
             return None, None
-        pattern = f'/{Chord.note_pattern}{Chord.symbol_pattern}''{0,1}$'
+        pattern = f'/{Chord._note_pattern}{Chord._symbol_pattern}''{0,1}$'
         regex = re.search(pattern, self.rgx.group(10), re.UNICODE)
         if regex:
             bass_note = Note(regex.group(1) + self._xstr(regex.group(2)))
@@ -120,7 +120,7 @@ class Chord:
         """Include 7 if major seventh chord."""
         if not self.other:
             string = ''
-        elif self.rgx.group(4) and re.match('7', self.other):
+        elif self.rgx.group(4) and re.match('13|11|9|7', self.other):
             string = '7'
         else:
             string = ''

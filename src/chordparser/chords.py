@@ -152,19 +152,77 @@ class Chord:
         return tuple(base_chord)
 
     def _parse_other_bass(self):
-        """Modify notes based on other and bass attributes."""
+        """Build notes attribute from other and bass attributes."""
         self._parse_other()
         self._parse_bass()
         return
-        # then read other and bass to modify it - notes
 
     def _parse_other(self):
-        """Modify notes based on other."""
-        pass
+        """Modify notes based on additional strings."""
+        self.notes = list(self.base_chord)
+        self._string = self.other
+        if self.other[0] == '7':  # 7th has already been parsed
+            self._string = string[1::].strip()
+        while not self._string.strip():
+            regex = re.match(Chord._power_chord, self._string)
+            if regex:
+                self._parse_power_chord(regex)
+            regex = re.match(Chord._extended_str, self._string, re.UNICODE)
+            if regex:
+                self._parse_ext_chord(regex)
+            regex = re.match(Chord._altered_5, self._string, re.UNICODE)
+            if regex:
+                self._parse_alt5_chord(regex)
+            regex = re.match(Chord._added, self._string)
+            if regex:
+                self._parse_add_chord(regex)
+            regex = re.match(Chord._suspended, self._string)
+            if regex:
+                self._parse_sus_chord(regex)
+        return
 
-    def _parse_bass(self):
-        """Modify notes to put bass note on the bass."""
-        pass
+    def _parse_power_chord(self, regex):
+        """Remove the third."""
+        self.notes.pop(1)
+        self._string = self._string[len(regex.groups())::].strip()
+
+    def _parse_ext_chord(self, regex):
+        """Extend the chord."""
+        symbol = regex.group(1)
+        interval = int(regex.group(2))
+        extend = []
+        while interval > 7:
+            extend.insert(0, self._scale.notes(interval - 1))
+            interval -= 2
+        extend[-1].shift(Chord._symbol[symbol])
+        self.notes += extend
+        self._string = self._string[len(regex.groups())::].strip()
+
+    def _parse_alt5_chord(self, regex):
+        """Alter the fifth."""
+        symbol = regex.group(1)
+        self.notes[2].shift(Chord._symbol[symbol])
+        self._string = self._string[len(regex.groups())::].strip()
+
+    def _parse_add_chord(self, regex):
+        """Add note in correct position."""
+        position = {
+            '2': 1, '4': 2, '6': 3,
+        }
+        idx = int(regex.group(1)) - 1
+        note = self._scale.notes[idx]
+        if regex.group(1) in position.keys():
+            self.notes.insert(position[regex.group(1)], note)
+        else:
+            self.notes.append(note)
+        self._string = self._string[len(regex.groups())::].strip()
+
+    def _parse_sus_chord(self, regex):
+        """Replace third with suspended note."""
+        idx = int(regex.group(1)) - 1
+        note = self._scale.notes[idx]
+        self.notes[1] = note
+        self._string = self._string[len(regex.groups())::].strip()
 
     def _parse_bass(self):
         """Modify notes to put bass note in front."""

@@ -14,7 +14,7 @@ class Chord:
     Arguments:
     value -- the chord notation (str)
 
-    The Chord class is built from the chord notation. It parses the notation and provides the 'root', 'quality' and 'base_triad' attributes for the root, chord quality and base triad respectively. The bass note and additional alterations to the chord can be accessed via the 'bass_note' and 'other' attributes.
+    The Chord class is built from the chord notation. It parses the notation and provides the 'root', 'quality' and 'base_chord' attributes for the root, chord quality and base chord respectively. The bass note and additional alterations to the chord can be accessed via the 'bass_note' and 'other' attributes.
 
     The Chord class can be transposed using the 'transpose' method. Its string form can also be altered using the 'format' method.
     """
@@ -44,9 +44,9 @@ class Chord:
     def _parse_rgx(self):
         """Parse chord notation regex."""
         self.root = self._parse_root()
-        self.base_triad = self._parse_base_triad()
         self.other, self.bass_note = self._split_other_bass()
         self.quality, self.quality_short = self._parse_quality()
+        self.base_chord = self._parse_base_chord()
         self._parse_other_bass()
 
     def _parse_root(self):
@@ -83,8 +83,9 @@ class Chord:
             if re.match('7', self.rgx.group(10)):
                 # E.g. C7
                 quality = 'dominant'
-            # E.g. C
-            quality = 'major'
+            else:
+                # E.g. C
+                quality = 'major'
         elif not self.rgx.group(3):
             # lowercase root
             quality = 'minor'
@@ -116,24 +117,30 @@ class Chord:
             string = ''
         return (quality + string)
 
-    def _parse_base_triad(self):
+    def _parse_base_chord(self):
         """Return base triad."""
         base_quality = {
             'major': ("major", 0),
             'minor': ("minor", 0),
-            'diminished': ("minor", -1),
+            'diminished': ("minor", -1, -1),
             'augmented': ("major", 1),
-            'half-diminished': ("minor", -1),
-            'dominant': ("major", 0),
+            'half-diminished': ("minor", -1, 0),
+            'dominant': ("major", 0, -1),
+            'major7': ("major", 0, 0),
         }
         info = base_quality[self.quality]
         self._key = Key(self.root, info[0])
         self._scale = Scale(self._key)
-        return (
-            self._scale.notes[0],
-            self._scale.notes[2],
-            self._scale.notes[4].shift(info[1])
-            )
+        base_chord = [
+                self._scale.notes[0],
+                self._scale.notes[2],
+                self._scale.notes[4].shift(info[1]),
+                ]
+        if len(info) == 3:
+            base_chord.append(
+                self._scale.notes[6].shift(info[2]),
+                )
+        return tuple(base_chord)
 
     def _parse_other_bass(self):
         """Modify notes based on other and bass attributes."""
@@ -167,7 +174,7 @@ class Chord:
                     self.bass_note = each
         # for each in self.notes:
         #     each.transpose(value, use_flats=use_flats)
-        # transpose base_triad as well
+        # transpose base_chord as well
         return self
 
     def format(self, options):

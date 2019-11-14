@@ -48,7 +48,7 @@ def test_chord_quality(name, quality):
 
 
 @pytest.mark.parametrize(
-    "name, triad", [
+    "name, chord", [
         ("C", (Note('C'), Note('E'), Note('G'))),
         ("D\u266Fmaj", (
             Note('D\u266F'),
@@ -56,18 +56,20 @@ def test_chord_quality(name, quality):
             Note('A\u266F'),
             )),
         ("Em", (Note('E'), Note('G'), Note('B'))),
-        ("F\U0001D12Adim", (
-            Note('F\U0001D12A'),
-            Note('A\u266F'),
-            Note('C\u266F'),
+        ("Fdim", (
+            Note('F'),
+            Note('A\u266D'),
+            Note('C\u266D'),
+            Note('E\U0001D12B'),
             )),
         ("Faug", (Note('F'), Note('A'), Note('C\u266F'))),
         ("C\u00f8", (Note('C'), Note('E\u266D'), Note('G\u266D'))),
-        ("G7", (Note('G'), Note('B'), Note('D'))),
+        ("G7", (Note('G'), Note('B'), Note('D'), Note('F'))),
+        ("Amaj7", (Note('A'), Note('C\u266F'), Note('E'), Note('G\u266F'))),
         ])
-def test_chord_base_triad(name, triad):
+def test_chord_base_chord(name, chord):
     new_chord = chords.Chord(name)
-    assert new_chord.base_triad == triad
+    assert new_chord.base_chord == chord
 
 
 @pytest.mark.parametrize(

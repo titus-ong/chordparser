@@ -44,43 +44,16 @@ class Chord:
     def _parse_rgx(self):
         """Parse chord notation regex."""
         self.root = self._parse_root()
-        self.quality = self._parse_quality()
         self.base_triad = self._parse_base_triad()
         self.other, self.bass_note = self._split_other_bass()
+        self.quality, self.quality_short = self._parse_quality()
         self._parse_other_bass()
-        self.quality_short = self._parse_qual()
 
     def _parse_root(self):
         """Return chord root."""
         note = self.rgx.group(1)
         accidental = self.rgx.group(2) or ''
         return Note(note + accidental)
-
-    def _parse_quality(self):
-        """Return chord quality."""
-        if not self.rgx.group(3) and self.rgx.group(1).isupper():
-            if re.match('7', self.rgx.group(10)):
-                # E.g. C7
-                return 'dominant'
-            # E.g. C
-            return 'major'
-        elif not self.rgx.group(3):
-            # lowercase root
-            return 'minor'
-        elif self.rgx.group(4):
-            return 'major'
-        elif self.rgx.group(5):
-            return 'minor'
-        elif self.rgx.group(6):
-            return 'diminished'
-        elif self.rgx.group(7):
-            return 'augmented'
-        elif self.rgx.group(8):
-            return 'half-diminished'
-        elif self.rgx.group(9):
-            return 'dominant'
-        else:
-            raise SyntaxError("Quality could not be parsed")
 
     def _split_other_bass(self):
         """Return other alterations and bass note. Return None, None if they do not exist."""
@@ -95,9 +68,9 @@ class Chord:
         other = self.rgx.group(10).split("/")[0]
         return other, bass_note
 
-    def _parse_qual(self):
-        """Print maj if seventh chord."""
-        qualities = {
+    def _parse_quality(self):
+        """Return chord quality."""
+        quality_short = {
             "major": '',
             "minor": 'm',
             "diminished": 'dim',
@@ -106,13 +79,42 @@ class Chord:
             "dominant": 'dom',
             "major7": 'maj',
             }
+        if not self.rgx.group(3) and self.rgx.group(1).isupper():
+            if re.match('7', self.rgx.group(10)):
+                # E.g. C7
+                quality = 'dominant'
+            # E.g. C
+            quality = 'major'
+        elif not self.rgx.group(3):
+            # lowercase root
+            quality = 'minor'
+        elif self.rgx.group(4):
+            quality = 'major'
+        elif self.rgx.group(5):
+            quality = 'minor'
+        elif self.rgx.group(6):
+            quality = 'diminished'
+        elif self.rgx.group(7):
+            quality = 'augmented'
+        elif self.rgx.group(8):
+            quality = 'half-diminished'
+        elif self.rgx.group(9):
+            quality = 'dominant'
+        else:
+            raise SyntaxError("Quality could not be parsed")
+        # Account for major7
+        quality = self._parse_maj7(quality)
+        return quality, quality_short[quality]
+
+    def _parse_maj7(self, quality):
+        """Include 7 if major seventh chord."""
         if not self.other:
             string = ''
         elif self.rgx.group(4) and re.match('7', self.other):
             string = '7'
         else:
             string = ''
-        return qualities[self.quality + string]
+        return (quality + string)
 
     def _parse_base_triad(self):
         """Return base triad."""

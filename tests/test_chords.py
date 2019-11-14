@@ -118,7 +118,7 @@ def test_chord_root_transpose(key, value, new_key):
 
 @pytest.mark.parametrize(
     "key, value, new_key", [
-        ('C/E', 3, 'G'),  # Fix this to be F##
+        ('C/E', 3, 'F\U0001D12A'),
         ('Dm7add5/A', -5, 'E')])
 def test_chord_bass_transpose(key, value, new_key):
     new_chord = chords.Chord(key)

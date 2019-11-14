@@ -149,12 +149,20 @@ class Chord:
         pass
 
     def transpose(self, value: int = 0, use_flats: bool = False):
-        """Transpose chord and bass note."""
+        """Transpose chord."""
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")
         self.root.transpose(value, use_flats=use_flats)
         if self.bass_note:
             self.bass_note.transpose(value, use_flats=use_flats)
+            print(self.bass_note, self.bass_note.num_value())
+            # Make sure bass note is in the correct key e.g. D#/F## not D#/G
+            self._key.root = self.root
+            self._scale.key = self._key
+            for each in self._scale.notes:
+                print(each, each.num_value())
+                if self.bass_note.num_value() == each.num_value():
+                    self.bass_note = each
         # for each in self.notes:
         #     each.transpose(value, use_flats=use_flats)
         # transpose base_triad as well

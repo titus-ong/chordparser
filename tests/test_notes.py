@@ -73,6 +73,15 @@ def test_note_shift_positive(shift, note):
 
 
 @pytest.mark.parametrize(
+    "note, value", [
+        ('C', 0), ('D\u266F', 3), ('G\u266D', 6),
+        ('A\U0001D12B', 7), ('B\U0001D12A', 1)])
+def test_note_num_value(note, value):
+    new_note = notes.Note(note)
+    assert new_note.num_value() == value
+
+
+@pytest.mark.parametrize(
     "note", ['C', 'D\u266F', 'G\u266D', 'A\U0001D12B', 'B\U0001D12A'])
 def test_note_letter(note):
     new_note = notes.Note(note)

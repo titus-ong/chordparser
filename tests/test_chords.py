@@ -35,7 +35,7 @@ def test_chord_root(name, root):
 @pytest.mark.parametrize(
     "name, quality", [
         ("C", "major"), ("C#Maj", "major"), ("DbM", "major"),
-        ("D\u266Fmaj", "major"), ("D\u266DMa7", "major"),
+        ("D\u266Fmaj", "major"), ("D\u266DMa7", "major7"),
         ("F##m", "minor"), ("Dbb", "major"), ("F-", "minor"),
         ("F\U0001D12Adim", "diminished"), ("Do7", "diminished"),
         ("G\u00B011", "diminished"),
@@ -63,7 +63,7 @@ def test_chord_quality(name, quality):
             Note('E\U0001D12B'),
             )),
         ("Faug", (Note('F'), Note('A'), Note('C\u266F'))),
-        ("C\u00f8", (Note('C'), Note('E\u266D'), Note('G\u266D'))),
+        ("C\u00f8", (Note('C'), Note('E\u266D'), Note('G\u266D'), Note('B\u266D'))),
         ("G7", (Note('G'), Note('B'), Note('D'), Note('F'))),
         ("Amaj7", (Note('A'), Note('C\u266F'), Note('E'), Note('G\u266F'))),
         ])

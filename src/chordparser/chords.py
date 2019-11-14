@@ -18,20 +18,29 @@ class Chord:
 
     The Chord class can be transposed using the 'transpose' method. Its string form can also be altered using the 'format' method.
     """
-    note_pattern = '([a-gA-G])'
-    symbol_pattern = '(\u266F|\u266D|\U0001D12B|\U0001D12A|bb|##|b|#)'
-    major_pattern = '(Maj|Ma|M|maj|\u0394)'
-    minor_pattern = '(min|m|-)'
-    dim_pattern = '(dim|o|\u00B0)'
-    aug_pattern = '(aug|\+)'
-    halfdim_pattern = '(\u00f8|\u00d8)'
-    dom_pattern = '(dom7|dom)'
-    pattern = (
-        f"{note_pattern}{symbol_pattern}{{0,1}}"
-        f"({major_pattern}|{minor_pattern}|"
-        f"{dim_pattern}|{aug_pattern}|"
-        f"{halfdim_pattern}|{dom_pattern}){{0,1}}(.*)"
+    _note_pattern = '([a-gA-G])'
+    _symbol_pattern = '(\u266F|\u266D|\U0001D12B|\U0001D12A|bb|##|b|#)'
+    _major_pattern = '(Maj|Ma|M|maj|\u0394)'
+    _minor_pattern = '(min|m|-)'
+    _dim_pattern = '(dim|o|\u00B0)'
+    _aug_pattern = '(aug|\+)'
+    _halfdim_pattern = '(\u00f8|\u00d8)'
+    _dom_pattern = '(dom7|dom)'
+    _pattern = (
+        f"{_note_pattern}{_symbol_pattern}{{0,1}}"
+        f"({_major_pattern}|{_minor_pattern}|"
+        f"{_dim_pattern}|{_aug_pattern}|"
+        f"{_halfdim_pattern}|{_dom_pattern}){{0,1}}(.*)"
         )
+    _power_chord = "5"
+    _extended_str = f"{_symbol_pattern}{{0,1}}(13|11|9)"
+    _altered_5 = f"{_symbol_pattern}(5)"
+    _added = "add(13|11|9|2|4|6)"
+    _suspended = "sus(2|4){0,1}"
+    _symbols = {
+        '\u266D': -1, '\U0001D12B': -2,
+        '\u266F': +1, '\U0001D12A': +2, None: 0,
+        }
 
     def __init__(self, value):
         if not isinstance(value, str):

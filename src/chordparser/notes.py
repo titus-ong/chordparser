@@ -124,6 +124,10 @@ class Note:
         self.value = self.letter() + Note._symbols.get(value)
         return self
 
+    def num_value(self) -> int:
+        """Return numerical value."""
+        return Note._note_values[self.value]
+
     def letter(self) -> str:
         """Return note letter."""
         return self.value[0]

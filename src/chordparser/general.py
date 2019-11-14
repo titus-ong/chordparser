@@ -1,6 +1,6 @@
-class Error(Exception):
-    pass
+# class Error(Exception):
+#     pass
 
 
-class TransposeError(Error):
-    pass
+# class TransposeError(Error):
+#     pass

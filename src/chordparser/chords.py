@@ -39,7 +39,12 @@ class Chord:
     _suspended = "sus(2|4){0,1}"
     _symbols = {
         '\u266D': -1, '\U0001D12B': -2,
-        '\u266F': +1, '\U0001D12A': +2, None: 0,
+        '\u266F': +1, '\U0001D12A': +2,
+        'b': -1, 'bb': -2,
+        '#': +1, '##': +2,
+        'flat': -1, 'doubleflat': -2,
+        'sharp': +1, 'doublesharp': +2,
+        None: 0,
         }
 
     def __init__(self, value):

@@ -166,9 +166,11 @@ class Chord:
         """Modify notes based on additional strings."""
         self.notes = list(self.base_chord)
         self._string = self.other
+        if self.other is None:
+            return
         if self.other[0] == '7':  # 7th has already been parsed
-            self._string = string[1::].strip()
-        while not self._string.strip():
+            self._string = self._string[1::].strip()
+        while self._string.strip():
             regex = re.match(Chord._power_chord, self._string)
             if regex:
                 self._parse_power_chord(regex)

@@ -171,21 +171,29 @@ class Chord:
         if self.other[0] == '7':  # 7th has already been parsed
             self._string = self._string[1::].strip()
         while self._string.strip():
+            decode = 0
             regex = re.match(Chord._power_chord, self._string)
             if regex:
                 self._parse_power_chord(regex)
+                decode += 1
             regex = re.match(Chord._extended_str, self._string, re.UNICODE)
             if regex:
                 self._parse_ext_chord(regex)
+                decode += 1
             regex = re.match(Chord._altered_5, self._string, re.UNICODE)
             if regex:
                 self._parse_alt5_chord(regex)
+                decode += 1
             regex = re.match(Chord._added, self._string)
             if regex:
                 self._parse_add_chord(regex)
+                decode += 1
             regex = re.match(Chord._suspended, self._string)
             if regex:
                 self._parse_sus_chord(regex)
+                decode += 1
+            if decode == 0:
+                raise SyntaxError("Additional string could not be parsed")
         return
 
     def _parse_power_chord(self, regex):

@@ -10,4 +10,3 @@ __pycache__/
 .tox/
 .coverage
 hidden_py/
-testing_script.py

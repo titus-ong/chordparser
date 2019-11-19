@@ -222,14 +222,14 @@ class Chord:
             self.notes.insert(position[regex.group(1)], note)
         else:
             self.notes.append(note)
-        self._string = self._string[len(regex.groups())::].strip()
+        self._string = self._string[len(regex.groups())+3::].strip()
 
     def _parse_sus_chord(self, regex):
         """Replace third with suspended note."""
         idx = int(regex.group(1)) - 1
         note = self._scale.notes[idx]
         self.notes[1] = note
-        self._string = self._string[len(regex.groups())::].strip()
+        self._string = self._string[len(regex.groups())+3::].strip()
 
     def _parse_bass(self):
         """Modify notes to put bass note in front."""

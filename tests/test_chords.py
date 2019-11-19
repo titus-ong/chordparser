@@ -109,7 +109,7 @@ def test_chord_power_chord(name, chord):
             )),
         ("Em11", (
             Note('E'), Note('G'), Note('B'),
-            Note('D'), Note('F'), Note('A'),
+            Note('D'), Note('F#'), Note('A'),
             )),
         ("F9", (
             Note('F'), Note('A'), Note('C'),
@@ -149,7 +149,7 @@ def test_chord_alt5_chord(name, chord):
             Note('C'), Note('E'), Note('G'), Note('A'),
             )),
         ("Emadd2add4add9", (
-            Note('E'), Note('F#'), Note('G'), Note('A'), Note('B'),
+            Note('E'), Note('F#'), Note('G'), Note('A'), Note('B'), Note('F#'),
             )),
         ])
 def test_chord_add_chord(name, chord):
@@ -194,7 +194,7 @@ def test_chord_transpose_error(value):
 @pytest.mark.parametrize(
     "key, value, new_key", [
         ('C', 3, 'D\u266f'),
-        ('Dm7add5/A', -5, 'A'),
+        ('Dm7add4/A', -5, 'A'),
         ('Gmaj', 12, 'G')])
 def test_chord_root_transpose(key, value, new_key):
     new_chord = chords.Chord(key)
@@ -205,7 +205,7 @@ def test_chord_root_transpose(key, value, new_key):
 @pytest.mark.parametrize(
     "key, value, new_key", [
         ('C/E', 3, 'F\U0001D12A'),
-        ('Dm7add5/A', -5, 'E')])
+        ('Dm7add4/A', -5, 'E')])
 def test_chord_bass_transpose(key, value, new_key):
     new_chord = chords.Chord(key)
     new_chord.transpose(value)

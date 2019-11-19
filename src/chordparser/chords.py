@@ -164,6 +164,7 @@ class Chord:
         """Build notes attribute from other and bass attributes."""
         self._parse_other()
         self._parse_bass()
+        self.notes = tuple(self.notes)
         return
 
     def _parse_other(self):

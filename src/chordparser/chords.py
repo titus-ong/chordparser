@@ -92,6 +92,7 @@ class Chord:
             "half-diminished": '\u00d8',
             "dominant": 'dom',
             "major7": 'maj',
+            "minor7": 'm',
             }
         if not self.rgx.group(3) and self.rgx.group(1).isupper():
             if re.match('13|11|9|7', self.rgx.group(10)):
@@ -118,14 +119,16 @@ class Chord:
         else:
             raise SyntaxError("Quality could not be parsed")
         # Account for major7
-        quality = self._parse_maj7(quality)
+        quality = self._parse_7(quality)
         return quality, quality_short[quality]
 
-    def _parse_maj7(self, quality):
-        """Include 7 if major seventh chord."""
+    def _parse_7(self, quality):
+        """Include 7 if seventh chord."""
         if not self.other:
             string = ''
         elif self.rgx.group(4) and re.match('13|11|9|7', self.other):
+            string = '7'
+        elif quality == 'minor' and re.match('13|11|9|7', self.other):
             string = '7'
         else:
             string = ''
@@ -141,6 +144,7 @@ class Chord:
             'half-diminished': ("minor", -1, 0),
             'dominant': ("major", 0, -1),
             'major7': ("major", 0, 0),
+            'minor7': ("minor", 0, 0),
         }
         info = base_quality[self.quality]
         self._key = Key(self.root, info[0])

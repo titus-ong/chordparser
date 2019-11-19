@@ -236,8 +236,9 @@ class Chord:
         # Check if bass is already part of chord
         for each in self.notes:
             if self.bass_note == each:
-                self.notes.pop(each)
-        self.notes.insert(0, self.bass_note)
+                self.notes.remove(each)
+        if self.bass_note:
+            self.notes.insert(0, self.bass_note)
         return
 
     def transpose(self, value: int = 0, use_flats: bool = False):

@@ -191,7 +191,7 @@ class Chord:
     def _parse_power_chord(self, regex):
         """Remove the third."""
         self.notes.pop(1)
-        self._string = self._string[len(regex.groups())::].strip()
+        self._string = self._string[1::].strip()
 
     def _parse_ext_chord(self, regex):
         """Extend the chord."""

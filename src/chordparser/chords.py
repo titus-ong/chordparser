@@ -234,7 +234,7 @@ class Chord:
     def _parse_bass(self):
         """Modify notes to put bass note in front."""
         # Check if bass is already part of chord
-        for each in self.notes:
+        for each in self.base_chord:  # NOT notes! e.g. Cadd6/A has 2 As
             if self.bass_note == each:
                 self.notes.remove(each)
         if self.bass_note:

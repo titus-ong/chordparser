@@ -36,6 +36,7 @@ class Chord:
     _extended_str = f"({_symbol_pattern}{{0,1}}(13|11|9))"
     _altered_5 = f"({_symbol_pattern}(5))"
     _added = "(add(13|11|9|2|4|6))"
+    _part_added = "((2|4|6))"
     _suspended = "(sus(2|4){0,1})"
     _symbols = {
         '\u266D': -1, '\U0001D12B': -2,
@@ -190,6 +191,10 @@ class Chord:
                 self._parse_alt5_chord(regex)
                 decode += 1
             regex = re.match(Chord._added, self._string)
+            if regex:
+                self._parse_add_chord(regex)
+                decode += 1
+            regex = re.match(Chord._part_added, self._string)
             if regex:
                 self._parse_add_chord(regex)
                 decode += 1

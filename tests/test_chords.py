@@ -89,6 +89,90 @@ def test_chord_quality_short(name, quality):
 
 @pytest.mark.parametrize(
     "name, chord", [
+        ("C5", (
+            Note('C'), Note('G'),
+            )),
+        ("Em5", (
+            Note('E'), Note('B'),
+            )),
+        ])
+def test_chord_power_chord(name, chord):
+    new_chord = chords.Chord(name)
+    assert new_chord.notes == chord
+
+
+@pytest.mark.parametrize(
+    "name, chord", [
+        ("C13", (
+            Note('C'), Note('E'), Note('G'), Note('Bb'),
+            Note('D'), Note('F'), Note('A'),
+            )),
+        ("Em11", (
+            Note('E'), Note('G'), Note('B'),
+            Note('D'), Note('F'), Note('A'),
+            )),
+        ("F9", (
+            Note('F'), Note('A'), Note('C'),
+            Note('E\u266D'), Note('G'),
+            )),
+        ])
+def test_chord_ext_chord(name, chord):
+    new_chord = chords.Chord(name)
+    assert new_chord.notes == chord
+
+
+@pytest.mark.parametrize(
+    "name, chord", [
+        ("CMb5", (
+            Note('C'), Note('E'), Note('Gb'),
+            )),
+        ("Em#5", (
+            Note('E'), Note('G'), Note('B#'),
+            )),
+        ("F7bb5", (
+            Note('F'), Note('A'), Note('Cbb'),
+            Note('E\u266D'),
+            )),
+        ("Gmaj7##5", (
+            Note('G'), Note('B'), Note('D##'),
+            Note('F\u266F'),
+            )),
+        ])
+def test_chord_alt5_chord(name, chord):
+    new_chord = chords.Chord(name)
+    assert new_chord.notes == chord
+
+
+@pytest.mark.parametrize(
+    "name, chord", [
+        ("CMadd13", (
+            Note('C'), Note('E'), Note('G'), Note('A'),
+            )),
+        ("Emadd2add4add9", (
+            Note('E'), Note('F#'), Note('G'), Note('A'), Note('B'),
+            )),
+        ])
+def test_chord_add_chord(name, chord):
+    new_chord = chords.Chord(name)
+    assert new_chord.notes == chord
+
+
+@pytest.mark.parametrize(
+    "name, chord", [
+        ("CMsus2", (
+            Note('C'), Note('D'), Note('G'),
+            )),
+        ("Emsus4", (
+            Note('E'), Note('A'), Note('B'),
+            )),
+        ])
+def test_chord_sus_chord(name, chord):
+    new_chord = chords.Chord(name)
+    assert new_chord.notes == chord
+
+
+@pytest.mark.parametrize(
+    "name, chord", [
         ("C", "C chord"), ("C#7", "C\u266fdom7 chord"),
         ("DbM7", "D\u266dmaj7 chord"), ("D-add9", "Dmadd9 chord"),
         ("c#6/E", "C\u266fm6/E chord"),

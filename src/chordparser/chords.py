@@ -33,10 +33,10 @@ class Chord:
         f"{_halfdim_pattern}|{_dom_pattern}){{0,1}}(.*)"
         )
     _power_chord = "5"
-    _extended_str = f"{_symbol_pattern}{{0,1}}(13|11|9)"
-    _altered_5 = f"{_symbol_pattern}(5)"
-    _added = "add(13|11|9|2|4|6)"
-    _suspended = "sus(2|4){0,1}"
+    _extended_str = f"({_symbol_pattern}{{0,1}}(13|11|9))"
+    _altered_5 = f"({_symbol_pattern}(5))"
+    _added = "(add(13|11|9|2|4|6))"
+    _suspended = "(sus(2|4){0,1})"
     _symbols = {
         '\u266D': -1, '\U0001D12B': -2,
         '\u266F': +1, '\U0001D12A': +2,
@@ -195,28 +195,28 @@ class Chord:
 
     def _parse_ext_chord(self, regex):
         """Extend the chord."""
-        symbol = regex.group(1)
-        interval = int(regex.group(2))
+        symbol = regex.group(2)
+        interval = int(regex.group(3))
         extend = []
         while interval > 7:
             extend.insert(0, self._scale.notes[interval - 1])
             interval -= 2
         extend[-1].shift(Chord._symbols[symbol])
         self.notes += extend
-        self._string = self._string[len(regex.groups())::].strip()
+        self._string = self._string[len(regex.group(1))::].strip()
 
     def _parse_alt5_chord(self, regex):
         """Alter the fifth."""
-        symbol = regex.group(1)
+        symbol = regex.group(2)
         self.notes[2].shift(Chord._symbols[symbol])
-        self._string = self._string[len(regex.groups())::].strip()
+        self._string = self._string[len(regex.group(1))::].strip()
 
     def _parse_add_chord(self, regex):
         """Add note in correct position."""
         position = {
             '2': -1, '4': 0, '6': 1,
         }
-        interval = regex.group(1)
+        interval = regex.group(2)
         idx = int(interval) - 1
         note = self._scale.notes[idx]
         # Position added note based on the fifth
@@ -228,14 +228,14 @@ class Chord:
         else:
             # Because added note > 7th
             self.notes.append(note)
-        self._string = self._string[len(regex.groups())+3::].strip()
+        self._string = self._string[len(regex.group(1))::].strip()
 
     def _parse_sus_chord(self, regex):
         """Replace third with suspended note."""
-        idx = int(regex.group(1)) - 1
+        idx = int(regex.group(2)) - 1
         note = self._scale.notes[idx]
         self.notes[1] = note
-        self._string = self._string[len(regex.groups())+3::].strip()
+        self._string = self._string[len(regex.group(1))::].strip()
 
     def _parse_bass(self):
         """Modify notes to put bass note in front."""
@@ -254,12 +254,10 @@ class Chord:
         self.root.transpose(value, use_flats=use_flats)
         if self.bass_note:
             self.bass_note.transpose(value, use_flats=use_flats)
-            print(self.bass_note, self.bass_note.num_value())
             # Make sure bass note is in the correct key e.g. D#/F## not D#/G
             self._key.root = self.root
             self._scale.key = self._key
             for each in self._scale.notes:
-                print(each, each.num_value())
                 if self.bass_note.num_value() == each.num_value():
                     self.bass_note = each
         # for each in self.notes:

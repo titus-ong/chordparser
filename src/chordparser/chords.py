@@ -79,7 +79,7 @@ class Chord:
             bass_note = Note(regex.group(1) + self._xstr(regex.group(2)))
         else:
             bass_note = None
-        other = self.rgx.group(10).split("/")[0]
+        other = self.rgx.group(10).split("/")[0] or None
         return other, bass_note
 
     def _parse_quality(self):

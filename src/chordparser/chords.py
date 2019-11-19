@@ -214,13 +214,19 @@ class Chord:
     def _parse_add_chord(self, regex):
         """Add note in correct position."""
         position = {
-            '2': 1, '4': 2, '6': 3,
+            '2': -1, '4': 0, '6': 1,
         }
-        idx = int(regex.group(1)) - 1
+        interval = regex.group(1)
+        idx = int(interval) - 1
         note = self._scale.notes[idx]
-        if regex.group(1) in position.keys():
-            self.notes.insert(position[regex.group(1)], note)
+        # Position added note based on the fifth
+        fifth = self.base_chord[2].letter
+        fifth_note = next(x for x in self.notes if (x.letter == fifth))
+        fifth_pos = self.notes.index(fifth_note)
+        if interval in position.keys():
+            self.notes.insert(fifth_pos + position[interval], note)
         else:
+            # Because added note > 7th
             self.notes.append(note)
         self._string = self._string[len(regex.groups())+3::].strip()
 

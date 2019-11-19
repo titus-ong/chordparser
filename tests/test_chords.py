@@ -145,7 +145,7 @@ def test_chord_alt5_chord(name, chord):
 
 @pytest.mark.parametrize(
     "name, chord", [
-        ("CMadd13", (
+        ("Cadd13", (
             Note('C'), Note('E'), Note('G'), Note('A'),
             )),
         ("Emadd2add4add9", (

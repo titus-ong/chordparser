@@ -94,7 +94,7 @@ class Chord:
             "major7": 'maj',
             }
         if not self.rgx.group(3) and self.rgx.group(1).isupper():
-            if re.match('7', self.rgx.group(10)):
+            if re.match('13|11|9|7', self.rgx.group(10)):
                 # E.g. C7
                 quality = 'dominant'
             else:

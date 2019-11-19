@@ -199,16 +199,16 @@ class Chord:
         interval = int(regex.group(2))
         extend = []
         while interval > 7:
-            extend.insert(0, self._scale.notes(interval - 1))
+            extend.insert(0, self._scale.notes[interval - 1])
             interval -= 2
-        extend[-1].shift(Chord._symbol[symbol])
+        extend[-1].shift(Chord._symbols[symbol])
         self.notes += extend
         self._string = self._string[len(regex.groups())::].strip()
 
     def _parse_alt5_chord(self, regex):
         """Alter the fifth."""
         symbol = regex.group(1)
-        self.notes[2].shift(Chord._symbol[symbol])
+        self.notes[2].shift(Chord._symbols[symbol])
         self._string = self._string[len(regex.groups())::].strip()
 
     def _parse_add_chord(self, regex):

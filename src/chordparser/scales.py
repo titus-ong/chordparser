@@ -69,7 +69,6 @@ class Scale:
     def _refresh(self):
         """Re-create the scale."""
         self.notes = self._get_notes()
-        self.diatonic_chords = self._get_diatonic()
 
     @property
     def notes(self):
@@ -140,13 +139,6 @@ class Scale:
             new_note.shift(total_increment)
             note_list.append(new_note)
         return tuple(note_list)
-
-    def _get_diatonic(self):
-        """Get tuple array of diatonic chords."""
-        chords = []
-        for i in range(7):
-            chords.append((self.notes[i], self.notes[i+2], self.notes[i+4]))
-        return tuple(chords)
 
     def transpose(self, value: int = 0, use_flats: bool = False):
         """Transpose key of the scale."""

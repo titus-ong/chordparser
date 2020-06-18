@@ -138,18 +138,18 @@ def test_scale_transpose_flats(key, value, new_key):
     assert new_scale.key == notes.Key(new_key)
 
 
-@pytest.mark.parametrize(
-    "degree, chord", [
-        (0, (notes.Note('C'), notes.Note('E'), notes.Note('G'))),
-        (1, (notes.Note('D'), notes.Note('F'), notes.Note('A'))),
-        (2, (notes.Note('E'), notes.Note('G'), notes.Note('B'))),
-        (3, (notes.Note('F'), notes.Note('A'), notes.Note('C'))),
-        (4, (notes.Note('G'), notes.Note('B'), notes.Note('D'))),
-        (5, (notes.Note('A'), notes.Note('C'), notes.Note('E'))),
-        (6, (notes.Note('B'), notes.Note('D'), notes.Note('F'))),
-        ]
-    )
-def test_scale_diatonic_chords(degree, chord):
-    nkey = notes.Key('C')
-    new_scale = scales.Scale(nkey)
-    assert new_scale.diatonic_chords[degree] == chord
+# @pytest.mark.parametrize(
+#     "degree, chord", [
+#         (0, (notes.Note('C'), notes.Note('E'), notes.Note('G'))),
+#         (1, (notes.Note('D'), notes.Note('F'), notes.Note('A'))),
+#         (2, (notes.Note('E'), notes.Note('G'), notes.Note('B'))),
+#         (3, (notes.Note('F'), notes.Note('A'), notes.Note('C'))),
+#         (4, (notes.Note('G'), notes.Note('B'), notes.Note('D'))),
+#         (5, (notes.Note('A'), notes.Note('C'), notes.Note('E'))),
+#         (6, (notes.Note('B'), notes.Note('D'), notes.Note('F'))),
+#         ]
+#     )
+# def test_scale_diatonic_chords(degree, chord):
+#     nkey = notes.Key('C')
+#     new_scale = scales.Scale(nkey)
+#     assert new_scale.diatonic_chords[degree] == chord

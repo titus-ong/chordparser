@@ -127,7 +127,7 @@ def test_note_equality(note):
 
 
 @pytest.mark.parametrize(
-    "note", ['CA', notes.Note('D'), True, 10])
+    "note", ['CA', notes.Note('D'), True, 10, 'B#'])
 def test_note_inequality(note):
     new_note = notes.Note('C')
     assert new_note != note

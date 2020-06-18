@@ -63,7 +63,8 @@ class Scale:
                 self._key = Key(value)
             except TypeError:
                 raise TypeError("Only Keys, Notes and strings are accepted")
-        self._key = value
+        else:
+            self._key = value
         self._refresh()
 
     def _refresh(self):

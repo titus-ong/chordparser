@@ -47,14 +47,58 @@ class Chord:
         'sharp': +1, 'doublesharp': +2,
         None: 0,
         }
+    _quality_intervals = {
+        (4, 3): 'major',
+        (3, 4): 'minor',
+        (3, 3): 'diminished',
+        (4, 4): 'augmented',
+    }
+    _quality_short = {
+        "major": '',
+        "minor": 'm',
+        "diminished": 'dim',
+        "augmented": 'aug',
+        "half-diminished": '\u00d8',
+        "dominant": 'dom',
+        "major7": 'maj',
+        "minor7": 'm',
+        }
 
-    def __init__(self, value):
-        if not isinstance(value, str):
-            raise TypeError("Only strings are accepted")
-        self.rgx = re.match(Chord._pattern, value, re.UNICODE)
-        if not self.rgx:
-            raise ValueError("Chord could not be recognised")
-        self._parse_rgx()
+    def __init__(self, value: Union[str, Scale, Key], degree: Union[int, None] = None):
+        if isinstance(value, str):
+            self.rgx = re.match(Chord._pattern, value, re.UNICODE)
+            if not self.rgx:
+                raise ValueError("Chord could not be recognised")
+            self._parse_rgx()
+        elif isinstance(value, Scale) or isinstance (value, Key):
+            if degree not in {1, 2, 3, 4, 5, 6, 7}:
+                raise ValueError("Scale degree must be between 1 and 7")
+            self._parse_diatonic(value, degree)
+        else:
+            raise TypeError("Only strings, keys or scales are accepted")
+
+    def _parse_diatonic(self, value: Union[Key, Scale], degree):
+        if isinstance(value, Key):
+            self._key = value
+            self._scale = Scale(self._key)
+        else:
+            self._scale = value
+            self._key = value.key
+        self.root = self._scale.notes[degree-1]
+        self.bass_note = None
+        self.other = None
+        self.base_chord = (
+            self._scale.notes[degree-1],
+            self._scale.notes[degree+1],
+            self._scale.notes[degree+3],
+            )
+        interval = (
+            (Note.num_value(self.base_chord[1]) - Note.num_value(self.base_chord[0])) % 12,
+            (Note.num_value(self.base_chord[2]) - Note.num_value(self.base_chord[1])) % 12,
+            )
+        self.quality = self._quality_intervals[interval]
+        self.quality_short = self._quality_short[self.quality]
+
 
     def _parse_rgx(self):
         """Parse chord notation regex."""
@@ -85,16 +129,6 @@ class Chord:
 
     def _parse_quality(self):
         """Return chord quality."""
-        quality_short = {
-            "major": '',
-            "minor": 'm',
-            "diminished": 'dim',
-            "augmented": 'aug',
-            "half-diminished": '\u00d8',
-            "dominant": 'dom',
-            "major7": 'maj',
-            "minor7": 'm',
-            }
         if not self.rgx.group(3) and self.rgx.group(1).isupper():
             if re.match('13|11|9|7', self.rgx.group(10)):
                 # E.g. C7
@@ -121,7 +155,7 @@ class Chord:
             raise SyntaxError("Quality could not be parsed")
         # Account for major7
         quality = self._parse_7(quality)
-        return quality, quality_short[quality]
+        return quality, self._quality_short[quality]
 
     def _parse_7(self, quality):
         """Include 7 if seventh chord."""

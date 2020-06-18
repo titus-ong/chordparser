@@ -1,5 +1,6 @@
 import chordparser.chords as chords
-from chordparser.notes import Note
+from chordparser.notes import Note, Key
+from chordparser.scales import Scale
 import pytest
 
 
@@ -15,6 +16,59 @@ def test_chord_typeerror(value):
 def test_chord_valueerror(value):
     with pytest.raises(ValueError):
         chords.Chord(value)
+
+
+@pytest.mark.parametrize(
+    "value, degree, root", [
+        (Key('C'), 6, Note('A')),
+        ]
+    )
+def test_chord_key_input(value, degree, root):
+    new_chord = chords.Chord(value, degree)
+    assert new_chord.root == root
+
+
+@pytest.mark.parametrize(
+    "value, degree, root", [
+        (Scale('C'), 6, Note('A')),
+        ]
+    )
+def test_chord_scale_input(value, degree, root):
+    new_chord = chords.Chord(value, degree)
+    assert new_chord.root == root
+
+
+@pytest.mark.parametrize(
+    "value, degree", [
+        (Scale('C'), 8),
+        (Scale('C'), 0),
+        (Scale('C'), None),
+        ]
+    )
+def test_chord_invalid_degree(value, degree):
+    with pytest.raises(ValueError):
+        new_chord = chords.Chord(value, degree)
+
+
+@pytest.mark.parametrize(
+    "value, degree, base_chord", [
+        (Key('C'), 6, (Note('A'), Note('C'), Note('E'))),
+        ]
+    )
+def test_chord_key_base_chord(value, degree, base_chord):
+    new_chord = chords.Chord(value, degree)
+    assert new_chord.base_chord == base_chord
+
+
+@pytest.mark.parametrize(
+    "value, degree, quality", [
+        (Key('C'), 6, "minor"),
+        ]
+    )
+def test_chord_key_quality(value, degree, quality):
+    new_chord = chords.Chord(value, degree)
+    assert new_chord.quality == quality
+
 
 
 @pytest.mark.parametrize(

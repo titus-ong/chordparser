@@ -78,7 +78,7 @@ class Scale:
 
     @notes.setter
     def notes(self, value):
-        """Notes setter - check if notes are valid."""
+        """Notes setter (e.g. when using non-heptatonic scale) - check if notes are valid."""
         notelist = []
         for note in value:
             if isinstance(note, Note):

@@ -9,9 +9,9 @@ class Note:
     Arguments:
     value -- the Note value (str)
 
-    The Note class consists of notation a-g or A-G, with optional accidental symbols. The symbols that can be used are b (flat), bb (doubleflat), # (sharp), ## (doublesharp) and their respective unicode characters.
+    The Note class consists of notation a-g or A-G, with optional unicode accidental symbols \u266d, \u266f, \U0001D12B, or \U0001D12A.
 
-    Notes can have accidentals set using the 'accidental' method, and can be shifted by semitones using the 'shift' method. Notes also have 'letter', 'symbol', and 'symbolvalue' methods to get their respective values.
+    Notes can have accidentals set using the 'accidental' method, and can be shifted by semitones using the 'shift' method. Notes also have 'letter', 'symbol', and 'symbolvalue' methods to get their respective values. Notes can be transposed using the 'transpose' method (flats can be toggled using the 'use_flats' kwarg).
     """
     _flat = '\u266d'
     _sharp = '\u266f'
@@ -24,13 +24,6 @@ class Note:
         +1: _sharp, +2: _doublesharp,
         0: '', None: 0,
         }
-    _symbol_converter = {
-        _flat: _flat, _doubleflat: _doubleflat,
-        _sharp: _sharp, _doublesharp: _doublesharp,
-        'b': _flat, 'bb': _doubleflat,
-        '#': _sharp, '##': _doublesharp,
-        None: '',
-    }
     _note_values = {
         ('C' + _doubleflat): 10,
         ('C' + _flat): 11,
@@ -79,27 +72,6 @@ class Note:
 
     def __init__(self, value):
         self.value = value
-
-    @property
-    def value(self):
-        """Value getter."""
-        return self._value
-
-    @value.setter
-    def value(self, value: str):
-        """Value setter - check if string is valid."""
-        if not isinstance(value, str):
-            raise TypeError("Only strings are accepted")
-        pattern = (
-            '^([a-gA-G])(\u266F|\u266D|\U0001D12B|\U0001D12A'
-            '|bb|##|b|#){0,1}$'
-            )
-        rgx = re.match(pattern, value, re.UNICODE)
-        if not rgx:
-            raise ValueError("Note is invalid")
-        letter_ = rgx.group(1).upper()
-        symbol_ = Note._symbol_converter.get(rgx.group(2))
-        self._value = letter_ + symbol_
 
     def accidental(self, value: int):
         """Change a note's accidental by specifying a value from -2(doubleflat) to 2(doublesharp)."""

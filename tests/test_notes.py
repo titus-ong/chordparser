@@ -1,38 +1,24 @@
-import chordparser.notes as notes
+from chordparser import notes
+from chordparser import notes_editor
 import pytest
 
 
-@pytest.mark.parametrize(
-    "note, expected", [
-        ('C', 'C'), ('D\u266F', 'D\u266F'), ('G\u266D', 'G\u266D'),
-        ('A\U0001D12B', 'A\U0001D12B'), ('B\U0001D12A', 'B\U0001D12A'),
-        ('F#', 'F\u266F'), ('Eb', 'E\u266d'),
-        ('Gbb', 'G\U0001D12B'), ('C##', 'C\U0001D12A'),
-        ])
-def test_note_creation_positive(note, expected):
-    new_note = notes.Note(note)
-    assert new_note.value == expected
-
-
-@pytest.mark.parametrize(
-    "note", [True, 1, len, [], ()])
-def test_note_creation_typeerror(note):
-    with pytest.raises(TypeError):
-        new_note = notes.Note(note)
-
-
-@pytest.mark.parametrize(
-    "note", ['CA', 'D\u266F\u266F', '\u266DG', '\U0001D12A', 'F###'])
-def test_note_creation_valueerror(note):
-    with pytest.raises(ValueError):
-        new_note = notes.Note(note)
+NE = notes_editor.NoteEditor()
 
 
 @pytest.mark.parametrize(
     "accidental", ['CA', 'D\u266F', 2.0])
-def test_note_accidental_negative(accidental):
-    new_note = notes.Note('C')
+def test_note_accidental_wrong_type(accidental):
+    new_note = NE.create_note('C')
     with pytest.raises(TypeError):
+        new_note.accidental(accidental)
+
+
+@pytest.mark.parametrize(
+    "accidental", [-3, 3])
+def test_note_accidental_wrong_value(accidental):
+    new_note = NE.create_note('C')
+    with pytest.raises(ValueError):
         new_note.accidental(accidental)
 
 
@@ -41,23 +27,23 @@ def test_note_accidental_negative(accidental):
         (-2, 'C\U0001D12B'), (-1, 'C\u266d'),
         (0, 'C'), (1, 'C\u266f'), (2, 'C\U0001D12A')])
 def test_note_accidental_positive(accidental, note):
-    new_note = notes.Note('C')
+    new_note = NE.create_note('C')
     new_note.accidental(accidental)
     assert new_note.value == note
 
 
 @pytest.mark.parametrize(
     "shift", ['CA', 'D\u266F', 2.0, len, [], ()])
-def test_note_shift_negative(shift):
-    new_note = notes.Note('C')
+def test_note_shift_wrong_type(shift):
+    new_note = NE.create_note('C')
     with pytest.raises(TypeError):
         new_note.shift(shift)
 
 
 @pytest.mark.parametrize(
     "shift", [300, -10, 3, -3])
-def test_note_shift_negative(shift):
-    new_note = notes.Note('C')
+def test_note_shift_wrong_value(shift):
+    new_note = NE.create_note('C')
     with pytest.raises(ValueError):
         new_note.shift(shift)
 
@@ -67,7 +53,7 @@ def test_note_shift_negative(shift):
         (-2, 'C\U0001D12B'), (-1, 'C\u266d'),
         (0, 'C'), (1, 'C\u266f'), (2, 'C\U0001D12A')])
 def test_note_shift_positive(shift, note):
-    new_note = notes.Note('C')
+    new_note = NE.create_note('C')
     new_note.shift(shift)
     assert new_note.value == note
 
@@ -77,25 +63,25 @@ def test_note_shift_positive(shift, note):
         ('C', 0), ('D\u266F', 3), ('G\u266D', 6),
         ('A\U0001D12B', 7), ('B\U0001D12A', 1)])
 def test_note_num_value(note, value):
-    new_note = notes.Note(note)
+    new_note = NE.create_note(note)
     assert new_note.num_value() == value
 
 
 @pytest.mark.parametrize(
     "note", ['C', 'D\u266F', 'G\u266D', 'A\U0001D12B', 'B\U0001D12A'])
 def test_note_letter(note):
-    new_note = notes.Note(note)
+    new_note = NE.create_note(note)
     assert new_note.letter() == note[0]
 
 
 @pytest.mark.parametrize(
     "note", ['C', 'D\u266F', 'G\u266D', 'A\U0001D12B', 'B\U0001D12A'])
-def test_note_letter(note):
-    new_note = notes.Note(note)
+def test_note_symbol(note):
+    new_note = NE.create_note(note)
     if len(note) > 1:
         symbol = note[1]
     else:
-        symbol = note[0]
+        symbol = None
     assert new_note.symbol() == symbol
 
 
@@ -103,8 +89,8 @@ def test_note_letter(note):
     "note, value", [
         ('C', 0), ('D\u266F', 1), ('G\u266D', -1),
         ('A\U0001D12B', -2), ('B\U0001D12A', 2)])
-def test_note_letter(note, value):
-    new_note = notes.Note(note)
+def test_note_value(note, value):
+    new_note = NE.create_note(note)
     if len(note) > 1:
         symbol = note[1]
     else:
@@ -115,21 +101,21 @@ def test_note_letter(note, value):
 @pytest.mark.parametrize(
     "note", ['C', 'D\u266F', 'G\u266D', 'A\U0001D12B', 'B\U0001D12A'])
 def test_note_creation_repr(note):
-    new_note = notes.Note(note)
+    new_note = NE.create_note(note)
     assert repr(new_note) == note
 
 
 @pytest.mark.parametrize(
     "note", ['C', notes.Note('C')])
 def test_note_equality(note):
-    new_note = notes.Note('C')
+    new_note = NE.create_note('C')
     assert new_note == note
 
 
 @pytest.mark.parametrize(
     "note", ['CA', notes.Note('D'), True, 10, 'B#'])
 def test_note_inequality(note):
-    new_note = notes.Note('C')
+    new_note = NE.create_note('C')
     assert new_note != note
 
 
@@ -137,7 +123,7 @@ def test_note_inequality(note):
     "note, value, new_note", [
         ('C', 2, 'D'), ('G\u266d', -5, 'C\u266f'), ('A\U0001D12A', 1, 'C')])
 def test_note_transpose_sharps(note, value, new_note):
-    nnote = notes.Note(note)
+    nnote = NE.create_note(note)
     nnote.transpose(value)
     assert nnote == new_note
 
@@ -146,7 +132,7 @@ def test_note_transpose_sharps(note, value, new_note):
     "note, value, new_note", [
         ('C', -2, 'B\u266d'), ('F\u266f', -5, 'D\u266d'), ('F', -2, 'E\u266d')])
 def test_root_transpose_flat(note, value, new_note):
-    nnote = notes.Note(note)
+    nnote = NE.create_note(note)
     nnote.transpose(value, use_flats=True)
     assert nnote == new_note
 
@@ -155,7 +141,7 @@ def test_root_transpose_flat(note, value, new_note):
     "value", [
         "H#", 10.0, "Z", len])
 def test_root_transpose_error(value):
-    nnote = notes.Note('C')
+    nnote = NE.create_note('C')
     with pytest.raises(TypeError):
         nnote.transpose(value)
 

@@ -1,7 +1,8 @@
 """
 Parse chord notation and return key and mode.
 """
-from .notes import Note, Key
+from .notes import Note
+from .keys import Key
 from .scales import Scale
 from typing import Union
 import re

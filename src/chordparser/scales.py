@@ -1,4 +1,5 @@
-from .notes import Note, Key
+from .notes import Note
+from .keys import Key
 from typing import Union
 import re
 

@@ -1,6 +1,11 @@
-import chordparser.scales as scales
-import chordparser.notes as notes
+from chordparser import scales
+from chordparser import keys_editor
+from chordparser import scales_editor
 import pytest
+
+
+KE = keys_editor.KeyEditor()
+SE = scales_editor.ScaleEditor()
 
 
 @pytest.mark.parametrize(
@@ -20,24 +25,9 @@ import pytest
          ]
     )
 def test_scale_modes(mode, submode, intervals):
-    nkey = notes.Key('D', mode=mode, submode=submode)
-    scale = scales.Scale(nkey)
+    nkey = KE.create_key('D', mode=mode, submode=submode)
+    scale = SE.create_scale(nkey)
     assert scale.scale_intervals == intervals
-
-
-@pytest.mark.parametrize(
-    "key", ["A", "C\u266f", "D\u266d", "B\U0001D12B", "F\U0001D12A"])
-def test_scale_keys(key):
-    nkey = notes.Key(key)
-    new_scale = scales.Scale(nkey)
-    assert new_scale.key == notes.Key(key)
-
-
-@pytest.mark.parametrize(
-    "key", [1, True, len])
-def test_scale_keys_typeerror(key):
-    with pytest.raises(TypeError):
-        scales.Scale(key)
 
 
 @pytest.mark.parametrize(
@@ -59,8 +49,8 @@ def test_scale_keys_typeerror(key):
         ]
     )
 def test_scale_note_order(key, note_order):
-    nkey = notes.Key(key)
-    scale = scales.Scale(nkey)
+    nkey = KE.create_key(key)
+    scale = SE.create_scale(nkey)
     assert scale._note_order == note_order
 
 
@@ -82,8 +72,8 @@ def test_scale_note_order(key, note_order):
             'C\u266d', 'D\u266d', 'E\u266d', 'F\u266d')),
         ])
 def test_scale_notes(key, mode, note):
-    nkey = notes.Key(key, mode=mode)
-    scale = scales.Scale(nkey)
+    nkey = KE.create_key(key, mode=mode)
+    scale = SE.create_scale(nkey)
     assert scale.notes == note
 
 
@@ -100,8 +90,8 @@ def test_scale_notes(key, mode, note):
             'C', 'D', 'E\u266d', 'F', 'G', 'A', 'B',)),
         ])
 def test_scale_submode_notes(key, mode, submode, note):
-    nkey = notes.Key(key, mode=mode, submode=submode)
-    scale = scales.Scale(nkey)
+    nkey = KE.create_key(key, mode=mode, submode=submode)
+    scale = SE.create_scale(nkey)
     assert scale.notes == note
 
 
@@ -109,8 +99,8 @@ def test_scale_submode_notes(key, mode, submode, note):
     "value", [
         "H#", 10.0, "Z", len])
 def test_scale_transpose_error(value):
-    nkey = notes.Key('C')
-    new_scale = scales.Scale(nkey)
+    nkey = KE.create_key('C')
+    new_scale = SE.create_scale(nkey)
     with pytest.raises(TypeError):
         new_scale.transpose(value)
 
@@ -121,10 +111,10 @@ def test_scale_transpose_error(value):
         ('D', -5, 'A'),
         ('G', 12, 'G')])
 def test_scale_transpose_sharps(key, value, new_key):
-    nkey = notes.Key(key)
-    new_scale = scales.Scale(nkey)
+    nkey = KE.create_key(key)
+    new_scale = SE.create_scale(nkey)
     new_scale.transpose(value)
-    assert new_scale.key == notes.Key(new_key)
+    assert new_scale.key == KE.create_key(new_key)
 
 
 @pytest.mark.parametrize(
@@ -132,24 +122,12 @@ def test_scale_transpose_sharps(key, value, new_key):
         ('C', 3, 'E\u266d'),
         ('D', -4, 'B\u266d')])
 def test_scale_transpose_flats(key, value, new_key):
-    nkey = notes.Key(key)
-    new_scale = scales.Scale(nkey)
+    nkey = KE.create_key(key)
+    new_scale = SE.create_scale(nkey)
     new_scale.transpose(value, use_flats=True)
-    assert new_scale.key == notes.Key(new_key)
+    assert new_scale.key == KE.create_key(new_key)
 
 
-# @pytest.mark.parametrize(
-#     "degree, chord", [
-#         (0, (notes.Note('C'), notes.Note('E'), notes.Note('G'))),
-#         (1, (notes.Note('D'), notes.Note('F'), notes.Note('A'))),
-#         (2, (notes.Note('E'), notes.Note('G'), notes.Note('B'))),
-#         (3, (notes.Note('F'), notes.Note('A'), notes.Note('C'))),
-#         (4, (notes.Note('G'), notes.Note('B'), notes.Note('D'))),
-#         (5, (notes.Note('A'), notes.Note('C'), notes.Note('E'))),
-#         (6, (notes.Note('B'), notes.Note('D'), notes.Note('F'))),
-#         ]
-#     )
-# def test_scale_diatonic_chords(degree, chord):
-#     nkey = notes.Key('C')
-#     new_scale = scales.Scale(nkey)
-#     assert new_scale.diatonic_chords[degree] == chord
+def test_scale_repr():
+    new_scale = SE.create_scale('C', 'minor', 'harmonic')
+    assert repr(new_scale) == "C harmonic minor scale"

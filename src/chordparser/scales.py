@@ -48,26 +48,10 @@ class Scale:
 
     def __init__(self, key: Key):
         self.key = key
+        self.build()
 
-    @property
-    def key(self):
-        """Key getter."""
-        return self._key
-
-    @key.setter
-    def key(self, value):
-        """Key setter - check if key is valid and re-create the scale."""
-        if not isinstance(value, Key):
-            try:
-                self._key = Key(value)
-            except TypeError:
-                raise TypeError("Only Keys, Notes and strings are accepted")
-        else:
-            self._key = value
-        self._refresh()
-
-    def _refresh(self):
-        """Re-create the scale."""
+    def build(self):
+        """Build the scale from its key."""
         self.notes = self._get_notes()
 
     def _get_notes(self):
@@ -129,6 +113,7 @@ class Scale:
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")
         self.key.transpose(value, use_flats=use_flats)
+        self.build()
         return self
 
     def __repr__(self):

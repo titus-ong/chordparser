@@ -11,11 +11,9 @@ class Scale:
     Arguments:
     key -- the key of the Scale (Key)
 
-    The Scale class accepts a Key and generates a 2-octave Note tuple in its 'notes' attribute, as well as diatonic chords with its 'diatonic_chords' attribute.
+    The Scale class accepts a Key and generates a 2-octave Note tuple in its 'notes' attribute.
 
     The Scale can be changed by setting its 'key' attribute, or by transposing it using the 'transpose' method.
-
-    The 'notes' attribute can also be set manually with a sequence (e.g. tuple).
     """
     _heptatonic_base = (2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1)
     _SCALES = {
@@ -71,22 +69,6 @@ class Scale:
     def _refresh(self):
         """Re-create the scale."""
         self.notes = self._get_notes()
-
-    @property
-    def notes(self):
-        """Notes getter."""
-        return self._notes
-
-    @notes.setter
-    def notes(self, value):
-        """Notes setter (e.g. when using non-heptatonic scale) - check if notes are valid."""
-        notelist = []
-        for note in value:
-            if isinstance(note, Note):
-                notelist.append(note)
-            else:
-                notelist.append(Note(note))
-        self._notes = tuple(notelist)
 
     def _get_notes(self):
         """Get notes in the scale."""

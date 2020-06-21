@@ -1,326 +1,289 @@
-"""
-Parse chord notation and return key and mode.
-"""
 from .notes import Note
+from .notes_editor import NoteEditor
 from .keys import Key
-from .scales import Scale
-from typing import Union
+from .scales_editor import ScaleEditor
+from typing import Union, List
 import re
+import copy
 
 
 class Chord:
     """
-    Chord class that is composed of a root, chord quality, base triad, and optionally a bass note and altered or added notes.
+    Chord class that is composed of a root note, chord quality, optional suspended and/or added notes, and an optional bass note.
 
     Arguments:
-    value -- the chord notation (str)
+    root -- root note of the chord
+    quality -- chord quality
 
-    The Chord class is built from the chord notation. It parses the notation and provides the 'root', 'quality' and 'base_chord' attributes for the root, chord quality and base chord respectively. The bass note and additional alterations to the chord can be accessed via the 'bass_note' and 'other' attributes.
+    Keyword arguments:
+    sus -- suspended notes
+    add -- added notes
+    bass -- bass_note
+    string -- original chord notation (str)
 
-    The Chord class can be transposed using the 'transpose' method. Its string form can also be altered using the 'format' method.
+    The Chord class accepts the chord components and builds a tuple of notes provided by the 'notes' method.
+
+    The Chord class can be transposed using the 'transpose' method.
     """
-    _note_pattern = '([a-gA-G])'
-    _symbol_pattern = '(\u266F|\u266D|\U0001D12B|\U0001D12A|bb|##|b|#)'
-    _major_pattern = '(Maj|Ma|M|maj|\u0394)'
-    _minor_pattern = '(min|m|-)'
-    _dim_pattern = '(dim|o|\u00B0)'
-    _aug_pattern = '(aug|\+)'
-    _halfdim_pattern = '(\u00f8|\u00d8)'
-    _dom_pattern = '(dom7|dom)'
-    _pattern = (
-        f"{_note_pattern}{_symbol_pattern}{{0,1}}"
-        f"({_major_pattern}|{_minor_pattern}|"
-        f"{_dim_pattern}|{_aug_pattern}|"
-        f"{_halfdim_pattern}|{_dom_pattern}){{0,1}}(.*)"
-        )
-    _power_chord = "5"
-    _extended_str = f"({_symbol_pattern}{{0,1}}(13|11|9))"
-    _altered_5 = f"({_symbol_pattern}(5))"
-    _added = "(add(13|11|9|2|4|6))"
-    _part_added = "((2|4|6))"
-    _suspended = "(sus(2|4){0,1})"
-    _symbols = {
-        '\u266D': -1, '\U0001D12B': -2,
-        '\u266F': +1, '\U0001D12A': +2,
-        'b': -1, 'bb': -2,
-        '#': +1, '##': +2,
-        'flat': -1, 'doubleflat': -2,
-        'sharp': +1, 'doublesharp': +2,
-        None: 0,
-        }
-    _quality_intervals = {
-        (4, 3): 'major',
-        (3, 4): 'minor',
-        (3, 3): 'diminished',
-        (4, 4): 'augmented',
-    }
-    _quality_short = {
-        "major": '',
-        "minor": 'm',
-        "diminished": 'dim',
-        "augmented": 'aug',
-        "half-diminished": '\u00d8',
-        "dominant": 'dom',
-        "major7": 'maj',
-        "minor7": 'm',
-        }
+    SE = ScaleEditor()
+    NE = NoteEditor()
 
-    def __init__(self, value: Union[str, Scale, Key], degree: Union[int, None] = None):
-        if isinstance(value, str):
-            self.rgx = re.match(Chord._pattern, value, re.UNICODE)
-            if not self.rgx:
-                raise ValueError("Chord could not be recognised")
-            self._parse_rgx()
-        elif isinstance(value, Scale) or isinstance (value, Key):
-            if degree not in {1, 2, 3, 4, 5, 6, 7}:
-                raise ValueError("Scale degree must be between 1 and 7")
-            self._parse_diatonic(value, degree)
-        else:
-            raise TypeError("Only strings, keys or scales are accepted")
+    def __init__(
+            self,
+            root: Note,
+            quality: str,
+            sus: Union[int, None] = None,
+            add: Union[List[str], None] = None,
+            bass: Union[Note, str, None] = None,
+            string: str = None,
+    ):
+        self.root = root
+        self.quality = quality
+        self.sus = sus
+        self.add = add
+        self.bass = bass
+        self.string = string
+        self._first_build()
 
-    def _parse_diatonic(self, value: Union[Key, Scale], degree):
-        if isinstance(value, Key):
-            self._key = value
-            self._scale = Scale(self._key)
-        else:
-            self._scale = value
-            self._key = value.key
-        self.root = self._scale.notes[degree-1]
-        self.bass_note = None
-        self.other = None
-        self.base_chord = (
-            self._scale.notes[degree-1],
-            self._scale.notes[degree+1],
-            self._scale.notes[degree+3],
-            )
-        interval = (
-            (Note.num_value(self.base_chord[1]) - Note.num_value(self.base_chord[0])) % 12,
-            (Note.num_value(self.base_chord[2]) - Note.num_value(self.base_chord[1])) % 12,
-            )
-        self.quality = self._quality_intervals[interval]
-        self.quality_short = self._quality_short[self.quality]
+    def _first_build(self):
+        self._build_no_bass()
+        if self.bass:
+            self._build_bass()
+        self._build_notation()
 
+    def _build_no_bass(self):
+        self._build_base_triad()
+        self._build_quality()
+        self._build_base_chord()
+        if self.sus:
+            self._build_sus()
+        if self.add:
+            self._build_add()
 
-    def _parse_rgx(self):
-        """Parse chord notation regex."""
-        self.root = self._parse_root()
-        self.other, self.bass_note = self._split_other_bass()
-        self.quality, self.quality_short = self._parse_quality()
-        self.base_chord = self._parse_base_chord()
-        self._parse_other_bass()
-
-    def _parse_root(self):
-        """Return chord root."""
-        note = self.rgx.group(1)
-        accidental = self.rgx.group(2) or ''
-        return Note(note + accidental)
-
-    def _split_other_bass(self):
-        """Return other alterations and bass note. Return None, None if they do not exist."""
-        if not self.rgx.group(10):
-            return None, None
-        pattern = f'/{Chord._note_pattern}{Chord._symbol_pattern}''{0,1}$'
-        regex = re.search(pattern, self.rgx.group(10), re.UNICODE)
-        if regex:
-            bass_note = Note(regex.group(1) + self._xstr(regex.group(2)))
-        else:
-            bass_note = None
-        other = self.rgx.group(10).split("/")[0] or None
-        return other, bass_note
-
-    def _parse_quality(self):
-        """Return chord quality."""
-        if not self.rgx.group(3) and self.rgx.group(1).isupper():
-            if re.match('13|11|9|7', self.rgx.group(10)):
-                # E.g. C7
-                quality = 'dominant'
-            else:
-                # E.g. C
-                quality = 'major'
-        elif not self.rgx.group(3):
-            # lowercase root
-            quality = 'minor'
-        elif self.rgx.group(4):
-            quality = 'major'
-        elif self.rgx.group(5):
-            quality = 'minor'
-        elif self.rgx.group(6):
-            quality = 'diminished'
-        elif self.rgx.group(7):
-            quality = 'augmented'
-        elif self.rgx.group(8):
-            quality = 'half-diminished'
-        elif self.rgx.group(9):
-            quality = 'dominant'
-        else:
-            raise SyntaxError("Quality could not be parsed")
-        # Account for major7
-        quality = self._parse_7(quality)
-        return quality, self._quality_short[quality]
-
-    def _parse_7(self, quality):
-        """Include 7 if seventh chord."""
-        if not self.other:
-            string = ''
-        elif self.rgx.group(4) and re.match('13|11|9|7', self.other):
-            string = '7'
-        elif quality == 'minor' and re.match('13|11|9|7', self.other):
-            string = '7'
-        else:
-            string = ''
-        return (quality + string)
-
-    def _parse_base_chord(self):
-        """Return base triad."""
-        base_quality = {
+    def _build_base_triad(self):
+        triad_quality = {
             'major': ("major", 0),
             'minor': ("minor", 0),
-            'diminished': ("minor", -1, -1),
+            'diminished': ("minor", -1),
             'augmented': ("major", 1),
-            'half-diminished': ("minor", -1, 0),
-            'dominant': ("major", 0, -1),
-            'major7': ("major", 0, 0),
-            'minor7': ("minor", 0, 0),
+            'dominant': ("major", 0),
+            'minor-major': ("minor", 0),
+            'half-diminished': ("minor", -1),
+            'augmented-major': ("major", 1),
         }
-        info = base_quality[self.quality]
-        self._key = Key(self.root, info[0])
-        self._scale = Scale(self._key)
-        base_chord = [
+        quality = self.quality.split()[0]
+        if quality == 'power':
+            self.base_triad = None
+            self._scale = self.SE.create_scale(self.root)
+            return
+        (triad_q, adjust) = triad_quality[quality]
+        self._scale = self.SE.create_scale(self.root, triad_q)
+        last_note = copy.copy(self._scale.notes[4])
+        self.base_triad = (
                 self._scale.notes[0],
                 self._scale.notes[2],
-                self._scale.notes[4].shift(info[1]),
-                ]
-        if len(info) == 3:
-            base_chord.append(
-                self._scale.notes[6].shift(info[2]),
+                last_note.shift(adjust),
                 )
-        return tuple(base_chord)
-
-    def _parse_other_bass(self):
-        """Build notes attribute from other and bass attributes."""
-        self._parse_other()
-        self._parse_bass()
-        self.notes = tuple(self.notes)
         return
 
-    def _parse_other(self):
-        """Modify notes based on additional strings."""
-        self.notes = list(self.base_chord)
-        self._string = self.other
-        if self.other is None:
-            return
-        if self.other[0] == '7':  # 7th has already been parsed
-            self._string = self._string[1::].strip()
-        while self._string.strip():
-            decode = 0
-            regex = re.match(Chord._power_chord, self._string)
-            if regex:
-                self._parse_power_chord(regex)
-                decode += 1
-            regex = re.match(Chord._extended_str, self._string, re.UNICODE)
-            if regex:
-                self._parse_ext_chord(regex)
-                decode += 1
-            regex = re.match(Chord._altered_5, self._string, re.UNICODE)
-            if regex:
-                self._parse_alt5_chord(regex)
-                decode += 1
-            regex = re.match(Chord._added, self._string)
-            if regex:
-                self._parse_add_chord(regex)
-                decode += 1
-            regex = re.match(Chord._part_added, self._string)
-            if regex:
-                self._parse_add_chord(regex)
-                decode += 1
-            regex = re.match(Chord._suspended, self._string)
-            if regex:
-                self._parse_sus_chord(regex)
-                decode += 1
-            if decode == 0:
-                raise SyntaxError("Additional string could not be parsed")
-        return
-
-    def _parse_power_chord(self, regex):
-        """Remove the third."""
-        self.notes.pop(1)
-        self._string = self._string[1::].strip()
-
-    def _parse_ext_chord(self, regex):
-        """Extend the chord."""
-        symbol = regex.group(2)
-        interval = int(regex.group(3))
-        extend = []
-        while interval > 7:
-            extend.insert(0, self._scale.notes[interval - 1])
-            interval -= 2
-        extend[-1].shift(Chord._symbols[symbol])
-        self.notes += extend
-        self._string = self._string[len(regex.group(1))::].strip()
-
-    def _parse_alt5_chord(self, regex):
-        """Alter the fifth."""
-        symbol = regex.group(2)
-        self.notes[2].shift(Chord._symbols[symbol])
-        self._string = self._string[len(regex.group(1))::].strip()
-
-    def _parse_add_chord(self, regex):
-        """Add note in correct position."""
-        position = {
-            '2': -1, '4': 0, '6': 1,
+    def _build_quality(self):
+        intervals = {
+            'dominant': -1,
+            'major': 0,
+            'minor': 0,
+            'minor-major': 1,
+            'diminished': -1,
+            'half-diminished': 0,
+            'augmented': -1,
+            'augmented-major': 0,
         }
-        interval = regex.group(2)
-        idx = int(interval) - 1
-        note = self._scale.notes[idx]
-        # Position added note based on the fifth
-        fifth = self.base_chord[2].letter
-        fifth_note = next(x for x in self.notes if (x.letter == fifth))
-        fifth_pos = self.notes.index(fifth_note)
-        if interval in position.keys():
-            self.notes.insert(fifth_pos + position[interval], note)
+        q_list = self.quality.split()
+        if q_list[0] == 'power':
+            self.notes = [
+                self._scale.notes[0],
+                self._scale.notes[4],
+                ]
+            self.tones = [[None, 1], [None, 5]]
+            return
+        self.notes = list(self.base_triad)
+        self.tones = [[None, 1], [None, 3], [None, 5]]
+        if len(q_list) == 1:
+            return
+        self.notes.append(self._scale.notes[6].shift(intervals[q_list[0]]))
+        self.tones.append([None, 7])
+        if q_list[-1] == 'ninth':
+            self.notes.append(self._scale.notes[8])
+            self.tones.append([None, 9])
+        if q_list[-1] == 'eleventh':
+            self.notes += [
+                self._scale.notes[8],
+                self._scale.notes[10],
+                ]
+            self.tones += [[None, 9], [None, 11]]
+        if q_list[-1] == 'thirteenth':
+            self.notes += [
+                self._scale.notes[8],
+                self._scale.notes[10],
+                self._scale.notes[12],
+                ]
+            self.tones += [[None, 9], [None, 11], [None, 13]]
+        if q_list[1] == 'minor':
+            self.notes[-1].shift(-1)
+            self.tones[-1][0] = '\u266D'
+        return
+
+    def _build_base_chord(self):
+        self.base_chord = tuple(self.notes)
+        self.base_tones = tuple(self.tones)
+        return
+
+    def _build_sus(self):
+        if self.sus == 2:
+            self.notes[1] = self._scale.notes[1]
+            self.tones[1][1] -= 1
         else:
-            # Because added note > 7th
-            self.notes.append(note)
-        self._string = self._string[len(regex.group(1))::].strip()
+            self.notes[1] = self._scale.notes[3]
+            self.tones[1][1] += 1
+        return
 
-    def _parse_sus_chord(self, regex):
-        """Replace third with suspended note."""
-        idx = int(regex.group(2)) - 1
-        note = self._scale.notes[idx]
-        self.notes[1] = note
-        self._string = self._string[len(regex.group(1))::].strip()
+    def _build_add(self):
+        symbols = {
+            '\u266d': -1, '\U0001D12B': -2,
+            '\u266f': +1, '\U0001D12A': +2,
+            }
+        for each in self.add:
+            adjustment = 0
+            accidental = None
+            if each[0] in symbols.keys():
+                adjustment = symbols[each[0]]
+                accidental = each[0]
+                each = each[1:]
+            tone = int(each)
+            pos = max(self.tones.index(i) for i in self.tones if i[1] < tone)+1
+            self.tones.insert(pos, [accidental, tone])
+            self.notes.insert(pos, self._scale.notes[tone-1].shift(adjustment))
+        return
 
-    def _parse_bass(self):
-        """Modify notes to put bass note in front."""
-        # Check if bass is already part of chord
-        for each in self.base_chord:  # NOT notes! e.g. Cadd6/A has 2 As
-            if self.bass_note == each:
-                self.notes.remove(each)
-        if self.bass_note:
-            self.notes.insert(0, self.bass_note)
+    def _build_bass(self):
+        if isinstance(self.bass, Note):
+            self._build_bass_note()
+        else:
+            self._build_bass_str()
+
+    def _build_bass_note(self):
+        if self.bass in self.notes:
+            idx = self.notes.index(self.bass)
+            self.notes.pop(idx)
+            self.notes.insert(0, self.bass)
+            tone = self.tones.pop(idx)
+            self.tones.insert(0, tone)
+            return
+        self.notes.insert(0, self.bass)
+        degree = min(
+            self._scale.notes.index(x) for x in self._scale.notes if x.letter() == self.bass.letter()
+            )+1
+        interval = self.NE.get_interval(self._scale.notes[degree-1], self.bass)
+        symbols = {
+            -1: '\u266d', -2: '\U0001D12B',
+            +1: '\u266f', +2: '\U0001D12A',
+            0: None,
+            }
+        accidental = symbols[interval]
+        self.tones.insert(0, [accidental, degree])
+        return
+
+    def _build_bass_str(self):
+        # build from diatonic - inversion or degree?
+        # rmb to set self.bass
+        pass
+
+    def _build_notation(self):
+        q_dict = {
+            'power': ('5', ''),
+            'major': ('maj', ''),
+            'minor': ('m', ''),
+            'diminished': ('dim', ''),
+            'augmented': ('aug', ''),
+            'dominant': ('', ''),
+            'minor-major': ('minmaj', ''),
+            'half-diminished': ('m', '\u266D5'),
+            'augmented-major': ('maj', '\u266F5'),
+        }
+        ext_dict = {
+            '': '',
+            'seventh': '7',
+            'ninth': '9',
+            'eleventh': '11',
+            'thirteenth': '13',
+            'minor ninth': '\u266D9',
+            'minor eleventh': '\u266D11',
+            'minor thirteenth': '\u266D13',
+        }
+        if self.quality == 'major':
+            q_short = ''
+        else:
+            q_list = self.quality.split()
+            (first, last) = q_dict[q_list.pop(0)]
+            mid = ext_dict[' '.join(q_list)]
+            q_short = first+mid+last
+        if self.sus:
+            sus = 'sus'+str(self.sus)
+        else:
+            sus = ''
+        add = ''
+        if self.add:
+            for each in self.add:
+                if not each[0] in {'\u266d', '\U0001D12B', '\u266f', '\U0001D12A'}:
+                    add += 'add'
+                add += each
+        if self.bass:
+            bass = '/'+str(self.bass)
+        else:
+            bass = ''
+        self.notation = str(self.root)+q_short+sus+add+str(bass)
         return
 
     def transpose(self, value: int = 0, use_flats: bool = False):
         """Transpose chord."""
         if not isinstance(value, int):
-            raise TypeError("Only integers are accepted")
+            raise TypeError("Only integers are accepted for value")
+        if not isinstance(use_flats, bool):
+            raise TypeError("Only booleans are accepted for use_flats")
         self.root.transpose(value, use_flats=use_flats)
-        if self.bass_note:
-            self.bass_note.transpose(value, use_flats=use_flats)
-            # Make sure bass note is in the correct key e.g. D#/F## not D#/G
-            self._key.root = self.root
-            self._scale.key = self._key
-            for each in self._scale.notes:
-                if self.bass_note.num_value() == each.num_value():
-                    self.bass_note = each
-        # for each in self.notes:
-        #     each.transpose(value, use_flats=use_flats)
-        # transpose base_chord as well
+        bass_tone = self.tones[0]
+        self._transpose_build(bass_tone)
         return self
 
-    def format(self, options):
-        """Specify options to format string output."""
-        pass
+    def _transpose_build(self, bass_tone):
+        self._build_no_bass()
+        if self.bass:
+            self._build_bass_from_tone(bass_tone)
+        self._build_notation()
+
+    def _build_bass_from_tone(self, bass_tone):
+        symbols = {
+            '\u266d': -1, '\U0001D12B': -2,
+            '\u266f': +1, '\U0001D12A': +2,
+            }
+        if bass_tone in self.base_tones:
+            bass_note = self.base_chord[self.base_tones.index(bass_tone)]
+            if bass_tone in self.tones:
+                self.tones.remove(bass_tone)
+                self.notes.remove(bass_note)
+            self.tones.insert(0, bass_tone)
+            self.notes.insert(0, bass_note)
+        else:
+            self.tones.insert(0, bass_tone)
+            adjustment = symbols[bass_tone[0]]
+            bass_note = copy.copy(self._scale.notes[bass_tone[1]-1])
+            bass_note.shift(adjustment)
+        self.bass = bass_note
+        return
+
+
+    # def format(self, options):
+    #     """Specify options to format string output."""
+    #     pass
 
     def _xstr(self, value):
         # To print blank for None values
@@ -329,13 +292,4 @@ class Chord:
         return value
 
     def __repr__(self):
-        if self.bass_note:
-            return (
-                f'{self.root}{self.quality_short}{self._xstr(self.other)}'
-                f'/{self.bass_note} chord'
-                )
-        else:
-            return (
-                f'{self.root}{self.quality_short}{self._xstr(self.other)}'
-                f' chord'
-                )
+        return f'{self.notation} chord'

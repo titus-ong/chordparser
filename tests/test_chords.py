@@ -1,266 +1,149 @@
-import chordparser.chords as chords
-from chordparser.notes import Note, Key
-from chordparser.scales import Scale
+from chordparser.chords import Chord
+from chordparser import chords_editor
+from chordparser import scales_editor
+from chordparser import keys_editor
+from chordparser import notes_editor
 import pytest
 
 
-@pytest.mark.parametrize(
-    "value", [1, len, True, [], ()])
-def test_chord_typeerror(value):
-    with pytest.raises(TypeError):
-        chords.Chord(value)
+NE = notes_editor.NoteEditor()
+KE = keys_editor.KeyEditor()
+SE = scales_editor.ScaleEditor()
+CE = chords_editor.ChordEditor()
 
 
 @pytest.mark.parametrize(
-    "value", ["1", "H", "\u266fG"])
-def test_chord_valueerror(value):
-    with pytest.raises(ValueError):
-        chords.Chord(value)
+    "name, quality, chord", [
+        ("C", 'major', (NE.create_note('C'), NE.create_note('E'), NE.create_note('G'))),
+        ("C", 'diminished', (NE.create_note('C'), NE.create_note('Eb'), NE.create_note('Gb'))),
+        ])
+def test_base_triad(name, quality, chord):
+    c = Chord(name, quality)
+    assert c.base_triad == chord
 
 
 @pytest.mark.parametrize(
-    "value, degree, root", [
-        (Key('C'), 6, Note('A')),
+    "name, quality, q", [
+        ("C", 'major seventh', [NE.create_note('C'), NE.create_note('E'), NE.create_note('G'), NE.create_note('B')]),
+        ("C", 'diminished ninth', [NE.create_note('C'), NE.create_note('Eb'), NE.create_note('Gb'), NE.create_note('Bbb'), NE.create_note('D')]),
+        ("C", 'augmented-major minor eleventh', [NE.create_note('C'), NE.create_note('E'), NE.create_note('G#'), NE.create_note('B'), NE.create_note('D'), NE.create_note('Fb')]),
+        ])
+def test_base_notes(name, quality, q):
+    c = Chord(name, quality)
+    assert c.notes == q
+
+
+@pytest.mark.parametrize(
+    "name, quality, q", [
+        ("C", 'major seventh', ([[None, 1], [None, 3], [None, 5], [None, 7]])),
+        ("C", 'diminished ninth', ([[None, 1], [None, 3], [None, 5], [None, 7], [None, 9]])),
+        ("C", 'augmented-major minor eleventh', ([[None, 1], [None, 3], [None, 5], [None, 7], [None, 9], ['\u266D', 11]])),
+        ])
+def test_base_tones(name, quality, q):
+    c = Chord(name, quality)
+    assert c.tones == q
+
+
+@pytest.mark.parametrize(
+    "name, quality, sus, q", [
+        ("C", 'major seventh', 2, [NE.create_note('C'), NE.create_note('D'), NE.create_note('G'), NE.create_note('B')]),
+        ("C", 'diminished ninth', 4, [NE.create_note('C'), NE.create_note('F'), NE.create_note('Gb'), NE.create_note('Bbb'), NE.create_note('D')]),
+        ])
+def test_sus_notes(name, quality, sus, q):
+    c = Chord(name, quality, sus=sus)
+    assert c.notes == q
+
+
+@pytest.mark.parametrize(
+    "name, quality, sus, q", [
+        ("C", 'major seventh', 2, ([[None, 1], [None, 2], [None, 5], [None, 7]])),
+        ("C", 'diminished ninth', 4, ([[None, 1], [None, 4], [None, 5], [None, 7], [None, 9]])),
+        ])
+def test_sus_tones(name, quality, sus, q):
+    c = Chord(name, quality, sus=sus)
+    assert c.tones == q
+
+
+@pytest.mark.parametrize(
+    "name, quality, add, q", [
+        ("C", 'major seventh', ['2', '\u266D11'], [NE.create_note('C'), NE.create_note('D'), NE.create_note('E'), NE.create_note('G'), NE.create_note('B'), NE.create_note('F\u266D')]),
+        ("C", 'diminished', ['11'], [NE.create_note('C'), NE.create_note('Eb'), NE.create_note('Gb'), NE.create_note('F')]),
+        ])
+def test_add_notes(name, quality, add, q):
+    c = Chord(name, quality, add=add)
+    assert c.notes == q
+
+
+@pytest.mark.parametrize(
+    "name, quality, add, q", [
+        ("C", 'major seventh', ['2', '\u266D11'],  ([[None, 1], [None, 2], [None, 3], [None, 5], [None, 7], ['\u266D', 11]])),
+        ("C", 'diminished', ['11'], ([[None, 1], [None, 3], [None, 5], [None, 11]])),
+        ])
+def test_add_tones(name, quality, add, q):
+    c = Chord(name, quality, add=add)
+    assert c.tones == q
+
+
+@pytest.mark.parametrize(
+    "name, quality, bass, q", [
+        ("C", 'major seventh', NE.create_note('G'), [NE.create_note('G'), NE.create_note('C'), NE.create_note('E'), NE.create_note('B')]),
+        ("C", 'diminished', NE.create_note('G#'), [NE.create_note('G#'), NE.create_note('C'), NE.create_note('Eb'), NE.create_note('Gb')]),
+        ])
+def test_bass_notes(name, quality, bass, q):
+    c = Chord(name, quality, bass=bass)
+    assert c.notes == q
+
+
+@pytest.mark.parametrize(
+    "name, quality, bass, q", [
+        ("C", 'major seventh', NE.create_note('G'),  ([[None, 5], [None, 1], [None, 3], [None, 7]])),
+        ("C", 'diminished', NE.create_note('G#'), ([['\u266F', 5], [None, 1], [None, 3], [None, 5]])),
+        ])
+def test_bass_tones(name, quality, bass, q):
+    c = Chord(name, quality, bass=bass)
+    assert c.tones == q
+
+
+@pytest.mark.parametrize(
+    "string, notation", [
+        ("Cmajsus2add9/G", "Csus2add9/G chord"),
+        ("Cminmaj9susadd#9#13/G#", "Cminmaj9sus4\u266F9\u266F13/G\u266F chord"),
+        ("Caugmaj11", "Cmaj11\u266F5 chord"),
         ]
     )
-def test_chord_key_input(value, degree, root):
-    new_chord = chords.Chord(value, degree)
-    assert new_chord.root == root
+def test_notation(string, notation):
+    c = CE.create_chord(string)
+    assert repr(c) == notation
 
 
 @pytest.mark.parametrize(
-    "value, degree, root", [
-        (Scale('C'), 6, Note('A')),
-        ]
-    )
-def test_chord_scale_input(value, degree, root):
-    new_chord = chords.Chord(value, degree)
-    assert new_chord.root == root
-
-
-@pytest.mark.parametrize(
-    "value, degree", [
-        (Scale('C'), 8),
-        (Scale('C'), 0),
-        (Scale('C'), None),
-        ]
-    )
-def test_chord_invalid_degree(value, degree):
-    with pytest.raises(ValueError):
-        new_chord = chords.Chord(value, degree)
-
-
-@pytest.mark.parametrize(
-    "value, degree, base_chord", [
-        (Key('C'), 6, (Note('A'), Note('C'), Note('E'))),
-        ]
-    )
-def test_chord_key_base_chord(value, degree, base_chord):
-    new_chord = chords.Chord(value, degree)
-    assert new_chord.base_chord == base_chord
-
-
-@pytest.mark.parametrize(
-    "value, degree, quality", [
-        (Key('C'), 6, "minor"),
-        ]
-    )
-def test_chord_key_quality(value, degree, quality):
-    new_chord = chords.Chord(value, degree)
-    assert new_chord.quality == quality
-
-
-
-@pytest.mark.parametrize(
-    "name, root", [
-        ("C", "C"), ("C#Maj", "C\u266F"), ("DbM", "D\u266D"),
-        ("D\u266Fmaj", "D\u266F"), ("D\u266DMa7", "D\u266D"),
-        ("F##m", "F\U0001D12A"), ("Dbb", "D\U0001D12B"), ("F-", "F"),
-        ("F\U0001D12Adim", "F\U0001D12A"), ("Do7", "D"),
-        ("G\u00B011", "G"),
-        ("B\U0001D12Baug", "B\U0001D12B"), ("G+11", "G"),
-        ("C\u00f8", "C"), ("A\u00d8", "A"),
-        ("G7", "G"), ("Edom7", "E"), ("Bdom", "B")])
-def test_chord_root(name, root):
-    new_chord = chords.Chord(name)
-    assert new_chord.root == root
-
-
-@pytest.mark.parametrize(
-    "name, quality", [
-        ("C", "major"), ("C#Maj", "major"), ("DbM", "major"),
-        ("D\u266Fmaj", "major"), ("D\u266DMa7", "major7"),
-        ("F##m", "minor"), ("Dbb", "major"), ("F-", "minor"),
-        ("F\U0001D12Adim", "diminished"), ("Do7", "diminished"),
-        ("G\u00B011", "diminished"),
-        ("B\U0001D12Baug", "augmented"), ("G+11", "augmented"),
-        ("C\u00f8", "half-diminished"), ("A\u00d8", "half-diminished"),
-        ("G7", "dominant"), ("Edom7", "dominant"), ("Bdom", "dominant")])
-def test_chord_quality(name, quality):
-    new_chord = chords.Chord(name)
-    assert new_chord.quality == quality
-
-
-@pytest.mark.parametrize(
-    "name, chord", [
-        ("C", (Note('C'), Note('E'), Note('G'))),
-        ("D\u266Fmaj", (
-            Note('D\u266F'),
-            Note('F\U0001D12A'),
-            Note('A\u266F'),
-            )),
-        ("Em", (Note('E'), Note('G'), Note('B'))),
-        ("Fdim", (
-            Note('F'),
-            Note('A\u266D'),
-            Note('C\u266D'),
-            Note('E\U0001D12B'),
-            )),
-        ("Faug", (Note('F'), Note('A'), Note('C\u266F'))),
-        ("C\u00f8", (Note('C'), Note('E\u266D'), Note('G\u266D'), Note('B\u266D'))),
-        ("G7", (Note('G'), Note('B'), Note('D'), Note('F'))),
-        ("Amaj7", (Note('A'), Note('C\u266F'), Note('E'), Note('G\u266F'))),
-        ])
-def test_chord_base_chord(name, chord):
-    new_chord = chords.Chord(name)
-    assert new_chord.base_chord == chord
-
-
-@pytest.mark.parametrize(
-    "name, quality", [
-        ("C", ""),
-        ("D\u266Fmaj7", "maj"),
-        ("Em", "m"),
-        ("F\U0001D12Adim", "dim"),
-        ("Faug", "aug"),
-        ("C\u00f8", "\u00d8"),
-        ("G7", "dom"),
-        ])
-def test_chord_quality_short(name, quality):
-    new_chord = chords.Chord(name)
-    assert new_chord.quality_short == quality
-
-
-@pytest.mark.parametrize(
-    "name, chord", [
-        ("C5", (
-            Note('C'), Note('G'),
-            )),
-        ("Em5", (
-            Note('E'), Note('B'),
-            )),
-        ])
-def test_chord_power_chord(name, chord):
-    new_chord = chords.Chord(name)
-    assert new_chord.notes == chord
-
-
-@pytest.mark.parametrize(
-    "name, chord", [
-        ("C13", (
-            Note('C'), Note('E'), Note('G'), Note('Bb'),
-            Note('D'), Note('F'), Note('A'),
-            )),
-        ("Em11", (
-            Note('E'), Note('G'), Note('B'),
-            Note('D'), Note('F#'), Note('A'),
-            )),
-        ("F9", (
-            Note('F'), Note('A'), Note('C'),
-            Note('E\u266D'), Note('G'),
-            )),
-        ])
-def test_chord_ext_chord(name, chord):
-    new_chord = chords.Chord(name)
-    assert new_chord.notes == chord
-
-
-@pytest.mark.parametrize(
-    "name, chord", [
-        ("CMb5", (
-            Note('C'), Note('E'), Note('Gb'),
-            )),
-        ("Em#5", (
-            Note('E'), Note('G'), Note('B#'),
-            )),
-        ("F7bb5", (
-            Note('F'), Note('A'), Note('Cbb'),
-            Note('E\u266D'),
-            )),
-        ("Gmaj7##5", (
-            Note('G'), Note('B'), Note('D##'),
-            Note('F\u266F'),
-            )),
-        ])
-def test_chord_alt5_chord(name, chord):
-    new_chord = chords.Chord(name)
-    assert new_chord.notes == chord
-
-
-@pytest.mark.parametrize(
-    "name, chord", [
-        ("Cadd13", (
-            Note('C'), Note('E'), Note('G'), Note('A'),
-            )),
-        ("Emadd2add4add9", (
-            Note('E'), Note('F#'), Note('G'), Note('A'), Note('B'), Note('F#'),
-            )),
-        ])
-def test_chord_add_chord(name, chord):
-    new_chord = chords.Chord(name)
-    assert new_chord.notes == chord
-
-
-@pytest.mark.parametrize(
-    "name, chord", [
-        ("CMsus2", (
-            Note('C'), Note('D'), Note('G'),
-            )),
-        ("Emsus4", (
-            Note('E'), Note('A'), Note('B'),
-            )),
-        ])
-def test_chord_sus_chord(name, chord):
-    new_chord = chords.Chord(name)
-    assert new_chord.notes == chord
-
-
-@pytest.mark.parametrize(
-    "name, chord", [
-        ("C", "C chord"), ("C#7", "C\u266fdom7 chord"),
-        ("DbM7", "D\u266dmaj7 chord"), ("D-add9", "Dmadd9 chord"),
-        ("c#6/E", "C\u266fm6/E chord"),
-        ])
-def test_chord_name(name, chord):
-    new_chord = chords.Chord(name)
-    assert repr(new_chord) == chord
-
-
-@pytest.mark.parametrize(
-    "value", [
-        "H#", 10.0, "Z", len])
-def test_chord_transpose_error(value):
-    new_chord = chords.Chord('C')
-    with pytest.raises(TypeError):
-        new_chord.transpose(value)
-
-
-@pytest.mark.parametrize(
-    "key, value, new_key", [
-        ('C', 3, 'D\u266f'),
-        ('Dm7add4/A', -5, 'A'),
-        ('Gmaj', 12, 'G')])
-def test_chord_root_transpose(key, value, new_key):
-    new_chord = chords.Chord(key)
+    "string, value, notation", [
+        ('C', 3, 'D\u266f chord'),
+        ('Dm7add4/A', -5, 'Am7add4/E chord'),
+        ('G/G#', 1, 'G\u266f/G\U0001D12A chord')])
+def test_transpose(string, value, notation):
+    new_chord = CE.create_chord(string)
     new_chord.transpose(value)
-    assert new_chord.root == new_key
+    assert repr(new_chord) == notation
+
+
+def test_transpose_type_error():
+    c = CE.create_chord('C')
+    with pytest.raises(TypeError):
+        c.transpose(1.5)
+
+
+def test_transpose_type_error_2():
+    c = CE.create_chord('C')
+    with pytest.raises(TypeError):
+        c.transpose(1, None)
 
 
 @pytest.mark.parametrize(
-    "key, value, new_key", [
-        ('C/E', 3, 'F\U0001D12A'),
-        ('Dm7add4/A', -5, 'E')])
-def test_chord_bass_transpose(key, value, new_key):
-    new_chord = chords.Chord(key)
-    new_chord.transpose(value)
-    assert new_chord.bass_note == new_key
+    "input, output", [
+        ("hey", "hey"), (None, '')
+        ]
+    )
+def test_xstr(input, output):
+    c = CE.create_chord('C')
+    assert c._xstr(input) == output

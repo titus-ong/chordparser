@@ -118,10 +118,12 @@ class Note:
             symbol = None
         return Note._symbols.get(symbol)
 
-    def transpose(self, value=0, use_flats: bool = False):
+    def transpose(self, value: int = 0, use_flats: bool = False):
         """Transpose a note by specifying a value. Use flats if use_flats=True."""
         if not isinstance(value, int):
-            raise TypeError("Only integers are accepted")
+            raise TypeError("Only integers are accepted for value")
+        if not isinstance(use_flats, bool):
+            raise TypeError("Only booleans are accepted for use_flats")
         number = Note._note_values.get(self.value)
         number += value
         if use_flats:

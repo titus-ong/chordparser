@@ -106,6 +106,16 @@ def test_scale_transpose_error(value):
 
 
 @pytest.mark.parametrize(
+    "value", [
+        "H#", 10.0, "Z", len])
+def test_scale_transpose_error_2(value):
+    nkey = KE.create_key('C')
+    new_scale = SE.create_scale(nkey)
+    with pytest.raises(TypeError):
+        new_scale.transpose(1, value)
+
+
+@pytest.mark.parametrize(
     "key, value, new_key", [
         ('C', 3, 'D\u266f'),
         ('D', -5, 'A'),

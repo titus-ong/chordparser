@@ -146,3 +146,12 @@ def test_root_transpose_error(value):
         nnote.transpose(value)
 
 
+@pytest.mark.parametrize(
+    "value", [
+        "H#", 10.0, "Z", len])
+def test_root_transpose_error_2(value):
+    nnote = NE.create_note('C')
+    with pytest.raises(TypeError):
+        nnote.transpose(1, value)
+
+

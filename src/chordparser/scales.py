@@ -111,7 +111,9 @@ class Scale:
     def transpose(self, value: int = 0, use_flats: bool = False):
         """Transpose key of the scale."""
         if not isinstance(value, int):
-            raise TypeError("Only integers are accepted")
+            raise TypeError("Only integers are accepted for value")
+        if not isinstance(use_flats, bool):
+            raise TypeError("Only booleans are accepted for use_flats")
         self.key.transpose(value, use_flats=use_flats)
         self.build()
         return self

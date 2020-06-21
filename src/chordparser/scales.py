@@ -1,4 +1,4 @@
-from .notes import Note
+from .notes_editor import NoteEditor
 from .keys import Key
 from typing import Union
 import re
@@ -45,6 +45,7 @@ class Scale:
     _notes_tuple = (
         'C', 'D', 'E', 'F', 'G', 'A', 'B',
         'C', 'D', 'E', 'F', 'G', 'A', 'B')
+    NE = NoteEditor()
 
     def __init__(self, key: Key):
         self.key = key
@@ -57,7 +58,7 @@ class Scale:
     def _get_notes(self):
         """Get notes in the scale."""
         self.scale_intervals = self._get_scale_intervals()
-        note_no_symbol = Note(self.key.letter())
+        note_no_symbol = self.NE.create_note(self.key.letter())
         self._idx = Scale._notes_tuple.index(note_no_symbol)
         self._note_order = self._get_note_order()
         notes = self._shift_notes()
@@ -98,7 +99,7 @@ class Scale:
         symbol_increment = self.key.symbolvalue()
         note_list = []
         for num, note in enumerate(self._note_order):
-            new_note = Note(note)
+            new_note = self.NE.create_note(note)
             total_increment = (
                 symbol_increment
                 + sum(self.scale_intervals[:num])

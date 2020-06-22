@@ -1,9 +1,9 @@
 """
 A package to parse ChordPro files.
 """
-from .chords import Chord
-from .notes import Note
-from .keys import Key
-from .scales import Scale
+from chordparser.parser import Parser
 
-__all__ = ['chords.py', 'scales.py', 'notes.py']
+__all__ = ['chords.py', 'scales.py', 'notes.py', 'keys.py']
+__author__ = """Titus Ong"""
+__email__ = 'titusongyl@gmail.com'
+__version__ = '0.1.1'

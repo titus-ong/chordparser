@@ -182,7 +182,7 @@ class Chord:
         degree = min(
             self._scale.notes.index(x) for x in self._scale.notes if x.letter() == self.bass.letter()
             )+1
-        (interval,) = self.NE.get_intervals(self._scale.notes[degree-1], self.bass)
+        (interval,) = self.NE.get_min_intervals(self._scale.notes[degree-1], self.bass)
         symbols = {
             -1: '\u266d', -2: '\U0001D12B',
             +1: '\u266f', +2: '\U0001D12A',

@@ -50,4 +50,11 @@ class NoteEditor:
         intervals.pop(0)
         return tuple(intervals)
 
+    def get_min_intervals(self, *notes):
+        intervals = self.get_intervals(*notes)
+        min_int = []
+        for each in intervals:
+            min_int.append(min(each, 12-each))
+        return tuple(min_int)
+
 

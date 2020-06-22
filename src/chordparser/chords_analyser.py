@@ -81,9 +81,10 @@ class ChordAnalyser:
         chords = []
         for submode in j:
             for i in range(7):
-                diatonic = self.CE.create_diatonic(scale, i+1)
+                nscale = self.SE.create_scale(scale.key.root, scale.key.mode, submode)
+                diatonic = self.CE.create_diatonic(nscale, i+1)
                 if chord.base_triad == diatonic.base_triad:
-                    chords.append((self.roman(diatonic, scale), scale.key.mode, submode))
+                    chords.append((self.roman(chord, nscale), nscale.key.mode, submode))
         return chords
 
     def analyse_all(self, chord, scale):

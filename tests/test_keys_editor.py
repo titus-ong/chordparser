@@ -27,7 +27,7 @@ def test_keys_valueerror(key):
         ("mixolydian", None), ("aeolian", None), ("locrian", None)])
 def test_key_mode_submode(mode, submode):
     nkey = KE.create_key('C', mode=mode, submode=submode)
-    if not submode:
+    if not submode and mode not in {'minor', 'aeolian'}:
         assert str(nkey) == f'C {mode.lower()}'
     else:
         assert str(nkey) == f'C {submode.lower()} {mode.lower()}'

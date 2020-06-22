@@ -42,19 +42,22 @@ class KeyEditor:
             raise TypeError("Only strings are accepted for mode")
         if mode.lower() not in KeyEditor._modes:
             raise KeyError("Mode could not be found")
+        mode = mode.lower()
         # submode
-        if submode is None:
+        if submode is None and mode not in KeyEditor._submodes.keys():
             pass
+        elif submode is None:
+            submode = 'natural'
         elif not isinstance(submode, str):
             raise TypeError("Only strings are accepted")
         else:
-            submode_tuple = KeyEditor._submodes.get(mode.lower())
+            submode_tuple = KeyEditor._submodes.get(mode)
             if submode_tuple is None:
                 raise KeyError("Mode does not have any submodes")
             if submode.lower() not in submode_tuple:
                 raise KeyError("Submode could not be found")
             submode = submode.lower()
-        return Key(root, mode.lower(), submode)
+        return Key(root, mode, submode)
 
     def relative_major(self, key):
         if not key.mode in {'minor', 'aeolian'}:

@@ -39,10 +39,15 @@ class NoteEditor:
         notation = letter + symbol
         return Note(notation)
 
-    def get_interval(self, note_1, note_2):
-        """Get interval of second Note from first Note in semitones."""
-        val_1 = note_1.num_value()
-        val_2 = note_2.num_value()
-        return (val_2 - val_1) % 12
+    def get_intervals(self, *notes):
+        """Return a tuple of intervals between notes in semitones."""
+        old_val = notes[0].num_value()
+        intervals = []
+        for each in notes:
+            new_val = each.num_value()
+            intervals.append((new_val-old_val) % 12)
+            old_val = new_val
+        intervals.pop(0)
+        return tuple(intervals)
 
 

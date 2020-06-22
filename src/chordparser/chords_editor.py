@@ -251,9 +251,6 @@ class ChordEditor:
             scale_.notes[degree+1],
             scale_.notes[degree+3],
             )
-        interval = (
-            (Note.num_value(base_chord[1])-Note.num_value(base_chord[0])) % 12,
-            (Note.num_value(base_chord[2])-Note.num_value(base_chord[1])) % 12,
-            )
+        interval = self.NE.get_intervals(*base_chord)
         quality = ChordEditor._quality_intervals[interval]
         return Chord(root, quality, sus, add, bass)

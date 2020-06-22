@@ -32,15 +32,16 @@ def test_note_creation_valueerror(note):
 
 
 @pytest.mark.parametrize(
-    "note1, note2, interval", [
-        ('C', 'D#', 3),
-        ('B', 'E', 5),
+    "notes, interval", [
+        (('C', 'D#'), (3,)),
+        (('B', 'E', 'F#'), (5, 2)),
         ]
     )
-def test_intervals(note1, note2, interval):
-    n1 = NE.create_note(note1)
-    n2 = NE.create_note(note2)
-    assert interval == NE.get_interval(n1, n2)
+def test_intervals(notes, interval):
+    note_list = []
+    for each in notes:
+        note_list.append(NE.create_note(each))
+    assert interval == NE.get_intervals(*note_list)
 
 
 

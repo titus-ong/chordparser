@@ -105,5 +105,5 @@ class ChordAnalyser:
             nscale = self.SE.create_scale(scale.key.root, mode)
             result = self.analyse_diatonic(chord, nscale)
             if result:
-                chords.append(result)
+                chords += result
         return chords

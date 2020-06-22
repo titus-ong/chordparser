@@ -21,16 +21,21 @@ def test_keys_valueerror(key):
 
 @pytest.mark.parametrize(
     "mode, submode", [
-        ("major", None), ("mInoR", None), ("MINOR", "harmonic"),
+        ("major", None), ("MINOR", "harmonic"),
         ("minor", "melodic"), ("minor", "natural"), ("ionian", None),
         ("dorian", None), ("phrygian", None), ("lydian", None),
-        ("mixolydian", None), ("aeolian", None), ("locrian", None)])
+        ("mixolydian", None), ("locrian", None)])
 def test_key_mode_submode(mode, submode):
     nkey = KE.create_key('C', mode=mode, submode=submode)
-    if not submode and mode.lower() not in {'minor', 'aeolian'}:
+    if not nkey.submode:
         assert str(nkey) == f'C {mode.lower()}'
     else:
         assert str(nkey) == f'C {submode.lower()} {mode.lower()}'
+
+
+def test_key_mode_submode_2():
+    nkey = KE.create_key('C', 'minor')
+    assert nkey.submode == 'natural'
 
 
 @pytest.mark.parametrize(

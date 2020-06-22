@@ -1,7 +1,7 @@
-from .notes import Note
-from .notes_editor import NoteEditor
-from .keys import Key
-from .scales_editor import ScaleEditor
+from chordparser.notes import Note
+from chordparser.notes_editor import NoteEditor
+from chordparser.keys import Key
+from chordparser.scales_editor import ScaleEditor
 from typing import Union, List
 import re
 import copy

@@ -1,5 +1,5 @@
-from .notes_editor import NoteEditor
-from .keys import Key
+from chordparser.notes_editor import NoteEditor
+from chordparser.keys import Key
 from typing import Union
 import re
 

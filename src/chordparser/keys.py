@@ -1,4 +1,4 @@
-from .notes import Note
+from chordparser.notes import Note
 from typing import Union
 import re
 

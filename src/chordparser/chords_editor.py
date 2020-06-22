@@ -1,10 +1,10 @@
-from .notes import Note
-from .keys import Key
-from .scales import Scale
-from .chords import Chord
-from .notes_editor import NoteEditor
-from .keys_editor import KeyEditor
-from .scales_editor import ScaleEditor
+from chordparser.notes import Note
+from chordparser.keys import Key
+from chordparser.scales import Scale
+from chordparser.chords import Chord
+from chordparser.notes_editor import NoteEditor
+from chordparser.keys_editor import KeyEditor
+from chordparser.scales_editor import ScaleEditor
 from typing import Union
 import re
 

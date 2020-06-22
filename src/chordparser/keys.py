@@ -27,6 +27,7 @@ class Key:
         # So Note methods can be used on Key
         if attribute in Note.__dict__:
             return getattr(self.root, attribute)
+        raise AttributeError(f"'Key' object has no attribute '{attribute}'")
 
     def __repr__(self):
         if not self.submode:

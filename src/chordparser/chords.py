@@ -293,3 +293,15 @@ class Chord:
 
     def __repr__(self):
         return f'{self.notation} chord'
+
+    def __eq__(self, other):
+        # Allow comparison between Keys by checking their basic attributes
+        if not isinstance(other, Chord):
+            return NotImplemented
+        return (
+            self.root == other.root
+            and self.quality == other.quality
+            and self.sus == other.sus
+            and self.add == other.add
+            and self.bass == other.bass
+            )

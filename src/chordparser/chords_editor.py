@@ -35,7 +35,8 @@ class ChordEditor:
     _suspended = f"sus(2|4){{0,1}}"
     _added = f"(?:add){{0,1}}({_symbol_pattern}){{0,1}}(2|4|6|9|11|13)"
 
-    # Match string [0]:  # Notation [regex group]
+    # Pattern notation [regex group]
+    # Match string [0]:
     #     note [1], {
     #         power chord [3] |
     #         extended chords [4] {
@@ -147,6 +148,7 @@ class ChordEditor:
         return [3, 4], None
 
     def _parse_ext(self, rgx):
+        """Parse quality of extended chords."""
         if not rgx.group(5):
             if rgx.group(1)[0].isupper():
                 quality = [4, 3, 3]
@@ -174,6 +176,7 @@ class ChordEditor:
         return quality, ext
 
     def _parse_triad(self, rgx):
+        """Parse quality of triads."""
         if rgx.group(17):
             return [4, 4], None
         if rgx.group(18):
@@ -183,6 +186,7 @@ class ChordEditor:
         return [3, 4], None
 
     def _parse_alt5(self, rgx, temp_q):
+        """Change the quality for chords with altered fifths."""
         if not rgx.group(21):
             return temp_q
         if rgx.group(21) in ChordEditor._dim_pattern+ChordEditor._flat_pattern:
@@ -196,6 +200,7 @@ class ChordEditor:
         return temp_q
 
     def _parse_others(self, rgx):
+        """Parse suspended and added notes."""
         if not rgx.group(22):
             return None, None
         string = rgx.group(22)
@@ -221,6 +226,7 @@ class ChordEditor:
         return sus, add or None
 
     def _parse_bass(self, rgx):
+        """Parse the bass note."""
         if not rgx.group(23):
             return None
         return self.NE.create_note(rgx.group(23))
@@ -236,6 +242,7 @@ class ChordEditor:
             value: Union[Scale, Key],
             degree: int = 1,
     ):
+        """Create a diatonic chord from a scale/key by specifying the scale degree."""
         if degree not in {1, 2, 3, 4, 5, 6, 7}:
             raise ValueError("Scale degree must be between 1 and 7")
         if isinstance(value, Key):

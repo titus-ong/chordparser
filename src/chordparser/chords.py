@@ -3,23 +3,12 @@ from chordparser.notes_editor import NoteEditor
 from chordparser.keys import Key
 from chordparser.scales_editor import ScaleEditor
 from typing import Union, List
-import re
 import copy
 
 
 class Chord:
     """
     Chord class that is composed of a root note, chord quality, optional suspended and/or added notes, and an optional bass note.
-
-    Arguments:
-    root -- root note of the chord
-    quality -- chord quality
-
-    Keyword arguments:
-    sus -- suspended notes
-    add -- added notes
-    bass -- bass_note
-    string -- original chord notation (str)
 
     The Chord class accepts the chord components and builds a tuple of notes provided by the 'notes' method.
 
@@ -46,12 +35,14 @@ class Chord:
         self._first_build()
 
     def _first_build(self):
+        """First iteration of building chord notes."""
         self._build_no_bass()
         if self.bass:
-            self._build_bass()
+            self._build_bass_note()
         self._build_notation()
 
     def _build_no_bass(self):
+        """Build the chord notes without the bass note."""
         self._build_base_triad()
         self._build_quality()
         self._build_base_chord()
@@ -61,6 +52,7 @@ class Chord:
             self._build_add()
 
     def _build_base_triad(self):
+        """Build the base triad of the chord."""
         triad_quality = {
             'major': ("major", 0),
             'minor': ("minor", 0),
@@ -87,6 +79,7 @@ class Chord:
         return
 
     def _build_quality(self):
+        """Build the chord notes based on its quality."""
         intervals = {
             'dominant': -1,
             'major': 0,
@@ -133,11 +126,13 @@ class Chord:
         return
 
     def _build_base_chord(self):
+        """Set the base chord notes and tones."""
         self.base_chord = tuple(self.notes)
         self.base_tones = tuple(self.tones)
         return
 
     def _build_sus(self):
+        """Change notes for suspended chords."""
         if self.sus == 2:
             self.notes[1] = self._scale.notes[1]
             self.tones[1][1] -= 1
@@ -147,6 +142,7 @@ class Chord:
         return
 
     def _build_add(self):
+        """Add notes for chords with added notes."""
         symbols = {
             '\u266d': -1, '\U0001D12B': -2,
             '\u266f': +1, '\U0001D12A': +2,
@@ -164,10 +160,8 @@ class Chord:
             self.notes.insert(pos, self._scale.notes[tone-1].shift_s(adjustment))
         return
 
-    def _build_bass(self):
-        self._build_bass_note()
-
     def _build_bass_note(self):
+        """Build the bass note."""
         if self.bass in self.notes:
             idx = self.notes.index(self.bass)
             self.notes.pop(idx)
@@ -190,6 +184,7 @@ class Chord:
         return
 
     def _build_notation(self):
+        """Build a standardised chord notation."""
         q_dict = {
             'power': ('5', ''),
             'major': ('maj', ''),
@@ -236,19 +231,21 @@ class Chord:
         return
 
     def transpose(self, semitones: int, letter: int):
-        """Transpose chord."""
+        """Transpose the chord by specifying the semitone and letter intervals."""
         self.root.transpose(semitones, letter)
         bass_tone = self.tones[0]
         self._transpose_build(bass_tone)
         return self
 
     def _transpose_build(self, bass_tone):
+        """Build chord notes for transposition."""
         self._build_no_bass()
         if self.bass:
             self._build_bass_from_tone(bass_tone)
         self._build_notation()
 
     def _build_bass_from_tone(self, bass_tone):
+        """Build the bass note based on its degree."""
         symbols = {
             '\u266d': -1, '\U0001D12B': -2,
             '\u266f': +1, '\U0001D12A': +2,

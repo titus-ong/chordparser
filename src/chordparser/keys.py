@@ -1,20 +1,12 @@
 from chordparser.notes import Note
 from typing import Union
-import re
 
 
 class Key:
     """
-    Key class that composes of a note as the root, and its mode and submode.
+    Key class that composes of a Note as the root and its mode and submode.
 
-    Arguments:
-    root -- the note of the Key (str)
-
-    Keyword arguments:
-    mode -- the mode of the Key (str)
-    submode -- the submode (str/None)
-
-    The Key class composes of a Note class with the additional attributes 'mode' and 'submode' (e.g. types of minor keys). Keys have the same methods as Notes.
+    The Key class composes of a Note class with the additional attributes 'mode' and 'submode' (e.g. types of minor keys). It is created by the KeyEditor. Keys have the same methods as Notes.
     """
     def __init__(
             self, root, mode: str,

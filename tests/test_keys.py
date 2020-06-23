@@ -1,4 +1,3 @@
-from chordparser import keys
 from chordparser import keys_editor
 import pytest
 

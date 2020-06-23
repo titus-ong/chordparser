@@ -1,19 +1,12 @@
 from chordparser.notes_editor import NoteEditor
 from chordparser.keys import Key
-from typing import Union
-import re
 
 
 class Scale:
     """
     Scale class that composes of a Key and Notes.
 
-    Arguments:
-    key -- the key of the Scale (Key)
-
-    The Scale class accepts a Key and generates a 2-octave Note tuple in its 'notes' attribute.
-
-    The Scale can be changed by setting its 'key' attribute, or by transposing it using the 'transpose' method.
+    The Scale class accepts a Key and generates a 2-octave Note tuple in its 'notes' attribute. The Scale can be changed by transposing its key using the 'transpose' method.
     """
     _heptatonic_base = (2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1)
     _SCALES = {

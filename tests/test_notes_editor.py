@@ -63,11 +63,11 @@ def test_min_intervals(notes, interval):
         (('B', 'E', 'D'), ((5, 4), (10, 7))),
         ]
     )
-def test_tone_notes(notes, difference):
+def test_tone_letter(notes, difference):
     note_list = []
     for each in notes:
         note_list.append(NE.create_note(each))
-    assert difference == NE.get_tone_notes(*note_list)
+    assert difference == NE.get_tone_letter(*note_list)
 
 
 

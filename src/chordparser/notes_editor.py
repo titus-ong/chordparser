@@ -1,5 +1,4 @@
 from chordparser.notes import Note
-from typing import Union
 import re
 
 
@@ -9,7 +8,7 @@ class NoteEditor:
 
     The NoteEditor class can create a Note using the 'create_note' method by accepting a string with notation a-g or A-G and optional accidental symbols. The symbols that can be used are b (flat), bb (doubleflat), # (sharp), ## (doublesharp) and their respective unicode characters.
 
-    The NoteEditor can also find the intervals between two Notes using the 'get_interval' method. The method measures the interval of the second Note from the first Note and is expressed in semitones.
+    The NoteEditor can also find the intervals between Notes using the 'get_intervals', 'get_min_intervals' and 'get_tone_notes' methods.
     """
     _flat = '\u266d'
     _sharp = '\u266f'
@@ -42,8 +41,8 @@ class NoteEditor:
         notation = letter + symbol
         return Note(notation)
 
-    def get_tone_notes(self, *notes):
-        """Return a tuple of (semitone, note) differences between notes."""
+    def get_tone_letter(self, *notes):
+        """Return a nested tuple of (semitone, letter) differences between notes."""
         semitones = self.get_intervals(*notes)
         old_note = self._notes_tuple.index(notes[0].letter())
         note_diff = []
@@ -55,7 +54,7 @@ class NoteEditor:
         return tuple(zip(semitones, note_diff))
 
     def get_intervals(self, *notes):
-        """Return a tuple of intervals between notes in semitones."""
+        """Return a tuple of semitone intervals between notes."""
         old_val = notes[0].num_value()
         intervals = []
         for each in notes:
@@ -66,6 +65,7 @@ class NoteEditor:
         return tuple(intervals)
 
     def get_min_intervals(self, *notes):
+        """Return a tuple of the shortest semitone distance between notes."""
         intervals = self.get_intervals(*notes)
         min_int = []
         for each in intervals:

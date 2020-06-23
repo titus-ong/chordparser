@@ -6,6 +6,11 @@ from chordparser.chords_analyser import ChordAnalyser
 
 
 class Parser:
+    """
+    Parser class that acts as a central collection for easy access to the Editors and Analysers.
+
+    The Parser can use the methods under all the various Editors and Analysers. This makes it more convenient to initialise the various musical classes and interact with them.
+    """
     sample = 'sample_sheet.cho'
 
     def __init__(self):
@@ -16,7 +21,7 @@ class Parser:
         self.CA = ChordAnalyser()
 
     def __getattr__(self, attribute):
-        # So Note methods can be used on Key
+        # So Editor/Analyser methods can be used on Parser
         if attribute in NoteEditor.__dict__:
             return getattr(self.NE, attribute)
         if attribute in KeyEditor.__dict__:

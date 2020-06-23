@@ -2,14 +2,13 @@ from chordparser.notes import Note
 from chordparser.keys import Key
 from chordparser.notes_editor import NoteEditor
 from typing import Union
-import re
 
 
 class KeyEditor:
     """
-    KeyEditor class that can create a Key and change keys to their relative major/minor.
+    KeyEditor class that can create a Key and change keys to their relative major/minor key.
 
-    The KeyEditor class can create a Key using the 'create_key' method by accepting a Note (or a string that can be parsed by NoteEditor), an optional mode (default 'major') and optional submode. Submodes are only available for the minor/aeolian mode. The 'relative_major' and 'relative_minor' methods change the key into its relative major/minor (submode can be specified for relative_minor).
+    The KeyEditor class can create a Key using the 'create_key' method by accepting a Note or string, an optional mode (default 'major') and optional submode. Submodes are only available for the minor/aeolian mode (default 'natural'). The 'relative_major' and 'relative_minor' methods change the key into its relative major/minor (submode can be specified for 'relative_minor').
     """
     _modes = (
         'major', 'minor', 'ionian', 'dorian', 'phrygian',
@@ -29,7 +28,15 @@ class KeyEditor:
             mode: str = 'major',
             submode: Union[str, None] = None
     ):
-        """Create a Key from a root note, optional mode (default 'major') and optional submode."""
+        """Create a Key from a root note, optional mode (default 'major') and optional submode.
+
+        Arguments:
+        root -- root note of the key(Union[Note, str])
+
+        Keyword arguments:
+        mode -- mode of the key e.g. major (str)
+        submode -- alternate forms of the same mode e.g. harmonic, natural (str)
+        """
         # root note
         if not isinstance(root, Note):
             try:
@@ -60,6 +67,7 @@ class KeyEditor:
         return Key(root, mode, submode)
 
     def relative_major(self, key):
+        """Change a key to its relative major."""
         if not key.mode in {'minor', 'aeolian'}:
             raise KeyError("Key is not minor")
         idx = KeyEditor._notes_tuple.index(key.letter())
@@ -69,6 +77,7 @@ class KeyEditor:
         return key
 
     def relative_minor(self, key, submode='natural'):
+        """Change a key to its relative minor."""
         if not key.mode in {'major', 'ionian'}:
             raise KeyError("Key is not major")
         if submode not in KeyEditor._submodes['minor']:

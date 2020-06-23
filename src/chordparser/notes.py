@@ -1,17 +1,12 @@
-from typing import Union
-import re
-
-
 class Note:
     """
     Note class that composes of a note value.
 
-    Arguments:
-    value -- the Note value (str)
+    The Note class consists of notation a-g or A-G, with optional unicode accidental symbols \u266d, \u266f, \U0001D12B, or \U0001D12A. It is created by the NoteEditor.
 
-    The Note class consists of notation a-g or A-G, with optional unicode accidental symbols \u266d, \u266f, \U0001D12B, or \U0001D12A.
+    Notes can have accidentals set using the 'accidental' method, and can be shifted by semitones using the 'shift_s' method. The letter of the Note can be shifted using the 'shift_l' method. Notes also have 'letter' and 'symbol' methods to get their respective values. Numerical representation of the Note value can be accessed via the 'num_value' and 'symbolvalue' methods. Notes can be transposed using the 'transpose' method.
 
-    Notes can have accidentals set using the 'accidental' method, and can be shifted by semitones using the 'shift' method. Notes also have 'letter', 'symbol', and 'symbolvalue' methods to get their respective values. Notes can be transposed using the 'transpose' method (flats can be toggled using the 'use_flats' kwarg).
+    Notes can be compared either with other Notes or with strings.
     """
     _flat = '\u266d'
     _sharp = '\u266f'
@@ -24,7 +19,7 @@ class Note:
         +1: _sharp, +2: _doublesharp,
         0: '', None: 0,
         }
-    _note_values = {
+    _note_values = {  # Basis: C = 0
         ('C' + _doubleflat): 10,
         ('C' + _flat): 11,
         'C': 0,
@@ -80,7 +75,7 @@ class Note:
         return self
 
     def shift_s(self, value: int):
-        """Shift a note's accidental by specifying a value."""
+        """Shift a note's accidental."""
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")
         value += self.symbolvalue()
@@ -92,7 +87,7 @@ class Note:
         return self
 
     def shift_l(self, value: int):
-        """Shift a note's letter by specifying a value."""
+        """Shift a note's letter."""
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")
         pos = self._notes_tuple.index(self.letter()) + value % 7
@@ -101,7 +96,7 @@ class Note:
         return self
 
     def num_value(self) -> int:
-        """Return numerical value."""
+        """Return numerical value (basis: C = 0)."""
         return Note._note_values[self.value]
 
     def letter(self) -> str:
@@ -109,7 +104,7 @@ class Note:
         return self.value[0]
 
     def symbol(self) -> str:
-        """Return note symbol."""
+        """Return note symbol (None if no symbol)."""
         if len(self.value) > 1:
             return self.value[1]
         return None
@@ -123,13 +118,12 @@ class Note:
         return Note._symbols.get(symbol)
 
     def transpose(self, semitones: int, letter: int):
-        """Transpose a note by specifying the change in semitones and letter."""
+        """Transpose a note by specifying the change in semitone and letter intervals."""
         if not isinstance(semitones, int) or not isinstance(letter, int):
             raise TypeError("Only integers are accepted for value")
         new_val = (self.num_value() + semitones) % 12
         self.shift_l(letter)
         curr_val = self.num_value()
-        print(new_val, curr_val)
         if (new_val-curr_val) % 12 < 12 - ((new_val-curr_val) % 12):
             shift = abs((new_val-curr_val) % 12)
         else:
@@ -141,7 +135,7 @@ class Note:
         return self.value
 
     def __eq__(self, other):
-        # Allow comparison between note values
+        # Allow comparison between note values and strings
         if isinstance(other, Note):
             return self.value == other.value
         elif isinstance(other, str):

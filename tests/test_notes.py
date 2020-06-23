@@ -56,6 +56,25 @@ def test_note_shift_positive(shift, note):
     new_note = NE.create_note('C')
     new_note.shift_s(shift)
     assert new_note.value == note
+
+
+@pytest.mark.parametrize(
+    "shift", ['CA', 'D\u266F', 2.0, len, [], ()])
+def test_note_shift_wrong_type_2(shift):
+    new_note = NE.create_note('C')
+    with pytest.raises(TypeError):
+        new_note.shift_l(shift)
+
+
+@pytest.mark.parametrize(
+    "shift, note", [
+        (-2, 'A'), (-1, 'B'),
+        (15, 'D'), (-10, 'G')
+        ]
+    )
+def test_note_shift_positive_2(shift, note):
+    new_note = NE.create_note('C')
+    new_note.shift_l(shift)
     assert new_note.value == note
 
 

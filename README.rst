@@ -20,11 +20,9 @@ A simple Python 3 package to analyse chords.
    :target: https://pypi.org/pypi/chordparser
    :alt: downloads
 
-chordparser aims to parse chord notation (e.g. in ChordPro file formats), and provide harmonic analysis of chords based on the key and nearby chords. This helps in understanding how each chord functions, and allows for conversion to roman numeral chord notation.
+chordparser aims to parse chord notation and provide harmonic analysis of chords based on keys and scales. This helps in understanding how each chord functions, and allows for the conversion to roman numeral chord notation.
 
-The chord functions that can be analysed are: diatonic chords, mode mixture/ borrowed chords (from other modes), secondary dominant chords (e.g. V/V), secondary leading tone chords.
-
-chordparser will provide a simple ChordPro parser for demonstration of its chord analysis functions. It is not as full-featured as the `official ChordPro program <https://github.com/ChordPro/chordpro>`_, and does not aim to be. Rather, it serves as a proof-of-concept for analysing chords within the chord progression of songs.
+The parser can be used to analyse the following chords: diatonic chords, mode mixture/ borrowed chords (from other modes), secondary dominant chords (e.g. V/V), secondary leading tone chords.
 
 -------
 Install
@@ -34,14 +32,19 @@ Install
 
     >>> pip -install chordparser
 
-----------------
-Current Features
-----------------
+--------
+Features
+--------
 
-* Parse notes
-* Parse keys with different modes and submodes (e.g. harmonic/natural/melodic for minor)
-* Scale with automatically-generated notes and diatonic chords
-* Ability to transpose notes, keys and scales
-* Parse chords
+* Parse notes, keys, scales and chords
+* Accept complex chord notations
+* Transpose musical classes for easy transposition
+* Automatically-generate notes for scales and chords
+* Parse and store chord information on its quality, chord tones, and other sus/add/bass notes
+* Generate roman numeral notation
+* Analyse chord-scale relationships
 
-  - Root note, quality, triad, bass note
+-----
+Usage
+-----
+Check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`.

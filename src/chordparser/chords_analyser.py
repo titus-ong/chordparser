@@ -45,12 +45,13 @@ class ChordAnalyser:
         if chord.quality == 'power':
             raise ValueError("Cannot parse power chords")
         if chord.sus:
-            warnings.warn("Warning: sus chords may not be parsed correctly")
+            warnings.warn("Warning: sus chords may not be parsed correctly", UserWarning)
         c_int = (self.NE.get_intervals(*chord.base_chord[0:3]))
+        scale = self.SE.create_scale(scale.key.root, "major")
         degree = min(scale.notes.index(x) for x in scale.notes if x.letter()==chord.root.letter())+1
         q_fn = intervals[c_int]
         c_qual = q_fn(roman_deg[degree])  # lower/uppercase numeral
-        (shift,) = self.NE.get_intervals(scale.notes[degree-1], chord.root)
+        (shift,) = self.NE.get_min_intervals(scale.notes[degree-1], chord.root)
         symb = symbols[shift]  # accidental of root
         notes = len(chord.base_tones)
         if chord.bass and chord.tones[0] in chord.base_tones:
@@ -71,7 +72,7 @@ class ChordAnalyser:
     def analyse_diatonic(self, chord, scale, incl_submodes: bool = True) -> List[tuple]:
         """Return all possible chord function (None if not found). Format: List[(Roman numeral, scale mode, scale submode)]."""
         if not incl_submodes:
-            j = scale.key.submode
+            j = [scale.key.submode]
         elif scale.key.mode in {'minor', 'aeolian'}:
             j = ['natural', 'harmonic', 'melodic']
             j.remove(scale.key.submode)

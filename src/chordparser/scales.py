@@ -105,7 +105,7 @@ class Scale:
                 + sum(self.scale_intervals[:num])
                 - sum(base_intervals[:num])
                 )
-            new_note.shift(total_increment)
+            new_note.shift_s(total_increment)
             note_list.append(new_note)
         return tuple(note_list)
 

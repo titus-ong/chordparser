@@ -37,7 +37,7 @@ def test_note_accidental_positive(accidental, note):
 def test_note_shift_wrong_type(shift):
     new_note = NE.create_note('C')
     with pytest.raises(TypeError):
-        new_note.shift(shift)
+        new_note.shift_s(shift)
 
 
 @pytest.mark.parametrize(
@@ -45,7 +45,7 @@ def test_note_shift_wrong_type(shift):
 def test_note_shift_wrong_value(shift):
     new_note = NE.create_note('C')
     with pytest.raises(ValueError):
-        new_note.shift(shift)
+        new_note.shift_s(shift)
 
 
 @pytest.mark.parametrize(
@@ -54,7 +54,8 @@ def test_note_shift_wrong_value(shift):
         (0, 'C'), (1, 'C\u266f'), (2, 'C\U0001D12A')])
 def test_note_shift_positive(shift, note):
     new_note = NE.create_note('C')
-    new_note.shift(shift)
+    new_note.shift_s(shift)
+    assert new_note.value == note
     assert new_note.value == note
 
 

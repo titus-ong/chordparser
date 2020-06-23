@@ -82,7 +82,7 @@ class Chord:
         self.base_triad = (
                 self._scale.notes[0],
                 self._scale.notes[2],
-                last_note.shift(adjust),
+                last_note.shift_s(adjust),
                 )
         return
 
@@ -109,7 +109,7 @@ class Chord:
         self.tones = [[None, 1], [None, 3], [None, 5]]
         if len(q_list) == 1:
             return
-        self.notes.append(self._scale.notes[6].shift(intervals[q_list[0]]))
+        self.notes.append(self._scale.notes[6].shift_s(intervals[q_list[0]]))
         self.tones.append([None, 7])
         if q_list[-1] == 'ninth':
             self.notes.append(self._scale.notes[8])
@@ -128,7 +128,7 @@ class Chord:
                 ]
             self.tones += [[None, 9], [None, 11], [None, 13]]
         if q_list[1] == 'minor':
-            self.notes[-1].shift(-1)
+            self.notes[-1].shift_s(-1)
             self.tones[-1][0] = '\u266D'
         return
 
@@ -161,7 +161,7 @@ class Chord:
             tone = int(each)
             pos = max(self.tones.index(i) for i in self.tones if i[1] < tone)+1
             self.tones.insert(pos, [accidental, tone])
-            self.notes.insert(pos, self._scale.notes[tone-1].shift(adjustment))
+            self.notes.insert(pos, self._scale.notes[tone-1].shift_s(adjustment))
         return
 
     def _build_bass(self):
@@ -268,7 +268,7 @@ class Chord:
             self.tones.insert(0, bass_tone)
             adjustment = symbols[bass_tone[0]]
             bass_note = copy.copy(self._scale.notes[bass_tone[1]-1])
-            bass_note.shift(adjustment)
+            bass_note.shift_s(adjustment)
         self.bass = bass_note
         return
 

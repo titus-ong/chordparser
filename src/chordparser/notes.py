@@ -84,7 +84,7 @@ class Note:
         self.value = self.letter() + Note._symbols.get(value)
         return self
 
-    def shift(self, value: int):
+    def shift_s(self, value: int):
         """Shift a note's accidental by specifying a value."""
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")

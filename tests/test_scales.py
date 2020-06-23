@@ -141,3 +141,13 @@ def test_scale_transpose_flats(key, value, new_key):
 def test_scale_repr():
     new_scale = SE.create_scale('C', 'minor', 'harmonic')
     assert repr(new_scale) == "C harmonic minor scale"
+
+
+def test_scale_equality():
+    s = SE.create_scale('C', 'dorian')
+    assert s == SE.create_scale('C', 'dorian')
+
+
+def test_scale_not_implemented():
+    s = SE.create_scale('C')
+    assert s != len

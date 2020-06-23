@@ -147,3 +147,13 @@ def test_transpose_type_error_2():
 def test_xstr(input, output):
     c = CE.create_chord('C')
     assert c._xstr(input) == output
+
+
+def test_chord_equality():
+    c = CE.create_chord('C')
+    assert c == CE.create_chord('C')
+
+
+def test_chord_not_implemented():
+    c = CE.create_chord('C')
+    assert c != len

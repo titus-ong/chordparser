@@ -7,30 +7,30 @@ KE = keys_editor.KeyEditor()
 
 
 @pytest.mark.parametrize(
-    "key, value, new_key", [
-        ('C', 2, 'D'), ('G\u266d', -5, 'C\u266f'), ('A\U0001D12A', 1, 'C')])
-def test_key_transpose_sharps(key, value, new_key):
+    "key, semitone, letter, new_key", [
+        ('C', 2, 1, 'D'), ('G\u266d', -5, -4, 'C\u266f'), ('A\U0001D12A', 1, 2, 'C')])
+def test_note_transpose(key, semitone, letter, new_key):
     nkey = KE.create_key(key)
-    nkey.transpose(value)
-    assert nkey.root == new_key
-
-
-@pytest.mark.parametrize(
-    "key, value, new_key", [
-        ('C', -2, 'B\u266d'), ('F\u266f', -5, 'D\u266d'), ('F', -2, 'E\u266d')])
-def test_key_transpose_flat(key, value, new_key):
-    nkey = KE.create_key(key)
-    nkey.transpose(value, use_flats=True)
+    nkey.transpose(semitone, letter)
     assert nkey.root == new_key
 
 
 @pytest.mark.parametrize(
     "value", [
         "H#", 10.0, "Z", len])
-def test_key_transpose_error(value):
+def test_root_transpose_error(value):
     nkey = KE.create_key('C')
     with pytest.raises(TypeError):
-        nkey.transpose(value)
+        nkey.transpose(value, 1)
+
+
+@pytest.mark.parametrize(
+    "value", [
+        "H#", 10.0, "Z", len])
+def test_root_transpose_error_2(value):
+    nkey = KE.create_key('C')
+    with pytest.raises(TypeError):
+        nkey.transpose(1, value)
 
 
 @pytest.mark.parametrize(

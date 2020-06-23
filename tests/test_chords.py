@@ -117,26 +117,14 @@ def test_notation(string, notation):
 
 
 @pytest.mark.parametrize(
-    "string, value, notation", [
-        ('C', 3, 'D\u266f chord'),
-        ('Dm7add4/A', -5, 'Am7add4/E chord'),
-        ('G/G#', 1, 'G\u266f/G\U0001D12A chord')])
-def test_transpose(string, value, notation):
+    "string, semitones, letter, notation", [
+        ('C', 3, 1, 'D\u266f chord'),
+        ('Dm7add4/A', -5, -3, 'Am7add4/E chord'),
+        ('G/G#', 1, 0, 'G\u266f/G\U0001D12A chord')])
+def test_transpose(string, semitones, letter, notation):
     new_chord = CE.create_chord(string)
-    new_chord.transpose(value)
+    new_chord.transpose(semitones, letter)
     assert repr(new_chord) == notation
-
-
-def test_transpose_type_error():
-    c = CE.create_chord('C')
-    with pytest.raises(TypeError):
-        c.transpose(1.5)
-
-
-def test_transpose_type_error_2():
-    c = CE.create_chord('C')
-    with pytest.raises(TypeError):
-        c.transpose(1, None)
 
 
 @pytest.mark.parametrize(

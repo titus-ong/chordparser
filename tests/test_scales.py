@@ -95,47 +95,11 @@ def test_scale_submode_notes(key, mode, submode, note):
     assert scale.notes == note
 
 
-@pytest.mark.parametrize(
-    "value", [
-        "H#", 10.0, "Z", len])
-def test_scale_transpose_error(value):
-    nkey = KE.create_key('C')
-    new_scale = SE.create_scale(nkey)
-    with pytest.raises(TypeError):
-        new_scale.transpose(value)
-
-
-@pytest.mark.parametrize(
-    "value", [
-        "H#", 10.0, "Z", len])
-def test_scale_transpose_error_2(value):
-    nkey = KE.create_key('C')
-    new_scale = SE.create_scale(nkey)
-    with pytest.raises(TypeError):
-        new_scale.transpose(1, value)
-
-
-@pytest.mark.parametrize(
-    "key, value, new_key", [
-        ('C', 3, 'D\u266f'),
-        ('D', -5, 'A'),
-        ('G', 12, 'G')])
-def test_scale_transpose_sharps(key, value, new_key):
-    nkey = KE.create_key(key)
-    new_scale = SE.create_scale(nkey)
-    new_scale.transpose(value)
-    assert new_scale.key == KE.create_key(new_key)
-
-
-@pytest.mark.parametrize(
-    "key, value, new_key", [
-        ('C', 3, 'E\u266d'),
-        ('D', -4, 'B\u266d')])
-def test_scale_transpose_flats(key, value, new_key):
-    nkey = KE.create_key(key)
-    new_scale = SE.create_scale(nkey)
-    new_scale.transpose(value, use_flats=True)
-    assert new_scale.key == KE.create_key(new_key)
+def test_scale_transpose_sharps():
+    nkey = KE.create_key("D")
+    new_scale = SE.create_scale("C")
+    new_scale.transpose(2, 1)
+    assert new_scale.key == nkey
 
 
 def test_scale_repr():

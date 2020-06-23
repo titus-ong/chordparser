@@ -121,20 +121,11 @@ def test_note_inequality(note):
 
 
 @pytest.mark.parametrize(
-    "note, value, new_note", [
-        ('C', 2, 'D'), ('G\u266d', -5, 'C\u266f'), ('A\U0001D12A', 1, 'C')])
-def test_note_transpose_sharps(note, value, new_note):
+    "note, semitone, letter, new_note", [
+        ('C', 2, 1, 'D'), ('G\u266d', -5, -4, 'C\u266f'), ('A\U0001D12A', 1, 2, 'C')])
+def test_note_transpose(note, semitone, letter, new_note):
     nnote = NE.create_note(note)
-    nnote.transpose(value)
-    assert nnote == new_note
-
-
-@pytest.mark.parametrize(
-    "note, value, new_note", [
-        ('C', -2, 'B\u266d'), ('F\u266f', -5, 'D\u266d'), ('F', -2, 'E\u266d')])
-def test_root_transpose_flat(note, value, new_note):
-    nnote = NE.create_note(note)
-    nnote.transpose(value, use_flats=True)
+    nnote.transpose(semitone, letter)
     assert nnote == new_note
 
 
@@ -144,7 +135,7 @@ def test_root_transpose_flat(note, value, new_note):
 def test_root_transpose_error(value):
     nnote = NE.create_note('C')
     with pytest.raises(TypeError):
-        nnote.transpose(value)
+        nnote.transpose(value, 1)
 
 
 @pytest.mark.parametrize(

@@ -54,7 +54,9 @@ class NoteEditor:
         intervals = self.get_intervals(*notes)
         min_int = []
         for each in intervals:
-            min_int.append(min(each, 12-each))
+            if each > (12-each):
+                shift = each-12
+            else:
+                shift = each
+            min_int.append(shift)
         return tuple(min_int)
-
-

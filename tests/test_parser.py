@@ -16,17 +16,26 @@ CA = ChordAnalyser()
 cp = Parser()
 
 
-@pytest.mark.parametrize(
-    "attribute, inputs, output", [
-        (NoteEditor.create_note, ("C",), NE.create_note("C")),
-        (KeyEditor.create_key, ("C", "major"), KE.create_key("C", "major")),
-        (ScaleEditor.create_scale, ("C", "major"), SE.create_scale("C", "major")),
-        (ChordEditor.create_chord, ("C",), CE.create_chord("C")),
-        (ChordAnalyser.roman, (CE.create_chord("C"), SE.create_scale("C")), "I"),
-        ]
-    )
-def test_attributes(attribute, inputs, output):
-    assert attribute(cp, *inputs) == output
+def test_notes():
+    assert cp.create_note("C") == NE.create_note("C")
+
+
+def test_keys():
+    assert cp.create_key("C") == KE.create_key("C")
+
+
+def test_scales():
+    assert cp.create_scale("C") == SE.create_scale("C")
+
+
+def test_chords():
+    assert cp.create_chord("C") == CE.create_chord("C")
+
+
+def test_CA():
+    c = CE.create_chord("C")
+    s = SE.create_scale("C")
+    assert cp.roman(c, s) == "I"
 
 
 def test_attribute_error():

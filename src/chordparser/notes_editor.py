@@ -22,6 +22,9 @@ class NoteEditor:
         '#': _sharp, '##': _doublesharp,
         None: '',
     }
+    _notes_tuple = (
+        'C', 'D', 'E', 'F', 'G', 'A', 'B',
+        'C', 'D', 'E', 'F', 'G', 'A', 'B')
 
     def create_note(self, value):
         """Create a Note from a string."""
@@ -38,6 +41,18 @@ class NoteEditor:
         symbol = NoteEditor._symbol_converter.get(rgx.group(2))
         notation = letter + symbol
         return Note(notation)
+
+    def get_tone_notes(self, *notes):
+        """Return a tuple of (semitone, note) differences between notes."""
+        semitones = self.get_intervals(*notes)
+        old_note = self._notes_tuple.index(notes[0].letter())
+        note_diff = []
+        for each in notes:
+            new_note = self._notes_tuple.index(each.letter())
+            note_diff.append((new_note-old_note) % 8)
+            old_note = new_note
+        note_diff.pop(0)
+        return tuple(zip(semitones, note_diff))
 
     def get_intervals(self, *notes):
         """Return a tuple of intervals between notes in semitones."""

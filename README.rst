@@ -47,4 +47,4 @@ Features
 -----
 Usage
 -----
-Check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`.
+Check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_.

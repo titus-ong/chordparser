@@ -43,7 +43,7 @@ class ChordAnalyser:
             'augmented-major': '+M',
         }
         if chord.quality == 'power':
-            return ValueError("Cannot parse power chords")
+            raise ValueError("Cannot parse power chords")
         if chord.sus:
             warnings.warn("Warning: sus chords may not be parsed correctly")
         c_int = (self.NE.get_intervals(*chord.base_chord[0:3]))

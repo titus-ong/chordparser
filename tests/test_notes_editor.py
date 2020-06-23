@@ -44,4 +44,30 @@ def test_intervals(notes, interval):
     assert interval == NE.get_intervals(*note_list)
 
 
+@pytest.mark.parametrize(
+    "notes, interval", [
+        (('C', 'B'), (-1,)),
+        (('B', 'E', 'D'), (5, -2)),
+        ]
+    )
+def test_min_intervals(notes, interval):
+    note_list = []
+    for each in notes:
+        note_list.append(NE.create_note(each))
+    assert interval == NE.get_min_intervals(*note_list)
+
+
+@pytest.mark.parametrize(
+    "notes, difference", [
+        (('C', 'B'), ((11, 6),)),
+        (('B', 'E', 'D'), ((5, 4), (10, 7))),
+        ]
+    )
+def test_tone_notes(notes, difference):
+    note_list = []
+    for each in notes:
+        note_list.append(NE.create_note(each))
+    assert difference == NE.get_tone_notes(*note_list)
+
+
 

@@ -63,10 +63,7 @@ class KeyEditor:
         if not key.mode in {'minor', 'aeolian'}:
             raise KeyError("Key is not minor")
         idx = KeyEditor._notes_tuple.index(key.letter())
-        key.transpose(3)
-        new_idx = KeyEditor._notes_tuple.index(key.letter())
-        if new_idx-idx != 2:  # must transpose 2 letters
-            key.transpose(0, use_flats=True)
+        key.transpose(3, 2)
         key.submode = None
         key.mode = 'major'
         return key
@@ -77,10 +74,7 @@ class KeyEditor:
         if submode not in KeyEditor._submodes['minor']:
             raise KeyError("Submode could not be found")
         idx = KeyEditor._notes_tuple.index(key.letter())
-        key.transpose(-3)
-        new_idx = KeyEditor._notes_tuple.index(key.letter())
-        if new_idx-idx != -2:  # transpose 2 letters
-            key.transpose(0, use_flats=True)
+        key.transpose(-3, -2)
         key.submode = submode
         key.mode = 'minor'
         return key

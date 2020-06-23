@@ -118,19 +118,19 @@ class Note:
             symbol = None
         return Note._symbols.get(symbol)
 
-    def transpose(self, value: int = 0, use_flats: bool = False):
-        """Transpose a note by specifying a value. Use flats if use_flats=True."""
-        if not isinstance(value, int):
+    def transpose(self, semitones: int, letter: int):
+        """Transpose a note by specifying the change in semitones and letter."""
+        if not isinstance(semitones, int) or not isinstance(letter, int):
             raise TypeError("Only integers are accepted for value")
-        if not isinstance(use_flats, bool):
-            raise TypeError("Only booleans are accepted for use_flats")
-        number = Note._note_values.get(self.value)
-        number += value
-        if use_flats:
-            dic = Note._flat_scale
+        new_val = (self.num_value() + semitones) % 12
+        self.shift_l(letter)
+        curr_val = self.num_value()
+        print(new_val, curr_val)
+        if (new_val-curr_val) % 12 < 12 - ((new_val-curr_val) % 12):
+            shift = abs((new_val-curr_val) % 12)
         else:
-            dic = Note._sharp_scale
-        self.value = dic[number % 12]
+            shift = -abs(12 - (new_val-curr_val) % 12)
+        self.shift_s(shift)
         return self
 
     def __repr__(self):

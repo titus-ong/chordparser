@@ -109,13 +109,9 @@ class Scale:
             note_list.append(new_note)
         return tuple(note_list)
 
-    def transpose(self, value: int = 0, use_flats: bool = False):
-        """Transpose key of the scale."""
-        if not isinstance(value, int):
-            raise TypeError("Only integers are accepted for value")
-        if not isinstance(use_flats, bool):
-            raise TypeError("Only booleans are accepted for use_flats")
-        self.key.transpose(value, use_flats=use_flats)
+    def transpose(self, semitones: int, letter: int):
+        """Transpose the key of the scale."""
+        self.key.transpose(semitones, letter)
         self.build()
         return self
 

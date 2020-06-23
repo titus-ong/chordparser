@@ -235,13 +235,9 @@ class Chord:
         self.notation = str(self.root)+q_short+sus+add+str(bass)
         return
 
-    def transpose(self, value: int = 0, use_flats: bool = False):
+    def transpose(self, semitones: int, letter: int):
         """Transpose chord."""
-        if not isinstance(value, int):
-            raise TypeError("Only integers are accepted for value")
-        if not isinstance(use_flats, bool):
-            raise TypeError("Only booleans are accepted for use_flats")
-        self.root.transpose(value, use_flats=use_flats)
+        self.root.transpose(semitones, letter)
         bass_tone = self.tones[0]
         self._transpose_build(bass_tone)
         return self

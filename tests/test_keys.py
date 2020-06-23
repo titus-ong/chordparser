@@ -52,6 +52,12 @@ def test_key_not_implemented():
     assert nkey != len
 
 
+def test_key_attribute_error():
+    nkey = KE.create_key('C')
+    with pytest.raises(AttributeError):
+        nkey.testing()
+
+
 @pytest.mark.parametrize(
     "root, mode, submode", [
         ('C', 'major', None),

@@ -34,7 +34,7 @@ class Chord:
             quality: str,
             sus: Union[int, None] = None,
             add: Union[List[str], None] = None,
-            bass: Union[Note, str, None] = None,
+            bass: Union[Note, None] = None,
             string: str = None,
     ):
         self.root = root
@@ -165,10 +165,7 @@ class Chord:
         return
 
     def _build_bass(self):
-        if isinstance(self.bass, Note):
-            self._build_bass_note()
-        else:
-            self._build_bass_str()
+        self._build_bass_note()
 
     def _build_bass_note(self):
         if self.bass in self.notes:
@@ -191,11 +188,6 @@ class Chord:
         accidental = symbols[interval]
         self.tones.insert(0, [accidental, degree])
         return
-
-    def _build_bass_str(self):
-        # build from diatonic - inversion or degree?
-        # rmb to set self.bass
-        pass
 
     def _build_notation(self):
         q_dict = {

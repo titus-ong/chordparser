@@ -61,14 +61,9 @@ class Note:
         ('B' + _sharp): 0,
         ('B' + _doublesharp): 1,
         }
-    _sharp_scale = (
-        'C', 'C\u266f', 'D', 'D\u266f', 'E', 'F', 'F\u266f',
-        'G', 'G\u266f', 'A', 'A\u266f', 'B'
-        )
-    _flat_scale = (
-        'C', 'D\u266d', 'D', 'E\u266d', 'E', 'F',
-        'G\u266d', 'G', 'A\u266d', 'A', 'B\u266d', 'B'
-        )
+    _notes_tuple = (
+        'C', 'D', 'E', 'F', 'G', 'A', 'B',
+        'C', 'D', 'E', 'F', 'G', 'A', 'B')
 
     def __init__(self, value):
         self.value = value
@@ -94,6 +89,15 @@ class Note:
                 "Only symbols up to doublesharps and doubleflats are accepted"
                 )
         self.value = self.letter() + Note._symbols.get(value)
+        return self
+
+    def shift_l(self, value: int):
+        """Shift a note's letter by specifying a value."""
+        if not isinstance(value, int):
+            raise TypeError("Only integers are accepted")
+        pos = self._notes_tuple.index(self.letter()) + value % 7
+        new_letter = self._notes_tuple[pos]
+        self.value = new_letter + (self.symbol() or '')
         return self
 
     def num_value(self) -> int:

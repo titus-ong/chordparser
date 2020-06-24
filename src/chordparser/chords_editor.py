@@ -272,7 +272,7 @@ class ChordEditor:
             remove: Union[List[str], None] = None,
             bass: Union[Note, bool, None] = None,
     ):
-        """Change the chord by specifying root, quality, sus, add, remove (you can only remove added notes), and/or bass. To remove the bass or sus note, use the argument False."""
+        """Change the chord by specifying root, quality, sus, add, remove (you can only remove added notes), and/or bass. To remove the bass or sus note, use the argument False. To remove all added notes, use remove=True."""
         if not isinstance(chord, Chord):
             raise TypeError(f"Object {chord} is not a 'Chord'")
         if root:
@@ -297,15 +297,9 @@ class ChordEditor:
             raise ValueError(f"Could not parse {sus}")
         elif sus is not None:
             chord.sus = sus or None
-        if add:
-            chord.add = chord.add or []
-            for each in add:
-                rgx = re.match(f"^{ChordEditor._added}$", each)
-                if not rgx:
-                    raise ValueError(f"Could not parse {each}")
-                new_each = ChordEditor._symbols[rgx.group(1)] + rgx.group(2)
-                chord.add.append(new_each)
-        if remove:
+        if remove is True:
+            chord.add = None
+        elif remove:
             for each in remove:
                 rgx = re.match(f"^{ChordEditor._added}$", each)
                 if not rgx:
@@ -315,6 +309,14 @@ class ChordEditor:
                     raise ValueError(f"{each} is not an added note")
                 chord.add.remove(new_each)
             chord.add = chord.add or None
+        if add:
+            chord.add = chord.add or []
+            for each in add:
+                rgx = re.match(f"^{ChordEditor._added}$", each)
+                if not rgx:
+                    raise ValueError(f"Could not parse {each}")
+                new_each = ChordEditor._symbols[rgx.group(1)] + rgx.group(2)
+                chord.add.append(new_each)
         if bass:
             chord.bass = self.NE.create_note(bass)
         if bass is False:

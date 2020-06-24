@@ -222,7 +222,7 @@ class ChordEditor:
             add.append(foo)
             string = ''.join(string.split(reg.group(0)))
         if string.strip():
-            raise SyntaxError(f"String '{string.strip}' could not be parsed")
+            raise SyntaxError(f"String '{string.strip()}' could not be parsed")
         return sus, add or None
 
     def _parse_bass(self, rgx):

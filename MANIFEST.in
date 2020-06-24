@@ -1,4 +1,10 @@
 include README.rst
 include docs/*.txt
 include LICENSE
-exclude tests/
+
+# added by check_manifest.py
+include Makefile
+include tox.ini
+recursive-include requirements *.txt
+recursive-include src *.cho
+recursive-include tests *.py

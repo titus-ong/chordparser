@@ -227,6 +227,8 @@ class Chord:
         else:
             bass = ''
         self.notation = str(self.root)+q_short+sus+add+str(bass)
+        if not self.string:
+            self.string = self.notation
         return
 
     def transpose(self, semitones: int, letter: int):

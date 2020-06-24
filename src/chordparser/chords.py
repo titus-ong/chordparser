@@ -32,17 +32,10 @@ class Chord:
         self.add = add
         self.bass = bass
         self.string = string
-        self._first_build()
+        self.build()
 
-    def _first_build(self):
-        """First iteration of building chord notes."""
-        self._build_no_bass()
-        if self.bass:
-            self._build_bass_note()
-        self._build_notation()
-
-    def _build_no_bass(self):
-        """Build the chord notes without the bass note."""
+    def build(self):
+        """Build the chord notes."""
         self._build_base_triad()
         self._build_quality()
         self._build_base_chord()
@@ -50,6 +43,9 @@ class Chord:
             self._build_sus()
         if self.add:
             self._build_add()
+        if self.bass:
+            self._build_bass_note()
+        self._build_notation()
 
     def _build_base_triad(self):
         """Build the base triad of the chord."""
@@ -233,38 +229,10 @@ class Chord:
     def transpose(self, semitones: int, letter: int):
         """Transpose the chord by specifying the semitone and letter intervals."""
         self.root.transpose(semitones, letter)
-        bass_tone = self.tones[0]
-        self._transpose_build(bass_tone)
-        return self
-
-    def _transpose_build(self, bass_tone):
-        """Build chord notes for transposition."""
-        self._build_no_bass()
         if self.bass:
-            self._build_bass_from_tone(bass_tone)
-        self._build_notation()
-
-    def _build_bass_from_tone(self, bass_tone):
-        """Build the bass note based on its degree."""
-        symbols = {
-            '\u266d': -1, '\U0001D12B': -2,
-            '\u266f': +1, '\U0001D12A': +2,
-            }
-        if bass_tone in self.base_tones:
-            bass_note = self.base_chord[self.base_tones.index(bass_tone)]
-            if bass_tone in self.tones:
-                self.tones.remove(bass_tone)
-                self.notes.remove(bass_note)
-            self.tones.insert(0, bass_tone)
-            self.notes.insert(0, bass_note)
-        else:
-            self.tones.insert(0, bass_tone)
-            adjustment = symbols[bass_tone[0]]
-            bass_note = copy.copy(self._scale.notes[bass_tone[1]-1])
-            bass_note.shift_s(adjustment)
-        self.bass = bass_note
-        return
-
+            self.bass.transpose(semitones, letter)
+        self.build()
+        return self
 
     # def format(self, options):
     #     """Specify options to format string output."""

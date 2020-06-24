@@ -5,7 +5,7 @@ from chordparser.chords import Chord
 from chordparser.notes_editor import NoteEditor
 from chordparser.keys_editor import KeyEditor
 from chordparser.scales_editor import ScaleEditor
-from typing import Union
+from typing import Union, List
 import re
 
 
@@ -87,14 +87,14 @@ class ChordEditor:
         (3, 4): 'minor',
         (3, 3): 'diminished',
         (4, 4): 'augmented',
-        (4, 3, 3): 'dominant ',
-        (4, 3, 4): 'major ',
-        (3, 4, 3): 'minor ',
-        (3, 4, 4): 'minor-major ',
-        (3, 3, 3): 'diminished ',
-        (3, 3, 4): 'half-diminished ',
-        (4, 4, 2): 'augmented ',
-        (4, 4, 3): 'augmented-major ',
+        (4, 3, 3): 'dominant',
+        (4, 3, 4): 'major',
+        (3, 4, 3): 'minor',
+        (3, 4, 4): 'minor-major',
+        (3, 3, 3): 'diminished',
+        (3, 3, 4): 'half-diminished',
+        (4, 4, 2): 'augmented',
+        (4, 4, 3): 'augmented-major',
     }
     _ext_words = {
         None: '',
@@ -123,10 +123,10 @@ class ChordEditor:
         root = self._parse_root(rgx)
         temp_q, extension = self._parse_quality(rgx)
         q = self._parse_alt5(rgx, temp_q)  # altered 5th may change quality
-        quality = (
-            ChordEditor._quality_intervals[tuple(q)] +
-            ChordEditor._ext_words[extension]
-            )
+        quality = "{} {}".format(
+            ChordEditor._quality_intervals[tuple(q)],
+            ChordEditor._ext_words[extension],
+            ).strip()
         sus, add = self._parse_others(rgx)
         bass_note = self._parse_bass(rgx)
         return root, quality, sus, add, bass_note
@@ -261,3 +261,64 @@ class ChordEditor:
         interval = self.NE.get_intervals(*base_chord)
         quality = ChordEditor._quality_intervals[interval]
         return Chord(root, quality, sus, add, bass)
+
+    def change_chord(
+            self,
+            chord,
+            root: Union[Note, None] = None,
+            quality: Union[str, None] = None,
+            sus: Union[int, bool, None] = None,
+            add: Union[List[str], None] = None,
+            remove: Union[List[str], None] = None,
+            bass: Union[Note, bool, None] = None,
+    ):
+        """Change the chord by specifying root, quality, sus, add, remove (you can only remove added notes), and/or bass. To remove the bass or sus note, use the argument False."""
+        if not isinstance(chord, Chord):
+            raise TypeError(f"Object {chord} is not a 'Chord'")
+        if root:
+            chord.root = self.NE.create_note(root)
+        if quality:
+            q_list = quality.split()
+            words = len(q_list)
+            if q_list[0] not in ChordEditor._quality_intervals.values():
+                raise ValueError(f"Could not parse {quality}")
+            if words == 2:
+                if q_list[1] not in ChordEditor._ext_words.values():
+                    raise ValueError(f"Could not parse {quality}")
+            if words == 3:
+                if f"{q_list[1]} {q_list[2]}" not in ChordEditor._ext_words.values():
+                    raise ValueError(f"Could not parse {quality}")
+            if words < 1 or words > 3:
+                raise ValueError(f"Could not parse {quality}")
+            if words != 1 and q_list[0] == 'power':
+                raise ValueError(f"Could not parse {quality}")
+            chord.quality = quality
+        if sus not in {2, 4, False, None}:
+            raise ValueError(f"Could not parse {sus}")
+        elif sus is not None:
+            chord.sus = sus or None
+        if add:
+            chord.add = chord.add or []
+            for each in add:
+                rgx = re.match(f"^{ChordEditor._added}$", each)
+                if not rgx:
+                    raise ValueError(f"Could not parse {each}")
+                new_each = ChordEditor._symbols[rgx.group(1)] + rgx.group(2)
+                chord.add.append(new_each)
+        if remove:
+            for each in remove:
+                rgx = re.match(f"^{ChordEditor._added}$", each)
+                if not rgx:
+                    raise ValueError(f"Could not parse {each}")
+                new_each = ChordEditor._symbols[rgx.group(1)] + rgx.group(2)
+                if not chord.add or new_each not in chord.add:
+                    raise ValueError(f"{each} is not an added note")
+                chord.add.remove(new_each)
+            chord.add = chord.add or None
+        if bass:
+            chord.bass = self.NE.create_note(bass)
+        if bass is False:
+            chord.bass = None
+        chord.build()
+        return chord
+

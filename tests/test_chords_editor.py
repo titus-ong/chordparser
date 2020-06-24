@@ -154,3 +154,85 @@ def test_diatonic_value_error(degree):
     )
 def test_xstr(input, output):
     assert CE._xstr(input) == output
+
+
+def test_change_chord_error():
+    with pytest.raises(TypeError):
+        CE.change_chord(len)
+
+
+def test_change_chord_root():
+    o = CE.create_chord('C')
+    n = CE.create_chord('D')
+    assert n == CE.change_chord(o, root='D')
+
+
+def test_change_chord_q():
+    o = CE.create_chord('C')
+    n = CE.create_chord('Cminmajb9')
+    assert n == CE.change_chord(o, quality="minor-major minor ninth")
+
+
+@pytest.mark.parametrize(
+    "quality", [
+        "powr", "power ninth", "major sixth", "augmented major ninth", "augmented minor tenth", "major minor ninth ten",
+        ]
+    )
+def test_change_chord_q_error(quality):
+    o = CE.create_chord('C')
+    with pytest.raises(ValueError):
+        CE.change_chord(o, quality=quality)
+
+
+def test_change_chord_sus():
+    o = CE.create_chord('Csus2')
+    n = CE.create_chord('C')
+    assert n == CE.change_chord(o, sus=False)
+
+
+def test_change_chord_sus_error():
+    o = CE.create_chord('C')
+    with pytest.raises(ValueError):
+        CE.change_chord(o, sus=3)
+
+
+def test_change_chord_add():
+    o = CE.create_chord('Cadd9')
+    n = CE.create_chord('Caddb2add9')
+    assert n == CE.change_chord(o, add=['b2'])
+
+
+def test_change_chord_add_error():
+    o = CE.create_chord('C')
+    with pytest.raises(ValueError):
+        CE.change_chord(o, add=['b22'])
+
+
+def test_change_chord_rem():
+    o = CE.create_chord('Caddb2')
+    n = CE.create_chord('C')
+    assert n == CE.change_chord(o, remove=['b2'])
+
+
+def test_change_chord_rem_error():
+    o = CE.create_chord('C')
+    with pytest.raises(ValueError):
+        CE.change_chord(o, remove=['b2'])
+
+
+def test_change_chord_rem_error_2():
+    o = CE.create_chord('Cb2')
+    with pytest.raises(ValueError):
+        CE.change_chord(o, remove=['b22'])
+
+
+def test_change_chord_bass():
+    o = CE.create_chord('Cadd9')
+    n = CE.create_chord('Cadd9/G')
+    assert n == CE.change_chord(o, bass='G')
+
+
+def test_change_chord_bass_2():
+    o = CE.create_chord('Cadd9/G')
+    n = CE.create_chord('Cadd9')
+    assert n == CE.change_chord(o, bass=False)

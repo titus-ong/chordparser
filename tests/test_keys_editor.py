@@ -106,3 +106,19 @@ def test_relative_minor(root, mode, submode, newroot, newmode, newsub):
     nkey = KE.create_key(root, mode)
     rel_key = KE.relative_minor(nkey, submode)
     assert rel_key == KE.create_key(newroot, newmode, newsub)
+
+
+def test_change_key():
+    okey = KE.create_key('C', 'major', None)
+    nkey = KE.create_key('D', 'minor', 'harmonic')
+    assert nkey == KE.change_key(okey, 'D', 'minor', 'harmonic')
+
+
+def test_change_key_2():
+    okey = KE.create_key('C', 'minor', 'melodic')
+    nkey = KE.create_key('D\u266d', 'minor', 'melodic')
+    assert nkey == KE.change_key(okey, 'D\u266d', 'minor', None)
+
+def test_change_key_error():
+    with pytest.raises(TypeError):
+        KE.change_key(len)

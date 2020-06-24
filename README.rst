@@ -36,7 +36,7 @@ Install
 Features
 --------
 
-* Parse notes, keys, scales and chords
+* Create and manipulate notes, keys, scales and chords easily
 * Accept complex chord notations
 * Transpose musical classes for easy transposition
 * Automatically-generate notes for scales and chords

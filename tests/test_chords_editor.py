@@ -214,6 +214,12 @@ def test_change_chord_rem():
     assert n == CE.change_chord(o, remove=['b2'])
 
 
+def test_change_chord_rem_2():
+    o = CE.create_chord('Caddb2add6add9')
+    n = CE.create_chord('C')
+    assert n == CE.change_chord(o, remove=True)
+
+
 def test_change_chord_rem_error():
     o = CE.create_chord('C')
     with pytest.raises(ValueError):

@@ -83,7 +83,7 @@ class ChordAnalyser:
         numeral = symb+c_qual+q_str+inv_str
         return numeral
 
-    def analyse_diatonic(self, chord, scale, incl_submodes: bool = True) -> List[tuple]:
+    def analyse_diatonic(self, chord, scale, incl_submodes: bool = False) -> List[tuple]:
         """Return all possible chord function (None if not found). Format: List[(Roman numeral, scale mode, scale submode)]."""
         if not incl_submodes:
             j = [scale.key.submode]
@@ -102,14 +102,14 @@ class ChordAnalyser:
                     chords.append((self.roman(chord, nscale), nscale.key.mode, submode))
         return chords
 
-    def analyse_all(self, chord, scale):
+    def analyse_all(self, chord, scale, incl_submodes: bool = False):
         """Return all possible chord function accounting for all modes (None if not found)."""
         self.mode_list.remove(scale.key.mode)
         self.mode_list.insert(0, scale.key.mode)  # shift to the front
         chords = []
         for mode in self.mode_list:
             nscale = self.SE.create_scale(scale.key.root, mode)
-            result = self.analyse_diatonic(chord, nscale)
+            result = self.analyse_diatonic(chord, nscale, incl_submodes)
             if result:
                 chords += result
         return chords

@@ -31,7 +31,7 @@ setup(name='chordparser',
       description='Parse and analyse chords',
       long_description=readme(),
       classifiers=[
-          "Development Status :: 5 - Production/Stable",
+          "Development Status :: 4 - Beta",
           'License :: OSI Approved :: MIT License',
           'Operating System :: OS Independent',
           "Natural Language :: English",

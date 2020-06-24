@@ -143,6 +143,7 @@ class Chord:
             '\u266d': -1, '\U0001D12B': -2,
             '\u266f': +1, '\U0001D12A': +2,
             }
+        pos_list = []
         for each in self.add:
             adjustment = 0
             accidental = None
@@ -154,6 +155,8 @@ class Chord:
             pos = max(self.tones.index(i) for i in self.tones if i[1] < tone)+1
             self.tones.insert(pos, [accidental, tone])
             self.notes.insert(pos, self._scale.notes[tone-1].shift_s(adjustment))
+            pos_list.append(pos)
+        self.add = [x for _, x in sorted(zip(pos_list, self.add))]
         return
 
     def _build_bass_note(self):

@@ -13,7 +13,7 @@ class ChordEditor:
     """
     ChordEditor class that creates a Chord from either a string or a Scale/Key.
 
-    The ChordEditor class can parse a chord notation string to create a Chord using the 'create_chord' method, or create a Chord by specifying a Scale/Key and scale degree using the 'create_diatonic' method.
+    The ChordEditor class can parse a chord notation string to create a Chord using the 'create_chord' method, or create a Chord by specifying a Scale/Key and scale degree using the 'create_diatonic' method. The ChordEditor can also change a chord using the 'change_chord' method.
     """
     _letter_pattern = '[a-gA-G]'
     _flat_pattern = '\u266D|\U0001D12B|bb|b'

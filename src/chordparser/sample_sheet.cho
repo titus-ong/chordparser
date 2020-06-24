@@ -1,18 +1,50 @@
-# A simple ChordPro song.
-# Taken from https://www.chordpro.org/chordpro/ChordPro-File-Format-Specification.html
-
-{title: Swing Low Sweet Chariot}
-
-{start_of_chorus}
-Swing [D]low, sweet [G]chari[D]ot,
-Comin’ for to carry me [A7]home.
-Swing [D7]low, sweet [G]chari[D]ot,
-Comin’ for to [A7]carry me [D]home.
-{end_of_chorus}
-
-I [D]looked over Jordan, and [G]what did I [D]see,
-Comin’ for to carry me [A7]home.
-A [D]band of angels [G]comin’ after [D]me,
-Comin’ for to [A7]carry me [D]home.
-
-{comment: Chorus}
+{t: Hotel California }
+{key: Bm}
+{artist:Eagles}
+{c: Source - https://ozbcoz.com/Songs/song.php?ID=2111}
+{c: }
+Intro: [Bm] [F#7] [A] [E] [G] [D] [Em] [F#7]
+{c: }
+[Bm] On a dark desert highway [F#7] cool wind in my hair
+[A] Warm smell of colitas [E] rising up through the air
+[G] Up ahead in the distance [D] I saw a shimmering light
+[Em] My head grew heavy and my sight grew dim
+[F#7] I had to stop for the night
+{c: }
+[Bm] There she stood in the doorway [F#7] I heard the mission bell
+[A] And I was thinking to myself this could be [E] heaven or this could be hell
+[G] Then she lit up a candle [D] and she showed me the way
+[Em] There were voices down the corridor [F#7] I thought I heard them say
+{c: }
+[G] Welcome to the Hotel Cali[D]fornia
+Such a [Em] lovely place such a [Bm] lovely face
+[G] Plenty of room at the Hotel Cali[D]fornia
+Any [Em] time of year you can [F#7] find it here
+{c: }
+[Bm] Her mind is Tiffany twisted [F#7] she got the Mercedes bends
+[A] She got a lot of pretty pretty boys [E] that she calls friends
+[G] How they dance in the courtyard [D] sweet summer sweat
+[Em] Some dance to remember [F#7] some dance to forget
+[Bm] So I called up the captain [F#7] please bring me my wine
+He said [A] we haven't had that spirit here since [E] 1969
+[G] And still those voices are calling from [D] far away
+[Em] Wake you up in the middle of the night [F#7] just to hear them say
+{c: }
+[G] Welcome to the Hotel Cali[D]fornia
+Such a [Em] lovely place such a [Bm] lovely face
+[G] Plenty of room at the Hotel Cali[D]fornia
+Any [Em] time of year you can [F#7] find it here
+{c: }
+[Bm] Mirrors on the ceiling [F#7] the pink champagne on ice
+And she said [A] we are all just prisoners here [E] of our own device
+[G] And in the master's chambers [D] they gathered for the feast
+[Em] They stab it with their steely knives but they [F#7] just can't kill the beast
+[Bm] Last thing I remember I was [F#7] running for the door
+[A] I had to find the passage back to the [E] place I was before
+[G] Relax said the nightman we are [D] programmed to receive
+[Em] You can check out anytime you like [F#7] but you can never leave
+{c: }
+[G] Welcome to the Hotel Cali[D]fornia
+Such a [Em] lovely place such a [Bm] lovely face
+They [G] livin' it up at the Hotel Cali[D]fornia
+What a [Em] nice surprise bring your [F#7] alibis       [Bm]

@@ -10,4 +10,4 @@ from chordparser.chords import Chord
 
 __author__ = 'Titus Ong'
 __email__ = 'titusongyl@gmail.com'
-__version__ = '0.2.1'
+__version__ = '0.2.2'

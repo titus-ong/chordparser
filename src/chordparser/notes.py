@@ -4,7 +4,7 @@ class Note:
 
     The Note class consists of notation a-g or A-G, with optional unicode accidental symbols \u266d, \u266f, \U0001D12B, or \U0001D12A. It is created by the NoteEditor.
 
-    Notes can have accidentals set using the 'accidental' method, and can be shifted by semitones using the 'shift_s' method. The letter of the Note can be shifted using the 'shift_l' method. Notes also have 'letter' and 'symbol' methods to get their respective values. Numerical representation of the Note value can be accessed via the 'num_value' and 'symbol_value' methods. Notes can be transposed using the 'transpose' method.
+    Notes can have accidentals set using the 'accidental' method, and can be shifted by semitones using the 'shift_s' method. The letter of the Note can be shifted using the 'shift_l' method. Notes also have 'letter' and 'symbol' methods to get their respective values. Numerical representation of the Note value can be accessed via the 'num_value', 'letter_value' and 'symbol_value' methods. Notes can be transposed using the 'transpose' method.
 
     Notes can be compared either with other Notes or with strings.
     """
@@ -13,49 +13,24 @@ class Note:
     _doubleflat = '\U0001D12B'
     _doublesharp = '\U0001D12A'
     _symbols = {
-        _flat: -1, _doubleflat: -2,
-        _sharp: +1, _doublesharp: +2,
         -1: _flat, -2: _doubleflat,
         +1: _sharp, +2: _doublesharp,
-        0: '', None: 0,
-        }
+        0: '',
+    }
+    _symbol_signs = {
+        _flat: -1, _doubleflat: -2,
+        _sharp: 1, _doublesharp: 2,
+        '': 0,
+    }
     _note_values = {  # Basis: C = 0
-        ('C' + _doubleflat): 10,
-        ('C' + _flat): 11,
         'C': 0,
-        ('C' + _sharp): 1,
-        ('C' + _doublesharp): 2,
-        ('D' + _doubleflat): 0,
-        ('D' + _flat): 1,
         'D': 2,
-        ('D' + _sharp): 3,
-        ('D' + _doublesharp): 4,
-        ('E' + _doubleflat): 2,
-        ('E' + _flat): 3,
         'E': 4,
-        ('E' + _sharp): 5,
-        ('E' + _doublesharp): 6,
-        ('F' + _doubleflat): 3,
-        ('F' + _flat): 4,
         'F': 5,
-        ('F' + _sharp): 6,
-        ('F' + _doublesharp): 7,
-        ('G' + _doubleflat): 5,
-        ('G' + _flat): 6,
         'G': 7,
-        ('G' + _sharp): 8,
-        ('G' + _doublesharp): 9,
-        ('A' + _doubleflat): 7,
-        ('A' + _flat): 8,
         'A': 9,
-        ('A' + _sharp): 10,
-        ('A' + _doublesharp): 11,
-        ('B' + _doubleflat): 9,
-        ('B' + _flat): 10,
         'B': 11,
-        ('B' + _sharp): 0,
-        ('B' + _doublesharp): 1,
-        }
+    }
     _notes_tuple = (
         'C', 'D', 'E', 'F', 'G', 'A', 'B',
         'C', 'D', 'E', 'F', 'G', 'A', 'B')
@@ -69,9 +44,9 @@ class Note:
             raise TypeError("Only integers are accepted")
         if value not in {-2, -1, 0, 1, 2}:
             raise ValueError(
-                "Only integers between -2 and 2 are accepted"
-                )
-        self.value = self.letter() + Note._symbols.get(value)
+                "Only symbols up to doublesharps and doubleflats are accepted"
+            )
+        self.value = self.letter() + Note._symbols[value]
         return self
 
     def shift_s(self, value: int):
@@ -82,16 +57,16 @@ class Note:
         if value not in {-2, -1, 0, 1, 2}:
             raise ValueError(
                 "Only symbols up to doublesharps and doubleflats are accepted"
-                )
-        self.value = self.letter() + Note._symbols.get(value)
+            )
+        self.value = self.letter() + Note._symbols[value]
         return self
 
     def shift_l(self, value: int):
         """Shift a note's letter."""
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")
-        pos = self._notes_tuple.index(self.letter()) + value % 7
-        new_letter = self._notes_tuple[pos]
+        pos = (Note._notes_tuple.index(self.letter()) + value) % 7
+        new_letter = Note._notes_tuple[pos]
         self.value = new_letter + (self.symbol() or '')
         return self
 
@@ -135,7 +110,7 @@ class Note:
         return self.value
 
     def __eq__(self, other):
-        # Allow comparison between note values and strings
+        # Allow comparison between other Notes and strings
         if isinstance(other, Note):
             return self.value == other.value
         elif isinstance(other, str):

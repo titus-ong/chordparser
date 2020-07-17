@@ -2,21 +2,7 @@ from chordparser.keys_editor import KeyEditor, ModeError
 import pytest
 
 
-KE = keys_editor.KeyEditor()
-
-
-@pytest.mark.parametrize(
-    "key", [1, True, len, [], ()])
-def test_keys_typeerror(key):
-    with pytest.raises(TypeError):
-        nkey = KE.create_key(key)
-
-
-@pytest.mark.parametrize(
-    "key", ["ABC", "G\u266f\u266f", "H"])
-def test_keys_valueerror(key):
-    with pytest.raises(ValueError):
-        nkey = KE.create_key(key)
+KE = KeyEditor()
 
 
 @pytest.mark.parametrize(
@@ -39,13 +25,6 @@ def test_key_mode_submode_2():
 
 
 @pytest.mark.parametrize(
-    "mode", [1, True, len])
-def test_key_mode_typeerror(mode):
-    with pytest.raises(TypeError):
-        nkey = KE.create_key('C', mode)
-
-
-@pytest.mark.parametrize(
     "mode", ["ionia", "hello", "1rh9"])
 def test_key_mode_error(mode):
     with pytest.raises(ValueError):
@@ -60,9 +39,6 @@ def test_key_submode_key_error(mode, submode):
 
 
 @pytest.mark.parametrize(
-    "mode, submode", [("major", 1), ("minor", True)])
-def test_key_submode_type_error(mode, submode):
-    with pytest.raises(TypeError):
     "mode, submode", [("major", "harmonic")])
 def test_key_submode_key_error_2(mode, submode):
     with pytest.raises(ModeError):
@@ -121,7 +97,3 @@ def test_change_key_2():
     okey = KE.create_key('C', 'minor', 'melodic')
     nkey = KE.create_key('D\u266d', 'minor', 'melodic')
     assert nkey == KE.change_key(okey, 'D\u266d', 'minor', None)
-
-def test_change_key_error():
-    with pytest.raises(TypeError):
-        KE.change_key(len)

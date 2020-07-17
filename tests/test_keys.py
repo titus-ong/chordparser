@@ -16,7 +16,7 @@ def test_note_transpose(key, semitone, letter, new_key):
 
 @pytest.mark.parametrize(
     "value", [
-        "H#", 10.0, "Z", len])
+        "H#", "Z", len])
 def test_root_transpose_error(value):
     nkey = KE.create_key('C')
     with pytest.raises(TypeError):
@@ -36,8 +36,8 @@ def test_root_transpose_error_2(value):
     "root, mode, submode", [
         ('C', 'dorian', None),
         ('C', 'aeolian', 'harmonic'),
-        ]
-    )
+    ]
+)
 def test_key_representation(root, mode, submode):
     nkey = KE.create_key(root, mode, submode)
     if submode:
@@ -61,8 +61,8 @@ def test_key_attribute_error():
     "root, mode, submode", [
         ('C', 'major', None),
         ('C', 'ionian', None),
-        ]
-    )
+    ]
+)
 def test_key_equality(root, mode, submode):
     nkey = KE.create_key('C')
     assert nkey == KE.create_key(root, mode, submode)
@@ -77,8 +77,8 @@ def test_key_equality_2():
     "root, mode, submode", [
         ('C', 'major', None),
         ('C', 'minor', 'harmonic'),
-        ]
-    )
+    ]
+)
 def test_key_inequality(root, mode, submode):
     nkey = KE.create_key('C', 'aeolian', 'natural')
     assert nkey != KE.create_key(root, mode, submode)

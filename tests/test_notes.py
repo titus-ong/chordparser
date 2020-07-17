@@ -7,14 +7,6 @@ NE = notes_editor.NoteEditor()
 
 
 @pytest.mark.parametrize(
-    "accidental", ['CA', 'D\u266F', 2.0])
-def test_note_accidental_wrong_type(accidental):
-    new_note = NE.create_note('C')
-    with pytest.raises(TypeError):
-        new_note.accidental(accidental)
-
-
-@pytest.mark.parametrize(
     "accidental", [-3, 3])
 def test_note_accidental_wrong_value(accidental):
     new_note = NE.create_note('C')
@@ -33,14 +25,6 @@ def test_note_accidental_positive(accidental, note):
 
 
 @pytest.mark.parametrize(
-    "shift", ['CA', 'D\u266F', 2.0, len, [], ()])
-def test_note_shift_wrong_type(shift):
-    new_note = NE.create_note('C')
-    with pytest.raises(TypeError):
-        new_note.shift_s(shift)
-
-
-@pytest.mark.parametrize(
     "shift", [300, -10, 3, -3])
 def test_note_shift_wrong_value(shift):
     new_note = NE.create_note('C')
@@ -56,14 +40,6 @@ def test_note_shift_positive(shift, note):
     new_note = NE.create_note('C')
     new_note.shift_s(shift)
     assert new_note.value == note
-
-
-@pytest.mark.parametrize(
-    "shift", ['CA', 'D\u266F', 2.0, len, [], ()])
-def test_note_shift_wrong_type_2(shift):
-    new_note = NE.create_note('C')
-    with pytest.raises(TypeError):
-        new_note.shift_l(shift)
 
 
 @pytest.mark.parametrize(
@@ -146,21 +122,3 @@ def test_note_transpose(note, semitone, letter, new_note):
     nnote = NE.create_note(note)
     nnote.transpose(semitone, letter)
     assert nnote == new_note
-
-
-@pytest.mark.parametrize(
-    "value", [
-        "H#", 10.0, "Z", len])
-def test_root_transpose_error(value):
-    nnote = NE.create_note('C')
-    with pytest.raises(TypeError):
-        nnote.transpose(value, 1)
-
-
-@pytest.mark.parametrize(
-    "value", [
-        "H#", 10.0, "Z", len])
-def test_root_transpose_error_2(value):
-    nnote = NE.create_note('C')
-    with pytest.raises(TypeError):
-        nnote.transpose(1, value)

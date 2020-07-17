@@ -40,8 +40,6 @@ class Note:
 
     def accidental(self, value: int):
         """Change a note's accidental by specifying a value from -2(doubleflat) to 2(doublesharp)."""
-        if not isinstance(value, int):
-            raise TypeError("Only integers are accepted")
         if value not in {-2, -1, 0, 1, 2}:
             raise ValueError(
                 "Only symbols up to doublesharps and doubleflats are accepted"
@@ -51,8 +49,6 @@ class Note:
 
     def shift_s(self, value: int):
         """Shift a note's accidental."""
-        if not isinstance(value, int):
-            raise TypeError("Only integers are accepted")
         value += self.symbol_value()
         if value not in {-2, -1, 0, 1, 2}:
             raise ValueError(
@@ -63,8 +59,6 @@ class Note:
 
     def shift_l(self, value: int):
         """Shift a note's letter."""
-        if not isinstance(value, int):
-            raise TypeError("Only integers are accepted")
         pos = (Note._notes_tuple.index(self.letter()) + value) % 7
         new_letter = Note._notes_tuple[pos]
         self.value = new_letter + (self.symbol() or '')
@@ -94,8 +88,6 @@ class Note:
 
     def transpose(self, semitones: int, letter: int):
         """Transpose a note by specifying the change in semitone and letter intervals."""
-        if not isinstance(semitones, int) or not isinstance(letter, int):
-            raise TypeError("Only integers are accepted for value")
         new_val = (self.num_value() + semitones) % 12
         self.shift_l(letter)
         curr_val = self.num_value()

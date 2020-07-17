@@ -23,8 +23,6 @@ class ScaleEditor:
 
     def change_scale(self, scale, *args):
         """Change the scale by specifying root, mode and/or submode."""
-        if not isinstance(scale, Scale):
-            raise TypeError(f"Object {scale} is not a 'Scale'")
         self.KE.change_key(scale.key, *args)
         scale.build()
         return scale

@@ -27,28 +27,26 @@ class NoteEditor:
 
     def create_note(self, value):
         """Create a Note from a string."""
-        if not isinstance(value, str):
-            raise TypeError("Only strings are accepted")
         pattern = (
             '^([a-gA-G])(\u266F|\u266D|\U0001D12B|\U0001D12A'
             '|bb|##|b|#){0,1}$'
-            )
+        )
         rgx = re.match(pattern, value, re.UNICODE)
         if not rgx:
-            raise ValueError("Note is invalid")
+            raise ValueError("Note could not be parsed")
         letter = rgx.group(1).upper()
         symbol = NoteEditor._symbol_converter.get(rgx.group(2))
         notation = letter + symbol
         return Note(notation)
 
     def get_tone_letter(self, *notes):
-        """Return a nested tuple of (semitone, letter) differences between notes."""
+        """Return a nested tuple of (semitone interval, letter interval) between notes."""
         semitones = self.get_intervals(*notes)
-        old_note = self._notes_tuple.index(notes[0].letter())
+        old_note = NoteEditor._notes_tuple.index(notes[0].letter())
         note_diff = []
         for each in notes:
-            new_note = self._notes_tuple.index(each.letter())
-            note_diff.append((new_note-old_note) % 8)
+            new_note = NoteEditor._notes_tuple.index(each.letter())
+            note_diff.append((new_note - old_note) % 8)
             old_note = new_note
         note_diff.pop(0)
         return tuple(zip(semitones, note_diff))
@@ -59,7 +57,7 @@ class NoteEditor:
         intervals = []
         for each in notes:
             new_val = each.num_value()
-            intervals.append((new_val-old_val) % 12)
+            intervals.append((new_val - old_val) % 12)
             old_val = new_val
         intervals.pop(0)
         return tuple(intervals)
@@ -69,8 +67,8 @@ class NoteEditor:
         intervals = self.get_intervals(*notes)
         min_int = []
         for each in intervals:
-            if each > (12-each):
-                shift = each-12
+            if each > (12 - each):
+                shift = each - 12
             else:
                 shift = each
             min_int.append(shift)

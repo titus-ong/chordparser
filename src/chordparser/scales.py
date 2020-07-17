@@ -46,61 +46,24 @@ class Scale:
 
     def build(self):
         """Build the scale from its key."""
-        self.notes = self._get_notes()
+        self.scale_intervals = self._get_intervals()
+        self.notes = [self.NE.create_note(self.key.root.value)]
+        for interval in self.scale_intervals:
+            new_note = self.NE.create_note(str(self.notes[-1]))
+            self.notes.append(new_note.transpose(interval, 1))
+        self.notes = tuple(self.notes)
+        return self
 
-    def _get_notes(self):
-        """Get notes in the scale."""
-        self.scale_intervals = self._get_scale_intervals()
-        note_no_symbol = self.NE.create_note(self.key.letter())
-        self._idx = Scale._notes_tuple.index(note_no_symbol)
-        self._note_order = self._get_note_order()
-        notes = self._shift_notes()
-        return notes
-
-    def _get_scale_intervals(self):
-        """Get note-by-note intervals in the scale."""
-        intervals = self._get_intervals(self.key.mode)
-        # Account for submode
-        submode_intervals = Scale._submodes.get(self.key.submode)
-        scale_intervals = []
-        for scale, subm in zip(intervals, submode_intervals):
-            scale_intervals.append(scale + subm)
-        return tuple(scale_intervals)
-
-    def _get_intervals(self, mode):
+    def _get_intervals(self):
         """Get intervals based on mode."""
-        shift = Scale._SCALES[mode]
-        intervals = (
+        shift = Scale._SCALES[self.key.mode]
+        mode_intervals = (
             Scale._heptatonic_base[shift:]
             + Scale._heptatonic_base[:shift]
         )
-        return intervals
-
-    def _get_note_order(self):
-        """Re-arrange note order based on key."""
-        note_order = (
-            Scale._notes_tuple[self._idx:]
-            + Scale._notes_tuple[:self._idx]
-        )
-        return note_order
-
-    def _shift_notes(self):
-        """Shift notes with reference to original mode intervals."""
-        base_intervals = self._get_intervals(
-            Scale._SCALE_DEGREE[self._idx]
-        )
-        symbol_increment = self.key.symbol_value()
-        note_list = []
-        for num, note in enumerate(self._note_order):
-            new_note = self.NE.create_note(note)
-            total_increment = (
-                symbol_increment
-                + sum(self.scale_intervals[:num])
-                - sum(base_intervals[:num])
-            )
-            new_note.shift_s(total_increment)
-            note_list.append(new_note)
-        return tuple(note_list)
+        submode_intervals = Scale._submodes.get(self.key.submode)
+        intervals = [x + y for x, y in zip(mode_intervals, submode_intervals)]
+        return tuple(intervals)
 
     def transpose(self, semitones: int, letter: int):
         """Transpose the key of the scale."""
@@ -115,4 +78,4 @@ class Scale:
         # Allow comparison between Keys by checking their basic attributes
         if not isinstance(other, Scale):
             return NotImplemented
-        return self.key == other.key
+        return self.key == other.key and self.notes == other.notes

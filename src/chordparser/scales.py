@@ -89,7 +89,7 @@ class Scale:
         base_intervals = self._get_intervals(
                 Scale._SCALE_DEGREE[self._idx]
                 )
-        symbol_increment = self.key.symbolvalue()
+        symbol_increment = self.key.symbol_value()
         note_list = []
         for num, note in enumerate(self._note_order):
             new_note = self.NE.create_note(note)

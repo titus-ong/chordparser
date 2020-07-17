@@ -4,7 +4,7 @@ class Note:
 
     The Note class consists of notation a-g or A-G, with optional unicode accidental symbols \u266d, \u266f, \U0001D12B, or \U0001D12A. It is created by the NoteEditor.
 
-    Notes can have accidentals set using the 'accidental' method, and can be shifted by semitones using the 'shift_s' method. The letter of the Note can be shifted using the 'shift_l' method. Notes also have 'letter' and 'symbol' methods to get their respective values. Numerical representation of the Note value can be accessed via the 'num_value' and 'symbolvalue' methods. Notes can be transposed using the 'transpose' method.
+    Notes can have accidentals set using the 'accidental' method, and can be shifted by semitones using the 'shift_s' method. The letter of the Note can be shifted using the 'shift_l' method. Notes also have 'letter' and 'symbol' methods to get their respective values. Numerical representation of the Note value can be accessed via the 'num_value' and 'symbol_value' methods. Notes can be transposed using the 'transpose' method.
 
     Notes can be compared either with other Notes or with strings.
     """
@@ -78,7 +78,7 @@ class Note:
         """Shift a note's accidental."""
         if not isinstance(value, int):
             raise TypeError("Only integers are accepted")
-        value += self.symbolvalue()
+        value += self.symbol_value()
         if value not in {-2, -1, 0, 1, 2}:
             raise ValueError(
                 "Only symbols up to doublesharps and doubleflats are accepted"
@@ -109,7 +109,7 @@ class Note:
             return self.value[1]
         return None
 
-    def symbolvalue(self) -> int:
+    def symbol_value(self) -> int:
         """Return note symbol as a integer value."""
         if len(self.value) > 1:
             symbol = self.value[1]

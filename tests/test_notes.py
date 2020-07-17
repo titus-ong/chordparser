@@ -70,8 +70,8 @@ def test_note_shift_wrong_type_2(shift):
     "shift, note", [
         (-2, 'A'), (-1, 'B'),
         (15, 'D'), (-10, 'G')
-        ]
-    )
+    ]
+)
 def test_note_shift_positive_2(shift, note):
     new_note = NE.create_note('C')
     new_note.shift_l(shift)
@@ -115,7 +115,7 @@ def test_note_value(note, value):
         symbol = note[1]
     else:
         symbol = note[0]
-    assert new_note.symbolvalue() == value
+    assert new_note.symbol_value() == value
 
 
 @pytest.mark.parametrize(
@@ -164,5 +164,3 @@ def test_root_transpose_error_2(value):
     nnote = NE.create_note('C')
     with pytest.raises(TypeError):
         nnote.transpose(1, value)
-
-

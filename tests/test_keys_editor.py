@@ -1,4 +1,4 @@
-from chordparser import keys_editor
+from chordparser.keys_editor import KeyEditor, ModeError
 import pytest
 
 
@@ -48,14 +48,14 @@ def test_key_mode_typeerror(mode):
 @pytest.mark.parametrize(
     "mode", ["ionia", "hello", "1rh9"])
 def test_key_mode_error(mode):
-    with pytest.raises(KeyError):
+    with pytest.raises(ValueError):
         nkey = KE.create_key('C', mode)
 
 
 @pytest.mark.parametrize(
-    "mode, submode", [("major", "harmonic"), ("minor", "nothing")])
+    "mode, submode", [("minor", "nothing")])
 def test_key_submode_key_error(mode, submode):
-    with pytest.raises(KeyError):
+    with pytest.raises(ValueError):
         nkey = KE.create_key('C', mode, submode)
 
 
@@ -63,6 +63,9 @@ def test_key_submode_key_error(mode, submode):
     "mode, submode", [("major", 1), ("minor", True)])
 def test_key_submode_type_error(mode, submode):
     with pytest.raises(TypeError):
+    "mode, submode", [("major", "harmonic")])
+def test_key_submode_key_error_2(mode, submode):
+    with pytest.raises(ModeError):
         nkey = KE.create_key('C', mode, submode)
 
 
@@ -70,8 +73,8 @@ def test_key_submode_type_error(mode, submode):
     "root, mode, newroot, newmode", [
         ('C', 'minor', 'E\u266d', 'major'),
         ('F', 'aeolian', 'A\u266d', 'major'),
-        ]
-    )
+    ]
+)
 def test_relative_major(root, mode, newroot, newmode):
     nkey = KE.create_key(root, mode)
     rel_key = KE.relative_major(nkey)
@@ -80,19 +83,19 @@ def test_relative_major(root, mode, newroot, newmode):
 
 def test_relative_major_incorrect_mode():
     nkey = KE.create_key('C', 'dorian')
-    with pytest.raises(KeyError):
+    with pytest.raises(ModeError):
         KE.relative_major(nkey)
 
 
 def test_relative_minor_incorrect_mode():
     nkey = KE.create_key('C', 'dorian')
-    with pytest.raises(KeyError):
+    with pytest.raises(ModeError):
         KE.relative_minor(nkey)
 
 
 def test_relative_minor_incorrect_submode():
     nkey = KE.create_key('C', 'major')
-    with pytest.raises(KeyError):
+    with pytest.raises(ValueError):
         KE.relative_minor(nkey, 'blah')
 
 
@@ -100,8 +103,8 @@ def test_relative_minor_incorrect_submode():
     "root, mode, submode, newroot, newmode, newsub", [
         ('A', 'major', 'harmonic', 'F\u266f', 'minor', 'harmonic'),
         ('F\u266d', 'ionian', 'natural', 'D\u266d', 'minor', 'natural'),
-        ]
-    )
+    ]
+)
 def test_relative_minor(root, mode, submode, newroot, newmode, newsub):
     nkey = KE.create_key(root, mode)
     rel_key = KE.relative_minor(nkey, submode)

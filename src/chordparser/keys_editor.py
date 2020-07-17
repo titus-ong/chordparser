@@ -4,11 +4,16 @@ from chordparser.notes_editor import NoteEditor
 from typing import Union
 
 
+class ModeError(Exception):
+    """Raise when a key's mode is invalid."""
+    pass
+
+
 class KeyEditor:
     """
     KeyEditor class that can create/change a Key, and change keys to their relative major/minor key.
 
-    The KeyEditor class can create a Key using the 'create_key' method by accepting a Note or string, an optional mode (default 'major') and optional submode. Submodes are only available for the minor/aeolian mode (default 'natural'). The 'relative_major' and 'relative_minor' methods change the key into its relative major/minor (submode can be specified for 'relative_minor'). The 'change_key' method can be used to alter the root, mode and submode all at once.
+    The KeyEditor class can create a Key using the 'create_key' method by accepting a Note or string, an optional mode (default 'major') and optional submode. Submodes are only available for the minor/aeolian mode (default 'natural'). The 'relative_major' and 'relative_minor' methods change the key into its relative major/minor (submode can be specified for 'relative_minor'). The 'change_key' method can be used to alter the root, mode and/or submode.
     """
     _modes = (
         'major', 'minor', 'ionian', 'dorian', 'phrygian',
@@ -59,8 +64,11 @@ class KeyEditor:
         return mode.lower()
 
     def _check_submode(self, mode, submode):
-        if submode is None and mode not in KeyEditor._submodes.keys():
-            return submode
+        if mode not in KeyEditor._modes_with_submodes:
+            if submode is None:
+                return submode
+            raise ModeError("Mode does not have any submodes")
+        # minor modes
         if submode is None:
             return 'natural'
         if not isinstance(submode, str):
@@ -74,9 +82,8 @@ class KeyEditor:
 
     def relative_major(self, key):
         """Change a key to its relative major."""
-        if not key.mode in {'minor', 'aeolian'}:
-            raise KeyError("Key is not minor")
-        idx = KeyEditor._notes_tuple.index(key.letter())
+        if key.mode not in {'minor', 'aeolian'}:
+            raise ModeError("Key is not minor")
         key.transpose(3, 2)
         key.submode = None
         key.mode = 'major'
@@ -84,11 +91,10 @@ class KeyEditor:
 
     def relative_minor(self, key, submode='natural'):
         """Change a key to its relative minor."""
-        if not key.mode in {'major', 'ionian'}:
-            raise KeyError("Key is not major")
-        if submode not in KeyEditor._submodes['minor']:
-            raise KeyError("Submode could not be found")
-        idx = KeyEditor._notes_tuple.index(key.letter())
+        if key.mode not in {'major', 'ionian'}:
+            raise ModeError("Key is not major")
+        if submode.lower() not in KeyEditor._submodes:
+            raise ValueError("Submode could not be parsed")
         key.transpose(-3, -2)
         key.submode = submode
         key.mode = 'minor'

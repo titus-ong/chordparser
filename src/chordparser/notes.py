@@ -66,11 +66,16 @@ class Note:
 
     def num_value(self) -> int:
         """Return numerical value (basis: C = 0)."""
-        return Note._note_values[self.value]
+        num = (self.letter_value() + self.symbol_value()) % 12
+        return num
 
     def letter(self) -> str:
         """Return note letter."""
         return self.value[0]
+
+    def letter_value(self) -> int:
+        """Return note letter as an integer value (Basis: C = 0)."""
+        return Note._note_values[self.letter()]
 
     def symbol(self) -> str:
         """Return note symbol (None if no symbol)."""
@@ -79,22 +84,16 @@ class Note:
         return None
 
     def symbol_value(self) -> int:
-        """Return note symbol as a integer value."""
-        if len(self.value) > 1:
-            symbol = self.value[1]
-        else:
-            symbol = None
-        return Note._symbols.get(symbol)
+        """Return note symbol as an integer value."""
+        return Note._symbol_signs.get(self.symbol(), 0)
 
     def transpose(self, semitones: int, letter: int):
         """Transpose a note by specifying the change in semitone and letter intervals."""
         new_val = (self.num_value() + semitones) % 12
         self.shift_l(letter)
         curr_val = self.num_value()
-        if (new_val-curr_val) % 12 < 12 - ((new_val-curr_val) % 12):
-            shift = abs((new_val-curr_val) % 12)
-        else:
-            shift = -abs(12 - (new_val-curr_val) % 12)
+        shift = (new_val - curr_val) % 12
+        shift = shift - 12 if shift > 6 else shift  # shift downwards if closer
         self.shift_s(shift)
         return self
 

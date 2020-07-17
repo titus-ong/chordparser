@@ -19,7 +19,7 @@ class Scale:
         "aeolian": 5,
         "minor": 5,
         "locrian": 6,
-        }
+    }
     _SCALE_DEGREE = {
         0: "ionian",
         1: "dorian",
@@ -73,7 +73,7 @@ class Scale:
         intervals = (
             Scale._heptatonic_base[shift:]
             + Scale._heptatonic_base[:shift]
-            )
+        )
         return intervals
 
     def _get_note_order(self):
@@ -81,14 +81,14 @@ class Scale:
         note_order = (
             Scale._notes_tuple[self._idx:]
             + Scale._notes_tuple[:self._idx]
-            )
+        )
         return note_order
 
     def _shift_notes(self):
         """Shift notes with reference to original mode intervals."""
         base_intervals = self._get_intervals(
-                Scale._SCALE_DEGREE[self._idx]
-                )
+            Scale._SCALE_DEGREE[self._idx]
+        )
         symbol_increment = self.key.symbol_value()
         note_list = []
         for num, note in enumerate(self._note_order):
@@ -97,7 +97,7 @@ class Scale:
                 symbol_increment
                 + sum(self.scale_intervals[:num])
                 - sum(base_intervals[:num])
-                )
+            )
             new_note.shift_s(total_increment)
             note_list.append(new_note)
         return tuple(note_list)

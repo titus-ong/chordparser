@@ -60,7 +60,7 @@ class KeyEditor:
         if not isinstance(mode, str):
             raise TypeError("Only strings are accepted for mode")
         if mode.lower() not in KeyEditor._modes:
-            raise KeyError("Mode could not be found")
+            raise ValueError("Mode could not be parsed")
         return mode.lower()
 
     def _check_submode(self, mode, submode):
@@ -76,8 +76,8 @@ class KeyEditor:
         submode_tuple = KeyEditor._submodes.get(mode)
         if submode_tuple is None:
             raise KeyError("Mode does not have any submodes")
-        if submode.lower() not in submode_tuple:
-            raise KeyError("Submode could not be found")
+        if submode.lower() not in KeyEditor._submodes:
+            raise ValueError("Submode could not be parsed")
         return submode.lower()
 
     def relative_major(self, key):

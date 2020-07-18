@@ -12,4 +12,4 @@ from chordparser.roman import Roman
 
 __author__ = 'Titus Ong'
 __email__ = 'titusongyl@gmail.com'
-__version__ = '0.3.3'
+__version__ = '0.3.4'

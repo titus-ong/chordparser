@@ -12,13 +12,6 @@ CE = chords_editor.ChordEditor()
 
 
 @pytest.mark.parametrize(
-    "value", [1, len, True, [], ()])
-def test_chord_typeerror(value):
-    with pytest.raises(TypeError):
-        CE.create_chord(value)
-
-
-@pytest.mark.parametrize(
     "value", ["1", "H", "\u266fG"])
 def test_chord_valueerror(value):
     with pytest.raises(ValueError):
@@ -29,8 +22,8 @@ def test_chord_valueerror(value):
     "value, root", [
         ('C', NE.create_note('C')),
         ('E\u266f', NE.create_note('E\u266f')),
-        ]
-    )
+    ]
+)
 def test_chord_root(value, root):
     new_chord = CE.create_chord(value)
     assert new_chord.root == root
@@ -52,8 +45,8 @@ def test_chord_root(value, root):
         ('Cdim7', 'diminished seventh'),
         ('C\u00f87', 'half-diminished seventh'),
         ('Cm9', 'minor ninth'),
-        ]
-    )
+    ]
+)
 def test_quality(string, quality):
     new_chord = CE.create_chord(string)
     assert new_chord.quality == quality
@@ -64,8 +57,8 @@ def test_quality(string, quality):
         ('Cmb5', 'diminished'),
         ('CM7#5', 'augmented-major seventh'),
         ('Cmin7dim5', 'half-diminished seventh'),
-        ]
-    )
+    ]
+)
 def test_quality_alt5(string, quality):
     new_chord = CE.create_chord(string)
     assert new_chord.quality == quality
@@ -77,8 +70,8 @@ def test_quality_alt5(string, quality):
         ('Csus', 4),
         ('Csus4', 4),
         ('C', None),
-        ]
-    )
+    ]
+)
 def test_sus(string, sus):
     c = CE.create_chord(string)
     assert c.sus == sus
@@ -90,8 +83,8 @@ def test_sus(string, sus):
         ('cadd2#6', ['2', '\u266f6']),
         ('cminmaj9b11', ['\u266d11']),
         ('C', None),
-        ]
-    )
+    ]
+)
 def test_add(string, add):
     c = CE.create_chord(string)
     assert c.add == add
@@ -107,8 +100,8 @@ def test_parse_error():
         ('C', None),
         ('C/G', NE.create_note('G')),
         ('C/G#', NE.create_note('G\u266f')),
-        ]
-    )
+    ]
+)
 def test_bass(string, bass):
     c = CE.create_chord(string)
     assert c.bass == bass
@@ -119,8 +112,8 @@ def test_bass(string, bass):
         (7, 'diminished'),
         (4, 'major'),
         (6, 'minor'),
-        ]
-    )
+    ]
+)
 def test_diatonic(degree, quality):
     s = SE.create_scale('C', 'major')
     c = CE.create_diatonic(s, degree)
@@ -132,8 +125,8 @@ def test_diatonic(degree, quality):
         (7, 'diminished'),
         (4, 'major'),
         (6, 'minor'),
-        ]
-    )
+    ]
+)
 def test_diatonic_2(degree, quality):
     s = KE.create_key('C', 'major')
     c = CE.create_diatonic(s, degree)
@@ -150,8 +143,8 @@ def test_diatonic_value_error(degree):
 @pytest.mark.parametrize(
     "input, output", [
         ("hey", "hey"), (None, '')
-        ]
-    )
+    ]
+)
 def test_xstr(input, output):
     assert CE._xstr(input) == output
 
@@ -176,8 +169,8 @@ def test_change_chord_q():
 @pytest.mark.parametrize(
     "quality", [
         "powr", "power ninth", "major sixth", "augmented major ninth", "augmented minor tenth", "major minor ninth ten",
-        ]
-    )
+    ]
+)
 def test_change_chord_q_error(quality):
     o = CE.create_chord('C')
     with pytest.raises(ValueError):

@@ -3,8 +3,6 @@ from chordparser.keys import Key
 from chordparser.scales import Scale
 from chordparser.chords import Chord
 from chordparser.notes_editor import NoteEditor
-from chordparser.keys_editor import KeyEditor
-from chordparser.scales_editor import ScaleEditor
 from typing import Union, List
 import re
 
@@ -75,12 +73,12 @@ class ChordEditor:
         f"(?:{_altered_5}){{0,1}}"
         f"({_others}){{0,1}}"
         f"(?:/({_note_pattern})){{0,1}}"
-        )
+    )
     _symbols = {
         'b': '\u266D', 'bb': '\U0001D12B',
         '#': '\u266F', '##': '\U0001D12A',
         None: '',
-        }
+    }
     _quality_intervals = {
         (7,): 'power',
         (4, 3): 'major',
@@ -110,23 +108,21 @@ class ChordEditor:
 
     def create_chord(self, value):
         """Create a chord from a string (do not use any spaces)."""
-        if not isinstance(value, str):
-            raise TypeError("Only strings are accepted")
         rgx = re.match(ChordEditor._pattern, value, re.UNICODE)
         if not rgx:
-            raise ValueError("Chord could not be recognised")
+            raise ValueError("Chord could not be parsed")
         root, quality, sus, add, bass = self._parse_rgx(rgx)
         return Chord(root, quality, sus, add, bass, string=rgx.group(0))
 
     def _parse_rgx(self, rgx):
-        """Parse chord notation regex."""
+        """Distribute regex groups and form chord notation."""
         root = self._parse_root(rgx)
         temp_q, extension = self._parse_quality(rgx)
         q = self._parse_alt5(rgx, temp_q)  # altered 5th may change quality
         quality = "{} {}".format(
             ChordEditor._quality_intervals[tuple(q)],
             ChordEditor._ext_words[extension],
-            ).strip()
+        ).strip()
         sus, add = self._parse_others(rgx)
         bass_note = self._parse_bass(rgx)
         return root, quality, sus, add, bass_note
@@ -189,7 +185,7 @@ class ChordEditor:
         """Change the quality for chords with altered fifths."""
         if not rgx.group(21):
             return temp_q
-        if rgx.group(21) in ChordEditor._dim_pattern+ChordEditor._flat_pattern:
+        if rgx.group(21) in ChordEditor._dim_pattern + ChordEditor._flat_pattern:
             temp_q[1] -= 1
             if len(temp_q) > 2:
                 temp_q[2] += 1
@@ -218,7 +214,7 @@ class ChordEditor:
             reg = re.search(ChordEditor._added, string, re.UNICODE)
             if not reg:
                 break
-            foo = ChordEditor._symbols[reg.group(1)]+reg.group(2)
+            foo = ChordEditor._symbols[reg.group(1)] + reg.group(2)
             add.append(foo)
             string = ''.join(string.split(reg.group(0)))
         if string.strip():
@@ -249,15 +245,15 @@ class ChordEditor:
             scale_ = Scale(value)
         else:
             scale_ = value
-        root = scale_.notes[degree-1]
+        root = scale_.notes[degree - 1]
         bass = None
         sus = None
         add = None
         base_chord = (
-            scale_.notes[degree-1],
-            scale_.notes[degree+1],
-            scale_.notes[degree+3],
-            )
+            scale_.notes[degree - 1],
+            scale_.notes[degree + 1],
+            scale_.notes[degree + 3],
+        )
         interval = self.NE.get_intervals(*base_chord)
         quality = ChordEditor._quality_intervals[interval]
         return Chord(root, quality, sus, add, bass)
@@ -323,4 +319,3 @@ class ChordEditor:
             chord.bass = None
         chord.build()
         return chord
-

@@ -46,7 +46,7 @@ class ChordEditor:
     def _parse_rgx(self, rgx):
         """Distribute regex groups and form chord notation."""
         root = self._parse_root(rgx.group(1))
-        quality = self._parse_quality(rgx.group(2), rgx.group(1).isupper())
+        quality = self._parse_quality(rgx.group(2), rgx.group(1)[0].isupper())
         add = self._parse_add(rgx.groups()[-2])
         bass_note = self._parse_bass(rgx.groups()[-1])
         return root, quality, add, bass_note

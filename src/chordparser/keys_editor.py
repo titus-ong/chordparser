@@ -50,25 +50,25 @@ class KeyEditor:
 
     def _check_mode(self, mode):
         if mode.lower() not in KeyEditor._modes:
-            raise ValueError("Mode could not be parsed")
+            raise SyntaxError(f"'{mode}' could not be parsed")
         return mode.lower()
 
     def _check_submode(self, mode, submode):
         if mode not in KeyEditor._modes_with_submodes:
             if submode is None:
                 return submode
-            raise ModeError("Mode does not have any submodes")
+            raise ModeError(f"'{mode}' does not have any submodes")
         # minor modes
         if submode is None:
             return 'natural'
         if submode.lower() not in KeyEditor._submodes:
-            raise ValueError("Submode could not be parsed")
+            raise SyntaxError(f"'{submode}' could not be parsed")
         return submode.lower()
 
     def relative_major(self, key):
         """Change a key to its relative major."""
         if key.mode not in {'minor', 'aeolian'}:
-            raise ModeError("Key is not minor")
+            raise ModeError(f"'{key}' is not minor")
         key.transpose(3, 2)
         key.submode = None
         key.mode = 'major'
@@ -77,9 +77,9 @@ class KeyEditor:
     def relative_minor(self, key, submode='natural'):
         """Change a key to its relative minor."""
         if key.mode not in {'major', 'ionian'}:
-            raise ModeError("Key is not major")
+            raise ModeError(f"'{key}' is not major")
         if submode.lower() not in KeyEditor._submodes:
-            raise ValueError("Submode could not be parsed")
+            raise SyntaxError(f"'{submode}' could not be parsed")
         key.transpose(-3, -2)
         key.submode = submode
         key.mode = 'minor'

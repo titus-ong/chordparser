@@ -19,8 +19,8 @@ def test_note_creation_positive(note, expected):
 
 @pytest.mark.parametrize(
     "note", ['CA', 'D\u266F\u266F', '\u266DG', '\U0001D12A', 'F###'])
-def test_note_creation_valueerror(note):
-    with pytest.raises(ValueError):
+def test_note_creation_syntaxerror(note):
+    with pytest.raises(SyntaxError):
         new_note = NE.create_note(note)
 
 

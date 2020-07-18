@@ -27,14 +27,14 @@ def test_key_mode_submode_2():
 @pytest.mark.parametrize(
     "mode", ["ionia", "hello", "1rh9"])
 def test_key_mode_error(mode):
-    with pytest.raises(ValueError):
+    with pytest.raises(SyntaxError):
         nkey = KE.create_key('C', mode)
 
 
 @pytest.mark.parametrize(
     "mode, submode", [("minor", "nothing")])
 def test_key_submode_key_error(mode, submode):
-    with pytest.raises(ValueError):
+    with pytest.raises(SyntaxError):
         nkey = KE.create_key('C', mode, submode)
 
 
@@ -71,7 +71,7 @@ def test_relative_minor_incorrect_mode():
 
 def test_relative_minor_incorrect_submode():
     nkey = KE.create_key('C', 'major')
-    with pytest.raises(ValueError):
+    with pytest.raises(SyntaxError):
         KE.relative_minor(nkey, 'blah')
 
 

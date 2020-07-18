@@ -33,7 +33,7 @@ class NoteEditor:
         )
         rgx = re.match(pattern, value, re.UNICODE)
         if not rgx:
-            raise ValueError("Note could not be parsed")
+            raise SyntaxError(f"'{value}' could not be parsed")
         letter = rgx.group(1).upper()
         symbol = NoteEditor._symbol_converter.get(rgx.group(2))
         notation = letter + symbol

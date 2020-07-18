@@ -112,14 +112,16 @@ class Chord:
             if x.letter() == self.bass.letter()
             ) + 1
         self.degrees.insert(0, degree)
-        bass_sym = self.bass.symbol_value()
-        origin_sym = self.base_scale.notes[degree-1].symbol_value()
+        (shift,) = self.NE.get_min_intervals(
+            self.base_scale.notes[degree-1],
+            self.bass
+        )
         symbols = {
             -1: '\u266d', -2: '\U0001D12B',
             +1: '\u266f', +2: '\U0001D12A',
             0: '',
             }
-        sym = symbols[bass_sym - origin_sym]
+        sym = symbols[shift]
         self.symbols.insert(0, sym)
 
     def _build_notation(self):

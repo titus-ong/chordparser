@@ -35,7 +35,7 @@ def test_chords():
 def test_CA():
     c = CE.create_chord("C")
     s = SE.create_scale("C")
-    assert cp.roman(c, s) == "I"
+    assert cp.to_roman(c, s) == "I"
 
 
 def test_attribute_error():

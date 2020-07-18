@@ -37,7 +37,7 @@ class Scale:
         self.scale_intervals = self._get_intervals()
         self.notes = [self.NE.create_note(self.key.root.value)]
         for interval in self.scale_intervals:
-            new_note = self.NE.create_note(str(self.notes[-1]))
+            new_note = self.NE.create_note(self.notes[-1].value)
             self.notes.append(new_note.transpose(interval, 1))
         self.notes = tuple(self.notes)
         return self

@@ -95,26 +95,32 @@ class Chord:
 
     def _build_bass_note(self):
         """Build the bass note."""
+        self.inversion = None
+        if not self.bass:
+            return
         if self.bass in self.notes:
             idx = self.notes.index(self.bass)
-            self.notes.pop(idx)
-            self.notes.insert(0, self.bass)
-            tone = self.tones.pop(idx)
-            self.tones.insert(0, tone)
+            self.notes.insert(0, self.notes.pop(idx))
+            self.symbols.insert(0, self.symbols.pop(idx))
+            self.degrees.insert(0, self.degrees.pop(idx))
+            self.inversion = self.degrees[0]
             return
         self.notes.insert(0, self.bass)
         degree = min(
-            self._scale.notes.index(x) for x in self._scale.notes if x.letter() == self.bass.letter()
-            )+1
-        (interval,) = self.NE.get_min_intervals(self._scale.notes[degree-1], self.bass)
+            self.base_scale.notes.index(x)
+            for x in self.base_scale.notes
+            if x.letter() == self.bass.letter()
+            ) + 1
+        self.degrees.insert(0, degree)
+        bass_sym = self.bass.symbol_value()
+        origin_sym = self.base_scale.notes[degree-1].symbol_value()
         symbols = {
             -1: '\u266d', -2: '\U0001D12B',
             +1: '\u266f', +2: '\U0001D12A',
-            0: None,
+            0: '',
             }
-        accidental = symbols[interval]
-        self.tones.insert(0, [accidental, degree])
-        return
+        sym = symbols[bass_sym - origin_sym]
+        self.symbols.insert(0, sym)
 
     def _build_notation(self):
         """Build a standardised chord notation."""

@@ -106,11 +106,6 @@ def test_xstr(input, output):
     assert CE._xstr(input) == output
 
 
-def test_change_chord_error():
-    with pytest.raises(TypeError):
-        CE.change_chord(len)
-
-
 def test_change_chord_root():
     o = CE.create_chord('C')
     n = CE.create_chord('D')

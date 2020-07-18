@@ -88,30 +88,32 @@ class ChordEditor:
             return ''
         return value
 
-    def create_diatonic(
-            self,
-            value: Union[Scale, Key],
-            degree: int = 1,
-    ):
+    def create_diatonic(self, value: Union[Scale, Key], degree: int = 1):
         """Create a diatonic chord from a scale/key by specifying the scale degree."""
-        if degree not in {1, 2, 3, 4, 5, 6, 7}:
+        if degree not in range(1, 8):
             raise ValueError("Scale degree must be between 1 and 7")
-        if isinstance(value, Key):
+        if not isinstance(value, Scale):
             scale_ = Scale(value)
         else:
             scale_ = value
         root = scale_.notes[degree - 1]
         bass = None
-        sus = None
         add = None
         base_chord = (
             scale_.notes[degree - 1],
             scale_.notes[degree + 1],
             scale_.notes[degree + 3],
         )
+        quality_intervals = {
+            (4, 3): 'M',
+            (3, 4): 'm',
+            (3, 3): 'dim',
+            (4, 4): 'aug',
+        }
         interval = self.NE.get_intervals(*base_chord)
-        quality = ChordEditor._quality_intervals[interval]
-        return Chord(root, quality, sus, add, bass)
+        q_str = quality_intervals[interval]
+        quality = self.QE.create_quality(q_str)
+        return Chord(root, quality, add, bass)
 
     def change_chord(
             self,

@@ -1,14 +1,14 @@
 from chordparser.notes import Note
-from chordparser.notes_editor import NoteEditor
 from chordparser.keys import Key
+from chordparser.quality import Quality
+from chordparser.notes_editor import NoteEditor
 from chordparser.scales_editor import ScaleEditor
-from typing import Union, List
-import copy
+from typing import Union, List, Tuple
 
 
 class Chord:
     """
-    Chord class that is composed of a root note, chord quality, optional suspended and/or added notes, and an optional bass note.
+    Chord class that is composed of a root note, chord quality, optional added notes and an optional bass note.
 
     The Chord class accepts the chord components and builds a tuple of notes provided by the 'notes' method.
 
@@ -20,15 +20,13 @@ class Chord:
     def __init__(
             self,
             root: Note,
-            quality: str,
-            sus: Union[int, None] = None,
-            add: Union[List[str], None] = None,
+            quality: Quality,
+            add: Union[List[Tuple[str, int]], None] = None,
             bass: Union[Note, None] = None,
             string: str = None,
     ):
         self.root = root
         self.quality = quality
-        self.sus = sus
         self.add = add
         self.bass = bass
         self.string = string
@@ -184,38 +182,6 @@ class Chord:
 
     def _build_notation(self):
         """Build a standardised chord notation."""
-        q_dict = {
-            'power': ('5', ''),
-            'major': ('maj', ''),
-            'minor': ('m', ''),
-            'diminished': ('dim', ''),
-            'augmented': ('aug', ''),
-            'dominant': ('', ''),
-            'minor-major': ('minmaj', ''),
-            'half-diminished': ('m', '\u266D5'),
-            'augmented-major': ('maj', '\u266F5'),
-        }
-        ext_dict = {
-            '': '',
-            'seventh': '7',
-            'ninth': '9',
-            'eleventh': '11',
-            'thirteenth': '13',
-            'minor ninth': '\u266D9',
-            'minor eleventh': '\u266D11',
-            'minor thirteenth': '\u266D13',
-        }
-        if self.quality == 'major':
-            q_short = ''
-        else:
-            q_list = self.quality.split()
-            (first, last) = q_dict[q_list.pop(0)]
-            mid = ext_dict[' '.join(q_list)]
-            q_short = first+mid+last
-        if self.sus:
-            sus = 'sus'+str(self.sus)
-        else:
-            sus = ''
         add = ''
         if self.add:
             for each in self.add:
@@ -259,7 +225,6 @@ class Chord:
         return (
             self.root == other.root
             and self.quality == other.quality
-            and self.sus == other.sus
             and self.add == other.add
             and self.bass == other.bass
             )

@@ -45,26 +45,6 @@ def test_base_tones(name, quality, q):
 
 
 @pytest.mark.parametrize(
-    "name, quality, sus, q", [
-        ("C", 'major seventh', 2, [NE.create_note('C'), NE.create_note('D'), NE.create_note('G'), NE.create_note('B')]),
-        ("C", 'diminished ninth', 4, [NE.create_note('C'), NE.create_note('F'), NE.create_note('Gb'), NE.create_note('Bbb'), NE.create_note('D')]),
-        ])
-def test_sus_notes(name, quality, sus, q):
-    c = Chord(name, quality, sus=sus)
-    assert c.notes == q
-
-
-@pytest.mark.parametrize(
-    "name, quality, sus, q", [
-        ("C", 'major seventh', 2, ([[None, 1], [None, 2], [None, 5], [None, 7]])),
-        ("C", 'diminished ninth', 4, ([[None, 1], [None, 4], [None, 5], [None, 7], [None, 9]])),
-        ])
-def test_sus_tones(name, quality, sus, q):
-    c = Chord(name, quality, sus=sus)
-    assert c.tones == q
-
-
-@pytest.mark.parametrize(
     "name, quality, add, q", [
         ("C", 'major seventh', ['2', '\u266D11'], [NE.create_note('C'), NE.create_note('D'), NE.create_note('E'), NE.create_note('G'), NE.create_note('B'), NE.create_note('F\u266D')]),
         ("C", 'diminished', ['11'], [NE.create_note('C'), NE.create_note('Eb'), NE.create_note('Gb'), NE.create_note('F')]),

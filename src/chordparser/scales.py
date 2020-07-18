@@ -9,7 +9,7 @@ class Scale:
     The Scale class accepts a Key and generates a 2-octave Note tuple in its 'notes' attribute. The Scale can be changed by transposing its key using the 'transpose' method.
     """
     _heptatonic_base = (2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1)
-    _SCALES = {
+    _scales = {
         "major": 0,
         "ionian": 0,
         "dorian": 1,
@@ -20,24 +20,12 @@ class Scale:
         "minor": 5,
         "locrian": 6,
     }
-    _SCALE_DEGREE = {
-        0: "ionian",
-        1: "dorian",
-        2: "phrygian",
-        3: "lydian",
-        4: "mixolydian",
-        5: "aeolian",
-        6: "locrian",
-    }
     _submodes = {
         None: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
         "natural": (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
         "melodic": (0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0, 1, 0, -1),
         "harmonic": (0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 1, -1),
     }
-    _notes_tuple = (
-        'C', 'D', 'E', 'F', 'G', 'A', 'B',
-        'C', 'D', 'E', 'F', 'G', 'A', 'B')
     NE = NoteEditor()
 
     def __init__(self, key: Key):
@@ -56,12 +44,12 @@ class Scale:
 
     def _get_intervals(self):
         """Get intervals based on mode."""
-        shift = Scale._SCALES[self.key.mode]
+        shift = Scale._scales[self.key.mode]
         mode_intervals = (
             Scale._heptatonic_base[shift:]
             + Scale._heptatonic_base[:shift]
         )
-        submode_intervals = Scale._submodes.get(self.key.submode)
+        submode_intervals = Scale._submodes[self.key.submode]
         intervals = [x + y for x, y in zip(mode_intervals, submode_intervals)]
         return tuple(intervals)
 

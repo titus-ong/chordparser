@@ -36,15 +36,20 @@ def test_quality():
 
 @pytest.mark.parametrize(
     "string, add", [
-        ('Cadd13', ['13']),
-        ('cadd2#6', ['2', '\u266f6']),
-        ('cminmaj9b11', ['\u266d11']),
+        ('Cadd13', [('', 13)]),
+        ('cadd2#6', [('', 2), ('\u266f', 6)]),
+        ('cminmaj9b11', [('\u266d', 11)]),
         ('C', None),
     ]
 )
 def test_add(string, add):
     c = CE.create_chord(string)
     assert c.add == add
+
+
+def test_add_2():
+    c = CE.create_chord("C")
+    assert c.add is None
 
 
 def test_parse_error():
@@ -62,6 +67,11 @@ def test_parse_error():
 def test_bass(string, bass):
     c = CE.create_chord(string)
     assert c.bass == bass
+
+
+def test_bass_2():
+    c = CE.create_chord("C")
+    assert None is c.bass
 
 
 @pytest.mark.parametrize(
@@ -121,25 +131,20 @@ def test_change_chord_q():
 def test_change_chord_add():
     o = CE.create_chord('Cadd9')
     n = CE.create_chord('Caddb2add9')
-    assert n == CE.change_chord(o, add=['b2'])
-
-
-def test_change_chord_add_error():
-    o = CE.create_chord('C')
-    with pytest.raises(ValueError):
-        CE.change_chord(o, add=['b22'])
+    assert n == CE.change_chord(o, add='b2')
 
 
 def test_change_chord_rem():
     o = CE.create_chord('Caddb2')
     n = CE.create_chord('C')
-    assert n == CE.change_chord(o, remove=['b2'])
+    assert n == CE.change_chord(o, remove='b2')
 
 
 def test_change_chord_rem_2():
     o = CE.create_chord('Caddb2add6add9')
     n = CE.create_chord('C')
     assert n == CE.change_chord(o, remove=True)
+    assert None is o.add
 
 
 def test_change_chord_rem_error():
@@ -151,7 +156,7 @@ def test_change_chord_rem_error():
 def test_change_chord_rem_error_2():
     o = CE.create_chord('Cb2')
     with pytest.raises(ValueError):
-        CE.change_chord(o, remove=['b22'])
+        CE.change_chord(o, remove='b22')
 
 
 def test_change_chord_bass():
@@ -164,6 +169,7 @@ def test_change_chord_bass_2():
     o = CE.create_chord('Cadd9/G')
     n = CE.create_chord('Cadd9')
     assert n == CE.change_chord(o, bass=False)
+    assert None is o.bass
 
 
 def test_change_chord_not_inplace():

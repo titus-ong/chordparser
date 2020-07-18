@@ -120,44 +120,40 @@ class ChordEditor:
             chord,
             root: Union[str, None] = None,
             quality: Union[str, None] = None,
-            sus: Union[int, bool, None] = None,
-            add: Union[List[str], None] = None,
-            remove: Union[List[str], None] = None,
+            add: Union[str, None] = None,
+            remove: Union[str, None] = None,
             bass: Union[str, bool, None] = None,
             inplace=True,
     ):
-        """Change the chord by specifying root, quality, sus, add, remove (you can only remove added notes), and/or bass. To remove the bass or sus note, use the argument False. To remove all added notes, use remove=True."""
+        """Change the chord by specifying root, quality, add, remove (you can only remove added notes), and/or bass. To remove the bass note, use bass=False. To remove all added notes, use remove=True."""
         if not inplace:
             chord = Chord(
-                chord.root, chord.quality, chord.sus,
+                chord.root, chord.quality,
                 chord.add, chord.bass, chord.string
             )
         if root:
-            chord.root = self.NE.create_note(root)
+            chord.root = self._parse_root(root)
         if quality:
             chord.quality = self._parse_quality(quality)
         if remove is True:
             chord.add = None
         elif remove:
-            for each in remove:
-                rgx = re.match(f"^{ChordEditor._added}$", each)
-                if not rgx:
-                    raise ValueError(f"Could not parse {each}")
-                new_each = ChordEditor._symbols[rgx.group(1)] + rgx.group(2)
-                if not chord.add or new_each not in chord.add:
-                    raise ValueError(f"{each} is not an added note")
-                chord.add.remove(new_each)
+            removed = self._parse_add(remove)
+            for each in removed:
+                try:
+                    chord.add.remove(each)
+                except ValueError:
+                    raise ValueError(f"'{each}' is not an added note")
+                except AttributeError:
+                    raise IndexError("No added notes to be removed")
             chord.add = chord.add or None
         if add:
             chord.add = chord.add or []
-            for each in add:
-                rgx = re.match(f"^{ChordEditor._added}$", each)
-                if not rgx:
-                    raise ValueError(f"Could not parse {each}")
-                new_each = ChordEditor._symbols[rgx.group(1)] + rgx.group(2)
-                chord.add.append(new_each)
+            chord.add += self._parse_add(add)
+            # re-sort after adding new added notes
+            chord.add.sort(key=lambda x: x[1])
         if bass:
-            chord.bass = self.NE.create_note(bass)
+            chord.bass = self._parse_bass(bass)
         if bass is False:
             chord.bass = None
         chord.build()

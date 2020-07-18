@@ -8,6 +8,7 @@ class Key:
 
     The Key class composes of a Note class with the additional attributes 'mode' and 'submode' (e.g. types of minor keys). It is created by the KeyEditor. Keys have the same methods as Notes.
     """
+
     def __init__(
             self, root, mode: str,
             submode: Union[str, None]):
@@ -35,15 +36,15 @@ class Key:
                 self.root == other.root
                 and other.mode in {'major', 'ionian'}
                 and self.submode == other.submode
-                )
+            )
         if self.mode in {'minor', 'aeolian'}:
             return (
                 self.root == other.root
                 and other.mode in {'minor', 'aeolian'}
                 and self.submode == other.submode
-                )
+            )
         return (
-                self.root == other.root
-                and self.mode == other.mode
-                and self.submode == other.submode
-                )
+            self.root == other.root
+            and self.mode == other.mode
+            and self.submode == other.submode
+        )

@@ -14,37 +14,6 @@ CA = ChordAnalyser()
 
 
 @pytest.mark.parametrize(
-    "chord, roman", [
-        ("C", "I"),
-        ("Cm", "i"),
-        ("Cb", '\u266dI'),
-        ("C7", "I7"),
-        ("C7/G", "I43"),
-        ("C9/G", "I9"),
-        ("Cdim7", "i\u00B07"),
-        ]
-    )
-def test_roman(chord, roman):
-    c = CE.create_chord(chord)
-    s = SE.create_scale("C", "major")
-    assert CA.roman(c, s) == roman
-
-
-def test_power_error():
-    c = CE.create_chord("C5")
-    s = SE.create_scale("C", "major")
-    with pytest.raises(ValueError):
-        CA.roman(c, s)
-
-
-def test_sus_warning():
-    c = CE.create_chord("Csus")
-    s = SE.create_scale("C", "major")
-    with pytest.warns(UserWarning):
-        CA.roman(c, s)
-
-
-@pytest.mark.parametrize(
     "chord, mode, incl_submodes, result", [
         ("C", "major", True, [('I', 'major', None)]),
         ("C7", "major", False, [('I7', 'major', None)]),

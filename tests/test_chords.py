@@ -13,102 +13,69 @@ CE = chords_editor.ChordEditor()
 
 
 @pytest.mark.parametrize(
-    "name, quality, chord", [
-        ("C", 'major', (NE.create_note('C'), NE.create_note('E'), NE.create_note('G'))),
-        ("C", 'diminished', (NE.create_note('C'), NE.create_note('Eb'), NE.create_note('Gb'))),
+    "name, chord", [
+        ("C", ('C', 'E', 'G')),
+        ('Cdim', ('C', 'E\u266d', 'G\u266d')),
+        ('Cmaj9', ('C', 'E', 'G', 'B', 'D')),
+        ('C5', ('C', 'G')),
         ])
-def test_base_triad(name, quality, chord):
-    c = Chord(name, quality)
-    assert c.base_triad == chord
+def test_base_notes(name, chord):
+    c = CE.create_chord(name)
+    assert c.base_notes == chord
 
 
 @pytest.mark.parametrize(
-    "name, quality, q", [
-        ("C", 'major seventh', [NE.create_note('C'), NE.create_note('E'), NE.create_note('G'), NE.create_note('B')]),
-        ("C", 'diminished ninth', [NE.create_note('C'), NE.create_note('Eb'), NE.create_note('Gb'), NE.create_note('Bbb'), NE.create_note('D')]),
-        ("C", 'augmented-major minor eleventh', [NE.create_note('C'), NE.create_note('E'), NE.create_note('G#'), NE.create_note('B'), NE.create_note('D'), NE.create_note('Fb')]),
+    "name, notes, sym, deg, intervals", [
+        ("Cmaj7add2addb11",
+            ('C', 'D', 'E', 'G', 'B', 'F\u266D'),
+            ('', '', '', '', '', '\u266D'),
+            (1, 2, 3, 5, 7, 11),
+            (2, 2, 3, 4, 5)),
+        ("Cdimadd11",
+            ('C', 'E\u266D', 'G\u266D', 'F'),
+            ('', '\u266D', '\u266D', ''),
+            (1, 3, 5, 11),
+            (3, 3, 11)),
         ])
-def test_base_notes(name, quality, q):
-    c = Chord(name, quality)
-    assert c.notes == q
+def test_add_notes(name, notes, sym, deg, intervals):
+    c = CE.create_chord(name)
+    assert c.notes == notes
+    assert c.symbols == sym
+    assert c.degrees == deg
+    assert c.intervals == intervals
 
 
 @pytest.mark.parametrize(
-    "name, quality, q", [
-        ("C", 'major seventh', ([[None, 1], [None, 3], [None, 5], [None, 7]])),
-        ("C", 'diminished ninth', ([[None, 1], [None, 3], [None, 5], [None, 7], [None, 9]])),
-        ("C", 'augmented-major minor eleventh', ([[None, 1], [None, 3], [None, 5], [None, 7], [None, 9], ['\u266D', 11]])),
+    "name, notes, sym, deg, intervals, inversion", [
+        ("Cmaj7/G",
+            ('G', 'C', 'E', 'B'),
+            ('', '', '', ''),
+            (5, 1, 3, 7),
+            (5, 4, 7),
+            (5)),
+        ("Cdim/G#",
+            ('G\u266F', 'C', 'E\u266D', 'G\u266D'),
+            ('\u266F', '', '\u266D', '\u266D'),
+            (5, 1, 3, 5),
+            (4, 3, 3),
+            (None)),
         ])
-def test_base_tones(name, quality, q):
-    c = Chord(name, quality)
-    assert c.tones == q
-
-
-@pytest.mark.parametrize(
-    "name, quality, sus, q", [
-        ("C", 'major seventh', 2, [NE.create_note('C'), NE.create_note('D'), NE.create_note('G'), NE.create_note('B')]),
-        ("C", 'diminished ninth', 4, [NE.create_note('C'), NE.create_note('F'), NE.create_note('Gb'), NE.create_note('Bbb'), NE.create_note('D')]),
-        ])
-def test_sus_notes(name, quality, sus, q):
-    c = Chord(name, quality, sus=sus)
-    assert c.notes == q
-
-
-@pytest.mark.parametrize(
-    "name, quality, sus, q", [
-        ("C", 'major seventh', 2, ([[None, 1], [None, 2], [None, 5], [None, 7]])),
-        ("C", 'diminished ninth', 4, ([[None, 1], [None, 4], [None, 5], [None, 7], [None, 9]])),
-        ])
-def test_sus_tones(name, quality, sus, q):
-    c = Chord(name, quality, sus=sus)
-    assert c.tones == q
-
-
-@pytest.mark.parametrize(
-    "name, quality, add, q", [
-        ("C", 'major seventh', ['2', '\u266D11'], [NE.create_note('C'), NE.create_note('D'), NE.create_note('E'), NE.create_note('G'), NE.create_note('B'), NE.create_note('F\u266D')]),
-        ("C", 'diminished', ['11'], [NE.create_note('C'), NE.create_note('Eb'), NE.create_note('Gb'), NE.create_note('F')]),
-        ])
-def test_add_notes(name, quality, add, q):
-    c = Chord(name, quality, add=add)
-    assert c.notes == q
-
-
-@pytest.mark.parametrize(
-    "name, quality, add, q", [
-        ("C", 'major seventh', ['2', '\u266D11'],  ([[None, 1], [None, 2], [None, 3], [None, 5], [None, 7], ['\u266D', 11]])),
-        ("C", 'diminished', ['11'], ([[None, 1], [None, 3], [None, 5], [None, 11]])),
-        ])
-def test_add_tones(name, quality, add, q):
-    c = Chord(name, quality, add=add)
-    assert c.tones == q
-
-
-@pytest.mark.parametrize(
-    "name, quality, bass, q", [
-        ("C", 'major seventh', NE.create_note('G'), [NE.create_note('G'), NE.create_note('C'), NE.create_note('E'), NE.create_note('B')]),
-        ("C", 'diminished', NE.create_note('G#'), [NE.create_note('G#'), NE.create_note('C'), NE.create_note('Eb'), NE.create_note('Gb')]),
-        ])
-def test_bass_notes(name, quality, bass, q):
-    c = Chord(name, quality, bass=bass)
-    assert c.notes == q
-
-
-@pytest.mark.parametrize(
-    "name, quality, bass, q", [
-        ("C", 'major seventh', NE.create_note('G'),  ([[None, 5], [None, 1], [None, 3], [None, 7]])),
-        ("C", 'diminished', NE.create_note('G#'), ([['\u266F', 5], [None, 1], [None, 3], [None, 5]])),
-        ])
-def test_bass_tones(name, quality, bass, q):
-    c = Chord(name, quality, bass=bass)
-    assert c.tones == q
+def test_bass_notes(name, notes, sym, deg, intervals, inversion):
+    c = CE.create_chord(name)
+    assert c.notes == notes
+    assert c.symbols == sym
+    assert c.degrees == deg
+    assert c.intervals == intervals
+    assert c.inversion is inversion
 
 
 @pytest.mark.parametrize(
     "string, notation", [
         ("Cmajsus2add9/G", "Csus2add9/G chord"),
-        ("Cminmaj9susadd#9#13/G#", "Cminmaj9sus4\u266F9\u266F13/G\u266F chord"),
+        ("Cmaj9sus4add#9#13/G#", "Cmaj9sus\u266F9\u266F13/G\u266F chord"),
         ("Caugmaj11", "Cmaj11\u266F5 chord"),
+        ("Cadd2", "Cadd2 chord"),
+        ("Cadd2addb6", "Cadd2\u266d6 chord"),
         ]
     )
 def test_notation(string, notation):

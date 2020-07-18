@@ -1,9 +1,10 @@
-from chordparser.notes import Note
 from chordparser.keys import Key
 from chordparser.scales import Scale
 from chordparser.chords import Chord
+from chordparser.quality import Quality
 from chordparser.notes_editor import NoteEditor
-from typing import Union, List
+from chordparser.quality_editor import QualityEditor
+from typing import Union
 import re
 
 

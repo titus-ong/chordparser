@@ -70,25 +70,28 @@ class Chord:
 
     def _build_add(self):
         """Add notes for chords with added notes."""
+        if not self.add:
+            return
         symbols = {
             '\u266d': -1, '\U0001D12B': -2,
             '\u266f': +1, '\U0001D12A': +2,
+            '': 0,
             }
-        pos_list = []
         for each in self.add:
-            adjustment = 0
-            accidental = None
-            if each[0] in symbols.keys():
-                adjustment = symbols[each[0]]
-                accidental = each[0]
-                each = each[1:]
-            tone = int(each)
-            pos = max(self.tones.index(i) for i in self.tones if i[1] < tone)+1
-            self.tones.insert(pos, [accidental, tone])
-            self.notes.insert(pos, self._scale.notes[tone-1].shift_s(adjustment))
-            pos_list.append(pos)
-        self.add = [x for _, x in sorted(zip(pos_list, self.add))]
-        return
+            sym = each[0]
+            tone = each[1]
+            shift = symbols[sym]
+            pos = max(
+                self.degrees.index(i)
+                for i in self.degrees
+                if i < tone
+                ) + 1
+            self.symbols.insert(pos, sym)
+            self.degrees.insert(pos, tone)
+            # copy the note
+            new_note = self.NE.create_note(self.base_scale.notes[tone-1].value)
+            new_note.shift_s(shift)
+            self.notes.insert(pos, new_note)
 
     def _build_bass_note(self):
         """Build the bass note."""

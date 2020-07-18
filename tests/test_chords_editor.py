@@ -29,52 +29,9 @@ def test_chord_root(value, root):
     assert new_chord.root == root
 
 
-@pytest.mark.parametrize(
-    "string, quality", [
-        ('C', 'major'),
-        ('Cm', 'minor'),
-        ('Cdim', 'diminished'),
-        ('C+', 'augmented'),
-        ('C7', 'dominant seventh'),
-        ('C5', 'power'),
-        ('c7', 'minor seventh'),
-        ('Cminmaj9', 'minor-major ninth'),
-        ('Caugmaj11', 'augmented-major eleventh'),
-        ('Caugb13', 'augmented minor thirteenth'),
-        ('Cmaj9', 'major ninth'),
-        ('Cdim7', 'diminished seventh'),
-        ('C\u00f87', 'half-diminished seventh'),
-        ('Cm9', 'minor ninth'),
-    ]
-)
-def test_quality(string, quality):
-    new_chord = CE.create_chord(string)
-    assert new_chord.quality == quality
-
-
-@pytest.mark.parametrize(
-    "string, quality", [
-        ('Cmb5', 'diminished'),
-        ('CM7#5', 'augmented-major seventh'),
-        ('Cmin7dim5', 'half-diminished seventh'),
-    ]
-)
-def test_quality_alt5(string, quality):
-    new_chord = CE.create_chord(string)
-    assert new_chord.quality == quality
-
-
-@pytest.mark.parametrize(
-    "string, sus", [
-        ('Csus2', 2),
-        ('Csus', 4),
-        ('Csus4', 4),
-        ('C', None),
-    ]
-)
-def test_sus(string, sus):
-    c = CE.create_chord(string)
-    assert c.sus == sus
+def test_quality():
+    c = CE.create_chord("Cminmaj7")
+    assert "minor major seventh" == str(c.quality)
 
 
 @pytest.mark.parametrize(
@@ -117,7 +74,7 @@ def test_bass(string, bass):
 def test_diatonic(degree, quality):
     s = SE.create_scale('C', 'major')
     c = CE.create_diatonic(s, degree)
-    assert c.quality == quality
+    assert str(c.quality) == quality
 
 
 @pytest.mark.parametrize(
@@ -130,7 +87,7 @@ def test_diatonic(degree, quality):
 def test_diatonic_2(degree, quality):
     s = KE.create_key('C', 'major')
     c = CE.create_diatonic(s, degree)
-    assert c.quality == quality
+    assert str(c.quality) == quality
 
 
 @pytest.mark.parametrize("degree", [0, len])
@@ -163,30 +120,7 @@ def test_change_chord_root():
 def test_change_chord_q():
     o = CE.create_chord('C')
     n = CE.create_chord('Cminmajb9')
-    assert n == CE.change_chord(o, quality="minor-major minor ninth")
-
-
-@pytest.mark.parametrize(
-    "quality", [
-        "powr", "power ninth", "major sixth", "augmented major ninth", "augmented minor tenth", "major minor ninth ten",
-    ]
-)
-def test_change_chord_q_error(quality):
-    o = CE.create_chord('C')
-    with pytest.raises(ValueError):
-        CE.change_chord(o, quality=quality)
-
-
-def test_change_chord_sus():
-    o = CE.create_chord('Csus2')
-    n = CE.create_chord('C')
-    assert n == CE.change_chord(o, sus=False)
-
-
-def test_change_chord_sus_error():
-    o = CE.create_chord('C')
-    with pytest.raises(ValueError):
-        CE.change_chord(o, sus=3)
+    assert n == CE.change_chord(o, quality="minmajb9")
 
 
 def test_change_chord_add():

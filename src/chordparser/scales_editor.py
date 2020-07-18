@@ -1,8 +1,6 @@
-from chordparser.notes import Note
 from chordparser.keys import Key
 from chordparser.scales import Scale
 from chordparser.keys_editor import KeyEditor
-from typing import Union
 
 
 class ScaleEditor:
@@ -21,8 +19,8 @@ class ScaleEditor:
             key = value
         return Scale(key)
 
-    def change_scale(self, scale, *args):
+    def change_scale(self, scale, *args, **kwargs):
         """Change the scale by specifying root, mode and/or submode."""
-        self.KE.change_key(scale.key, *args)
+        self.KE.change_key(scale.key, *args, **kwargs)
         scale.build()
         return scale

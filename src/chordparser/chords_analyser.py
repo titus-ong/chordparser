@@ -26,9 +26,21 @@ class ChordAnalyser:
     SE = ScaleEditor()
     CRC = ChordRomanConverter()
 
-
-    def analyse_diatonic(self, chord, scale, incl_submodes: bool = False) -> List[tuple]:
-        """Return all possible chord function (None if not found). Format: List[(Roman numeral, scale mode, scale submode)]."""
+    def analyse_diatonic(
+            self, chord, scale,
+            incl_submodes: bool = False,
+            allow_power_sus=False,
+            default_power_sus="M",
+    ) -> List[tuple]:
+        """Return all possible chord function (None if not found). Format: List[(Roman numeral, scale mode, scale submode)]. To convert power and sus chords to be parsed as Roman notation, use allow_power_sus=True and set default_power_sus ("M" for major, "m" for minor)."""
+        if chord.quality.value in {"power", "sus2", "sus4"}:
+            if not allow_power_sus:
+                return []
+            chord = self.CE.change_chord(
+                chord,
+                quality=default_power_sus,
+                inplace=False
+            )
         if not incl_submodes:
             j = [scale.key.submode]
         elif scale.key.mode in {'minor', 'aeolian'}:
@@ -42,18 +54,30 @@ class ChordAnalyser:
             for i in range(7):
                 nscale = self.SE.create_scale(scale.key.root, scale.key.mode, submode)
                 diatonic = self.CE.create_diatonic(nscale, i+1)
-                if chord.base_triad == diatonic.base_triad:
-                    chords.append((self.roman(chord, nscale), nscale.key.mode, submode))
+                if chord.base_notes[0:3] == diatonic.base_notes:
+                    chords.append(
+                        (self.CRC.to_roman(chord, nscale),
+                         nscale.key.mode,
+                         submode)
+                    )
         return chords
 
-    def analyse_all(self, chord, scale, incl_submodes: bool = False):
+    def analyse_all(
+            self, chord, scale,
+            incl_submodes: bool = False,
+            allow_power_sus=False,
+            default_power_sus="M",
+    ):
         """Return all possible chord function accounting for all modes (None if not found)."""
         self.mode_list.remove(scale.key.mode)
         self.mode_list.insert(0, scale.key.mode)  # shift to the front
         chords = []
         for mode in self.mode_list:
             nscale = self.SE.create_scale(scale.key.root, mode)
-            result = self.analyse_diatonic(chord, nscale, incl_submodes)
+            result = self.analyse_diatonic(
+                chord, nscale, incl_submodes,
+                allow_power_sus, default_power_sus
+            )
             if result:
                 chords += result
         return chords

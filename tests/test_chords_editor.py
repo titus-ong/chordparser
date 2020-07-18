@@ -14,7 +14,7 @@ CE = chords_editor.ChordEditor()
 @pytest.mark.parametrize(
     "value", ["1", "H", "\u266fG"])
 def test_chord_valueerror(value):
-    with pytest.raises(ValueError):
+    with pytest.raises(SyntaxError):
         CE.create_chord(value)
 
 
@@ -215,8 +215,8 @@ def test_change_chord_rem_2():
 
 def test_change_chord_rem_error():
     o = CE.create_chord('C')
-    with pytest.raises(ValueError):
-        CE.change_chord(o, remove=['b2'])
+    with pytest.raises(IndexError):
+        CE.change_chord(o, remove='b2')
 
 
 def test_change_chord_rem_error_2():

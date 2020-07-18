@@ -45,18 +45,13 @@ class ChordEditor:
 
     def _parse_rgx(self, rgx):
         """Distribute regex groups and form chord notation."""
-        root = self._parse_root(rgx)
-        temp_q, extension = self._parse_quality(rgx)
-        q = self._parse_alt5(rgx, temp_q)  # altered 5th may change quality
-        quality = "{} {}".format(
-            ChordEditor._quality_intervals[tuple(q)],
-            ChordEditor._ext_words[extension],
-        ).strip()
-        sus, add = self._parse_others(rgx)
-        bass_note = self._parse_bass(rgx)
-        return root, quality, sus, add, bass_note
+        root = self._parse_root(rgx.group(1))
+        quality = self._parse_quality(rgx.group(2), rgx.group(1).isupper())
+        add = self._parse_add(rgx.groups()[-2])
+        bass_note = self._parse_bass(rgx.groups()[-1])
+        return root, quality, add, bass_note
 
-    def _parse_root(self, rgx):
+    def _parse_root(self, root):
         """Return chord root."""
         return self.NE.create_note(root)
 
@@ -64,23 +59,28 @@ class ChordEditor:
         """Return chord quality."""
         return self.QE.create_quality(string, capital_note)
 
+    def _parse_add(self, string):
+        """Parse added notes."""
+        if string is None:
+            return None
         add = []
         while True:
             reg = re.search(ChordEditor._added, string, re.UNICODE)
             if not reg:
                 break
-            foo = ChordEditor._symbols[reg.group(1)] + reg.group(2)
+            foo = (ChordEditor._symbols[reg.group(1)], int(reg.group(2)))
             add.append(foo)
             string = ''.join(string.split(reg.group(0)))
         if string.strip():
-            raise SyntaxError(f"String '{string.strip()}' could not be parsed")
-        return sus, add or None
+            raise SyntaxError(f"'{string.strip()}' could not be parsed")
+        add.sort(key=lambda x: x[1])  # sort by scale degree
+        return add
 
-    def _parse_bass(self, rgx):
+    def _parse_bass(self, string):
         """Parse the bass note."""
-        if not rgx.group(23):
+        if not string:
             return None
-        return self.NE.create_note(rgx.group(23))
+        return self.NE.create_note(string)
 
     def _xstr(self, value):
         # To print blank for None values

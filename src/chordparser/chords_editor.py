@@ -39,9 +39,9 @@ class ChordEditor:
         """Create a chord from a string (do not use any spaces)."""
         rgx = re.match(ChordEditor._pattern, value, re.UNICODE)
         if not rgx:
-            raise ValueError("Chord could not be parsed")
-        root, quality, sus, add, bass = self._parse_rgx(rgx)
-        return Chord(root, quality, sus, add, bass, string=rgx.group(0))
+            raise SyntaxError(f"'{value}' could not be parsed")
+        root, quality, add, bass = self._parse_rgx(rgx)
+        return Chord(root, quality, add, bass, string=rgx.group(0))
 
     def _parse_rgx(self, rgx):
         """Distribute regex groups and form chord notation."""
@@ -130,8 +130,6 @@ class ChordEditor:
                 chord.root, chord.quality, chord.sus,
                 chord.add, chord.bass, chord.string
             )
-        if not isinstance(chord, Chord):
-            raise TypeError(f"Object {chord} is not a 'Chord'")
         if root:
             chord.root = self.NE.create_note(root)
         if quality:

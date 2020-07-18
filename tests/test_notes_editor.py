@@ -61,3 +61,15 @@ def test_tone_letter(notes, difference):
     for each in notes:
         note_list.append(NE.create_note(each))
     assert difference == NE.get_tone_letter(*note_list)
+
+
+def test_change_note():
+    note = NE.create_note("C")
+    NE.change_note(note, "d")
+    assert "D" == note
+
+
+def test_change_note_not_inplace():
+    note = NE.create_note("C")
+    new = NE.change_note(note, "C", inplace=False)
+    assert new is not note

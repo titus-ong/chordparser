@@ -97,3 +97,9 @@ def test_change_key_2():
     okey = KE.create_key('C', 'minor', 'melodic')
     nkey = KE.create_key('D\u266d', 'minor', 'melodic')
     assert nkey == KE.change_key(okey, 'D\u266d', 'minor', None)
+
+
+def test_change_key_not_inplace():
+    okey = KE.create_key("C")
+    nkey = KE.change_key(okey, root="C", inplace=False)
+    assert nkey is not okey

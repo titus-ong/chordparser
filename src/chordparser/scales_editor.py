@@ -19,8 +19,10 @@ class ScaleEditor:
             key = value
         return Scale(key)
 
-    def change_scale(self, scale, *args, **kwargs):
+    def change_scale(self, scale, *args, inplace=True, **kwargs):
         """Change the scale by specifying root, mode and/or submode."""
+        if not inplace:
+            scale = self.create_scale(scale.key)
         self.KE.change_key(scale.key, *args, **kwargs)
         scale.build()
         return scale

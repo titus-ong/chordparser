@@ -8,7 +8,7 @@ class NoteEditor:
 
     The NoteEditor class can create a Note using the 'create_note' method by accepting a string with notation a-g or A-G and optional accidental symbols. The symbols that can be used are b (flat), bb (doubleflat), # (sharp), ## (doublesharp) and their respective unicode characters.
 
-    The NoteEditor can also find the intervals between Notes using the 'get_intervals', 'get_min_intervals' and 'get_tone_notes' methods.
+    The NoteEditor can also find the intervals between Notes using the 'get_intervals', 'get_min_intervals' and 'get_tone_notes' methods. The 'change_note' method allows for changing a note's value.
     """
     _flat = '\u266d'
     _sharp = '\u266f'
@@ -73,3 +73,11 @@ class NoteEditor:
                 shift = each
             min_int.append(shift)
         return tuple(min_int)
+
+    def change_note(self, note, value, inplace=True):
+        """Change a note's value. Use inplace=True to return a new note."""
+        new = self.create_note(value)
+        if inplace:
+            note.value = new.value
+            return note
+        return new

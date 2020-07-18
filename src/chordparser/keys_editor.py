@@ -85,8 +85,10 @@ class KeyEditor:
         key.mode = 'minor'
         return key
 
-    def change_key(self, key, root=None, mode=None, submode=None):
-        """Change the key by specifying root, mode and/or submode."""
+    def change_key(self, key, root=None, mode=None, submode=None, inplace=True):
+        """Change the key by specifying root, mode and/or submode. Use inplace=False to return a new key."""
+        if not inplace:
+            key = self.create_key(key.root, key.mode, key.submode)
         if root:
             key.root = self._check_root(root)
         if mode:

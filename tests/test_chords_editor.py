@@ -235,3 +235,10 @@ def test_change_chord_bass_2():
     o = CE.create_chord('Cadd9/G')
     n = CE.create_chord('Cadd9')
     assert n == CE.change_chord(o, bass=False)
+
+
+def test_change_chord_not_inplace():
+    o = CE.create_chord("Csus4add9/G")
+    n = CE.change_chord(o, bass='G', inplace=False)
+    assert n == o
+    assert n is not o

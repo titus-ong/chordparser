@@ -261,14 +261,20 @@ class ChordEditor:
     def change_chord(
             self,
             chord,
-            root: Union[Note, None] = None,
+            root: Union[str, None] = None,
             quality: Union[str, None] = None,
             sus: Union[int, bool, None] = None,
             add: Union[List[str], None] = None,
             remove: Union[List[str], None] = None,
-            bass: Union[Note, bool, None] = None,
+            bass: Union[str, bool, None] = None,
+            inplace=True,
     ):
         """Change the chord by specifying root, quality, sus, add, remove (you can only remove added notes), and/or bass. To remove the bass or sus note, use the argument False. To remove all added notes, use remove=True."""
+        if not inplace:
+            chord = Chord(
+                chord.root, chord.quality, chord.sus,
+                chord.add, chord.bass, chord.string
+            )
         if not isinstance(chord, Chord):
             raise TypeError(f"Object {chord} is not a 'Chord'")
         if root:

@@ -33,3 +33,9 @@ def test_change_scale_2():
     o = SE.create_scale('C', 'minor', 'melodic')
     n = SE.create_scale('D\u266d', 'minor', 'melodic')
     assert n == SE.change_scale(o, 'D\u266d', 'minor', None)
+
+
+def test_change_scale_not_inplace():
+    o = SE.create_scale("C")
+    n = SE.change_scale(o, root="C", inplace=False)
+    assert n is not o

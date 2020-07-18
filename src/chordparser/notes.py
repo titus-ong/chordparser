@@ -40,9 +40,9 @@ class Note:
 
     def accidental(self, value: int):
         """Change a note's accidental by specifying a value from -2(doubleflat) to 2(doublesharp)."""
-        if value not in {-2, -1, 0, 1, 2}:
+        if value not in range(-2, 3):
             raise ValueError(
-                "Only symbols up to doublesharps and doubleflats are accepted"
+                "Only integers between -2 and 2 are accepted"
             )
         self.value = self.letter() + Note._symbols[value]
         return self
@@ -50,7 +50,7 @@ class Note:
     def shift_s(self, value: int):
         """Shift a note's accidental."""
         value += self.symbol_value()
-        if value not in {-2, -1, 0, 1, 2}:
+        if value not in range(-2, 3):
             raise ValueError(
                 "Only symbols up to doublesharps and doubleflats are accepted"
             )

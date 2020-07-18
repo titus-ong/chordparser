@@ -124,20 +124,23 @@ class Chord:
 
     def _build_notation(self):
         """Build a standardised chord notation."""
-        add = ''
+        add = ""
         if self.add:
             for each in self.add:
-                if not each[0] in {'\u266d', '\U0001D12B', '\u266f', '\U0001D12A'}:
-                    add += 'add'
-                add += each
+                if not add and not self.quality.short():
+                    string = 'add'  # when quality is blank
+                elif not each[0]:
+                    string = 'add'  # when there's no accidental
+                else:
+                    string = ''
+                add += string + each[0] + str(each[1])
         if self.bass:
             bass = '/'+str(self.bass)
         else:
             bass = ''
-        self.notation = str(self.root)+q_short+sus+add+str(bass)
+        self.notation = str(self.root) + self.quality.short() + add + bass
         if not self.string:
             self.string = self.notation
-        return
 
     def transpose(self, semitones: int, letter: int):
         """Transpose the chord by specifying the semitone and letter intervals."""
@@ -146,10 +149,6 @@ class Chord:
             self.bass.transpose(semitones, letter)
         self.build()
         return self
-
-    # def format(self, options):
-    #     """Specify options to format string output."""
-    #     pass
 
     def _xstr(self, value):
         # To print blank for None values
@@ -161,7 +160,7 @@ class Chord:
         return f'{self.notation} chord'
 
     def __eq__(self, other):
-        # Allow comparison between Keys by checking their basic attributes
+        # Allow comparison between Chords by checking their basic attributes
         if not isinstance(other, Chord):
             return NotImplemented
         return (

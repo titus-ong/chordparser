@@ -2,6 +2,11 @@
 History
 -------
 
+0.3.5 (2020-07-20)
+~~~~~~~~~~~~~~~~~~
+* Included ``transpose_simple`` method to only use semitones for transposing
+* Included initial Sphinx documentation
+
 0.3.4 (2020-07-19)
 ~~~~~~~~~~~~~~~~~~
 * Removed code with static typing

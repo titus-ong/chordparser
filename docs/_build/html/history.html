@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History &#8212; chordparser 0.3.4 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Contributing" href="contributing.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="history">
+<h1>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>0.3.5 (2020-07-20)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Included <code class="docutils literal notranslate"><span class="pre">transpose_simple</span></code> method to only use semitones for transposing</p></li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>0.3.4 (2020-07-19)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Removed code with static typing</p></li>
+<li><p>Removed unused instance variables in classes</p></li>
+<li><p>Changed <code class="docutils literal notranslate"><span class="pre">Note.symbolvalue()</span></code> to <code class="docutils literal notranslate"><span class="pre">Note.symbol_value()</span></code> for namespace consistency</p></li>
+<li><p>Include <code class="docutils literal notranslate"><span class="pre">Note.letter_value()</span></code> method</p></li>
+<li><p>Fixed wrong errors being raised</p></li>
+<li><p>Refactored scale building code</p></li>
+<li><p>Abstracted chord quality to a separate Quality class</p></li>
+<li><p>Quality now includes sus chords, Chords no longer have a <code class="docutils literal notranslate"><span class="pre">Chord.sus</span></code> attribute</p></li>
+<li><p>Refactored chord notation regex parsing for methods to be reusable</p></li>
+<li><p>Abstracted roman numeral notation to a separate Roman class, and roman conversion to a separate ChordRomanConverter class</p></li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>0.2.2 (2020-06-25)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Changed song in sample_sheet.cho</p></li>
+<li><p>Added ability to remove all added notes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">incl_submodes</span></code> defaulted to False in analysing chords</p></li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>0.2.1 (2020-06-24)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Bug fixes for sample_sheet.cho</p></li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>0.2.0 (2020-06-24)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Separated parsing function into Editor classes - NoteEditor, KeyEditor, ScaleEditor, ChordEditor</p></li>
+<li><p>Refactored regex parsing for code to be more readable and for regex groups to be more distinct</p></li>
+<li><p>Added ChordAnalyser for analysing chords</p></li>
+<li><p>Added Parser class to collate all the Editors</p></li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>0.1.1 (2019-10-21)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Added Chord class with full parsing function</p></li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h2>0.1.0 (2019-10-11)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>First release on PyPI.</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">chordparser</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">chordparser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">0.3.5 (2020-07-20)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">0.3.4 (2020-07-19)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">0.2.2 (2020-06-25)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">0.2.1 (2020-06-24)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">0.2.0 (2020-06-24)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">0.1.1 (2019-10-21)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">0.1.0 (2019-10-11)</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="contributing.html" title="previous chapter">Contributing</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Titus Ong.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/history.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -6,6 +6,7 @@ History
 ~~~~~~~~~~~~~~~~~~
 * Fixed empty README description (fixes failed build - PyPI could not read the README)
 * Fixed Sphinx documentation for readthedocs
+* Fixed build upload
 
 0.3.5 (2020-07-20)
 ~~~~~~~~~~~~~~~~~~

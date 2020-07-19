@@ -59,6 +59,12 @@ class Scale:
         self.build()
         return self
 
+    def transpose_simple(self, semitones: int, use_flats=False):
+        """Transpose the key of the scale by specifying the change in semitone intervals. Use use_flats=True to transpose using flat accidentals."""
+        self.key.transpose_simple(semitones, use_flats)
+        self.build()
+        return self
+
     def __repr__(self):
         return f'{self.key} scale'
 

@@ -70,11 +70,25 @@ def test_scale_submode_notes(key, mode, submode, note):
     assert scale.notes == note
 
 
-def test_scale_transpose_sharps():
+def test_scale_transpose():
     nkey = KE.create_key("D")
     new_scale = SE.create_scale("C")
     new_scale.transpose(2, 1)
     assert new_scale.key == nkey
+
+
+def test_scale_transpose_simple():
+    s = SE.create_scale("C")
+    s.transpose_simple(1)
+    assert "C\u266f" == s.notes[0]
+    assert "C\u266f" == s.key.root
+
+
+def test_scale_transpose_simple_flats():
+    s = SE.create_scale("C")
+    s.transpose_simple(1, use_flats=True)
+    assert "D\u266d" == s.notes[0]
+    assert "D\u266d" == s.key.root
 
 
 def test_scale_repr():

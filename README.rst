@@ -72,6 +72,7 @@ Authors
 -------
 
 Development Lead
+
 * Titus Ong <titusongyl@gmail.com>
 
 -------

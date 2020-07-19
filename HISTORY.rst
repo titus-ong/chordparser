@@ -2,8 +2,14 @@
 History
 -------
 
+0.3.6 (2020-07-20)
+~~~~~~~~~~~~~~~~~~
+* Fixed empty README description (fixes failed build - PyPI could not read the README)
+* Fixed Sphinx documentation for readthedocs
+
 0.3.5 (2020-07-20)
 ~~~~~~~~~~~~~~~~~~
+* **FAILED BUILD**
 * Included ``transpose_simple`` method to only use semitones for transposing
 * Included initial Sphinx documentation
 

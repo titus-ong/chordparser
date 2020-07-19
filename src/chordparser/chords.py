@@ -152,6 +152,17 @@ class Chord:
         self.build()
         return self
 
+    def transpose_simple(self, semitones: int, use_flats=False):
+        """Transpose a Chord by specifying the change in semitone intervals. Use use_flats=True to transpose using flat accidentals."""
+        prev = self.NE.create_note(self.root.value)
+        self.root.transpose_simple(semitones, use_flats)
+        if self.bass:
+            # bass has to be transposed exact!
+            (diff,) = self.NE.get_tone_letter(prev, self.root)
+            self.bass.transpose(*diff)
+        self.build()
+        return self
+
     def _xstr(self, value):
         # To print blank for None values
         if value is None:

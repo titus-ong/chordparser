@@ -4,7 +4,7 @@ class Note:
 
     The Note class consists of notation a-g or A-G, with optional unicode accidental symbols \u266d, \u266f, \U0001D12B, or \U0001D12A. It is created by the NoteEditor.
 
-    Notes can have accidentals set using the 'accidental' method, and can be shifted by semitones using the 'shift_s' method. The letter of the Note can be shifted using the 'shift_l' method. Notes also have 'letter' and 'symbol' methods to get their respective values. Numerical representation of the Note value can be accessed via the 'num_value', 'letter_value' and 'symbol_value' methods. Notes can be transposed using the 'transpose' method.
+    Notes can have accidentals set using the 'accidental' method, and can be shifted by semitones using the 'shift_s' method. The letter of the Note can be shifted using the 'shift_l' method. Notes also have 'letter' and 'symbol' methods to get their respective values. Numerical representation of the Note value can be accessed via the 'num_value', 'letter_value' and 'symbol_value' methods. Notes can be transposed using the 'transpose' or 'transpose_simple' methods.
 
     Notes can be compared either with other Notes or with strings.
     """
@@ -33,7 +33,19 @@ class Note:
     }
     _notes_tuple = (
         'C', 'D', 'E', 'F', 'G', 'A', 'B',
-        'C', 'D', 'E', 'F', 'G', 'A', 'B')
+        'C', 'D', 'E', 'F', 'G', 'A', 'B',
+    )
+    _sharp_tuple = (
+        'C', 'C\u266f', 'D', 'D\u266f', 'E',
+        'F', 'F\u266f', 'G', 'G\u266f', 'A',
+        'A\u266f', 'B',
+    )
+    _flat_tuple = (
+        'C', 'D\u266d', 'D', 'E\u266d', 'E',
+        'F', 'G\u266d', 'G', 'A\u266d', 'A',
+        'B\u266d', 'B',
+    )
+
 
     def __init__(self, value):
         self.value = value
@@ -95,6 +107,16 @@ class Note:
         shift = (new_val - curr_val) % 12
         shift = shift - 12 if shift > 6 else shift  # shift downwards if closer
         self.shift_s(shift)
+        return self
+
+    def transpose_simple(self, semitones: int, use_flats=False):
+        """Transpose a note by specifying the change in semitone intervals. Use use_flats=True to transpose using flat accidentals."""
+        if use_flats:
+            note_list = Note._flat_tuple
+        else:
+            note_list = Note._sharp_tuple
+        new = note_list[(self.num_value() + semitones) % 12]
+        self.value = new
         return self
 
     def __repr__(self):

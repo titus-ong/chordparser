@@ -2,8 +2,6 @@
 chordparser
 ===========
 
-A Python 3 package that provides a musical framework to analyse chords.
-
 .. image:: https://travis-ci.org/titus-ong/chordparser.svg?branch=master
    :alt: build status
    :target: https://travis-ci.org/titus-ong/chordparser
@@ -20,9 +18,7 @@ A Python 3 package that provides a musical framework to analyse chords.
    :target: https://pypi.org/pypi/chordparser
    :alt: downloads
 
-.. include:: docs/whatiscp.rst
-
-.. include:: docs/whycp.rst
+chordparser is a Python 3 package that provides a musical framework to analyse chords. Chord notation can be parsed into Chords, which can then be analysed against other chords or the key of the song. This allows for harmonic progression analysis in chord sheets and helps musicians understand why and how chord progressions work.
 
 --------
 Features
@@ -50,9 +46,9 @@ To install chordparser, run this command in your terminal:
 Usage
 -----
 
-For a quick introduction and working example, check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_.
+For a quick introduction and a working example, check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_.
 
-The full documentation can be found `here <>`_.
+The full documentation can be found `here <https://chordparser.readthedocs.io/en/latest/>`_.
 
 ----------
 Contribute

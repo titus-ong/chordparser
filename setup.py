@@ -30,6 +30,7 @@ setup(name='chordparser',
       version=grep('__version__'),
       description='Parse and analyse chords',
       long_description=readme(),
+      long_description_content_type='text/x-rst',
       classifiers=[
           "Development Status :: 4 - Beta",
           'License :: OSI Approved :: MIT License',

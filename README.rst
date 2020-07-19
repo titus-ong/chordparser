@@ -6,6 +6,10 @@ chordparser
    :alt: build status
    :target: https://travis-ci.org/titus-ong/chordparser
 
+.. image:: https://readthedocs.org/projects/chordparser/badge/?version=latest
+    :target: https://chordparser.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 .. image:: https://coveralls.io/repos/github/titus-ong/chordparser/badge.svg?branch=master
    :alt: coverage
    :target: https://coveralls.io/github/titus-ong/chordparser

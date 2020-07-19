@@ -20,21 +20,9 @@ A Python 3 package that provides a musical framework to analyse chords.
    :target: https://pypi.org/pypi/chordparser
    :alt: downloads
 
-chordparser aims to act as a framework for harmonic analysis of chords based on keys and scales. This helps in understanding how each chord functions, and allows for the conversion to roman numeral chord notation.
+.. include:: docs/whatiscp.rst
 
-Musical classes have been grouped into Notes, Keys, Scales, Chords and Romans as the foundation for analysing chords. Chord notation can be parsed as string input and converted to Chords, which have been built on the other classes.
-
-The Parser is a one-stop shop for creating, manipulating and analysing the musical classes. It can be used to analyse the following chords: diatonic chords, mode mixture/ borrowed chords (from other modes), secondary dominant chords (e.g. V/V), secondary leading tone chords.
-
-chordparser can be incorporated into Songbooks easily with its ability to transpose chords correctly. Check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_ on how you can do that and perform more advanced manipulation with other functions available in chordparser.
-
--------
-Install
--------
-
-.. code-block:: python
-
-    >>> pip -install chordparser
+.. include:: docs/whycp.rst
 
 --------
 Features
@@ -42,13 +30,47 @@ Features
 
 * Create and manipulate notes, keys, scales and chords easily
 * Accept complex chord notations
-* Transpose musical classes for easy transposition
-* Automatically-generate notes for scales and chords
-* Parse and store chord information on its quality, chord tones, and other sus/add/bass notes
-* Generate roman numeral notation
-* Analyse chord-scale relationships
+* Transpose musical classes easily and accurately
+* Automatically generate notes for scales and chords from notation
+* Parse and store chord information to be easily analysed
+* Generate roman numeral notation from chords
+* Analyse chord-key/scale relationships
+
+------------
+Installation
+------------
+
+To install chordparser, run this command in your terminal:
+
+.. code-block:: console
+
+    $ pip install chordparser
 
 -----
 Usage
 -----
-Check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_.
+
+For a quick introduction and working example, check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_.
+
+The full documentation can be found `here <>`_.
+
+----------
+Contribute
+----------
+
+- Issue Tracker: github.com/titus-ong/chordparser/issues
+- Source Code: github.com/titus-ong/chordparser
+
+-------
+Support
+-------
+
+If you are having issues, please let me know at: titusongyl@gmail.com
+
+.. include:: AUTHORS.rst
+
+-------
+License
+-------
+
+The project is licensed under the MIT license.

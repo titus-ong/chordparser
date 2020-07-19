@@ -67,7 +67,13 @@ Support
 
 If you are having issues, please let me know at: titusongyl@gmail.com
 
-.. include:: AUTHORS.rst
+-------
+Authors
+-------
+
+Development Lead
+
+* Titus Ong <titusongyl@gmail.com>
 
 -------
 License

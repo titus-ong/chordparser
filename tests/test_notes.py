@@ -131,3 +131,27 @@ def test_note_transpose(note, semitone, letter, new_note):
     nnote = NE.create_note(note)
     nnote.transpose(semitone, letter)
     assert nnote == new_note
+
+
+def test_transpose_simple():
+    n = NE.create_note("C")
+    n.transpose_simple(2)
+    assert "D" == n
+
+
+def test_transpose_simple_2():
+    n = NE.create_note("C")
+    n.transpose_simple(-13)
+    assert "B" == n
+
+
+def test_transpose_simple_sharps():
+    n = NE.create_note("C")
+    n.transpose_simple(3)
+    assert "D\u266f" == n
+
+
+def test_transpose_simple_flats():
+    n = NE.create_note("C")
+    n.transpose_simple(3, use_flats=True)
+    assert "E\u266d" == n

@@ -94,6 +94,20 @@ def test_transpose(string, semitones, letter, notation):
     assert repr(new_chord) == notation
 
 
+def test_transpose_simple():
+    new_chord = CE.create_chord("C#/G")
+    new_chord.transpose_simple(1)
+    assert "D" == new_chord.root
+    assert "A\u266d" == new_chord.bass
+
+
+def test_transpose_simple_flats():
+    c = CE.create_chord("C/Gb")
+    c.transpose_simple(1, use_flats=True)
+    assert "D\u266d" == c.root
+    assert "A\U0001D12B" == c.bass
+
+
 @pytest.mark.parametrize(
     "input, output", [
         ("hey", "hey"), (None, '')

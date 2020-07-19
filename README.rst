@@ -18,7 +18,7 @@ chordparser
    :target: https://pypi.org/pypi/chordparser
    :alt: downloads
 
-chordparser is a Python 3 package that provides a musical framework to analyse chords. Chord notation can be parsed into Chords, which can then be analysed against other chords or the key of the song.
+chordparser is a Python 3 package that provides a musical framework to analyse chords. Chord notation can be parsed into Chords, which can then be analysed against other chords or the key of the song. This allows for harmonic progression analysis in chord sheets and helps musicians understand why and how chord progressions work.
 
 --------
 Features

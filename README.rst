@@ -71,6 +71,7 @@ If you are having issues, please let me know at: titusongyl@gmail.com
 Authors
 -------
 
+Development Lead
 * Titus Ong <titusongyl@gmail.com>
 
 -------

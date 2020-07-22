@@ -47,6 +47,11 @@ class NoteEditor:
     def get_tone_letter(self, *notes):
         """Return a nested tuple of (semitone interval, letter interval) between notes."""
         semitones = self.get_intervals(*notes)
+        letters = self.get_letter_intervals(*notes)
+        return tuple(zip(semitones, letters))
+
+    def get_letter_intervals(self, *notes):
+        """Return a tuple of letter intervals between notes."""
         old_note = NoteEditor._notes_tuple.index(notes[0].letter)
         note_diff = []
         for each in notes:
@@ -54,7 +59,7 @@ class NoteEditor:
             note_diff.append((new_note - old_note) % 8)
             old_note = new_note
         note_diff.pop(0)
-        return tuple(zip(semitones, note_diff))
+        return note_diff
 
     def get_intervals(self, *notes):
         """Return a tuple of semitone intervals between notes."""

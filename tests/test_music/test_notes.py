@@ -68,7 +68,7 @@ def test_note_num_value(note, value):
     "note", ['C', 'D\u266F', 'G\u266D', 'A\U0001D12B', 'B\U0001D12A'])
 def test_note_letter(note):
     new_note = NE.create_note(note)
-    assert new_note.letter() == note[0]
+    assert new_note.letter == note[0]
 
 
 @pytest.mark.parametrize(
@@ -87,8 +87,8 @@ def test_note_symbol(note):
     if len(note) > 1:
         symbol = note[1]
     else:
-        symbol = None
-    assert new_note.symbol() == symbol
+        symbol = ''
+    assert new_note.symbol == symbol
 
 
 @pytest.mark.parametrize(
@@ -112,14 +112,14 @@ def test_note_creation_repr(note):
 
 
 @pytest.mark.parametrize(
-    "note", ['C', Note('C')])
+    "note", ['C', Note('C', '')])
 def test_note_equality(note):
     new_note = NE.create_note('C')
     assert new_note == note
 
 
 @pytest.mark.parametrize(
-    "note", ['CA', Note('D'), True, 10, 'B#'])
+    "note", ['CA', Note('D', ''), True, 10, 'B#'])
 def test_note_inequality(note):
     new_note = NE.create_note('C')
     assert new_note != note

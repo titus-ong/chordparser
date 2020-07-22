@@ -36,19 +36,36 @@ class Note:
         'C', 'D', 'E', 'F', 'G', 'A', 'B',
     )
     _sharp_tuple = (
-        'C', 'C\u266f', 'D', 'D\u266f', 'E',
-        'F', 'F\u266f', 'G', 'G\u266f', 'A',
-        'A\u266f', 'B',
+        ('C', ''), ('C', '\u266f'), ('D', ''), ('D', '\u266f'), ('E', ''),
+        ('F', ''), ('F', '\u266f'), ('G', ''), ('G', '\u266f'), ('A', ''),
+        ('A', '\u266f'), ('B', ''),
     )
     _flat_tuple = (
-        'C', 'D\u266d', 'D', 'E\u266d', 'E',
-        'F', 'G\u266d', 'G', 'A\u266d', 'A',
-        'B\u266d', 'B',
+        ('C', ''), ('D', '\u266d'), ('D', ''), ('E', '\u266d'), ('E', ''),
+        ('F', ''), ('G', '\u266d'), ('G', ''), ('A', '\u266d'), ('A', ''),
+        ('B', '\u266d'), ('B', ''),
     )
 
+    def __init__(self, letter, symbol):
+        self.letter = letter
+        self.symbol = symbol
 
-    def __init__(self, value):
-        self.value = value
+    @property
+    def value(self):
+        return self.letter + self.symbol
+
+    def num_value(self) -> int:
+        """Return numerical value (basis: C = 0)."""
+        num = (self.letter_value() + self.symbol_value()) % 12
+        return num
+
+    def letter_value(self) -> int:
+        """Return note letter as an integer value (Basis: C = 0)."""
+        return Note._note_values[self.letter]
+
+    def symbol_value(self) -> int:
+        """Return note symbol as an integer value."""
+        return Note._symbol_signs[self.symbol]
 
     def accidental(self, value: int):
         """Change a note's accidental by specifying a value from -2(doubleflat) to 2(doublesharp)."""
@@ -56,7 +73,7 @@ class Note:
             raise ValueError(
                 "Only integers between -2 and 2 are accepted"
             )
-        self.value = self.letter() + Note._symbols[value]
+        self.symbol = Note._symbols[value]
         return self
 
     def shift_s(self, value: int):
@@ -66,38 +83,15 @@ class Note:
             raise ValueError(
                 "Only symbols up to doublesharps and doubleflats are accepted"
             )
-        self.value = self.letter() + Note._symbols[value]
+        self.symbol = Note._symbols[value]
         return self
 
     def shift_l(self, value: int):
         """Shift a note's letter."""
-        pos = (Note._notes_tuple.index(self.letter()) + value) % 7
+        pos = (Note._notes_tuple.index(self.letter) + value) % 7
         new_letter = Note._notes_tuple[pos]
-        self.value = new_letter + (self.symbol() or '')
+        self.letter = new_letter
         return self
-
-    def num_value(self) -> int:
-        """Return numerical value (basis: C = 0)."""
-        num = (self.letter_value() + self.symbol_value()) % 12
-        return num
-
-    def letter(self) -> str:
-        """Return note letter."""
-        return self.value[0]
-
-    def letter_value(self) -> int:
-        """Return note letter as an integer value (Basis: C = 0)."""
-        return Note._note_values[self.letter()]
-
-    def symbol(self) -> str:
-        """Return note symbol (None if no symbol)."""
-        if len(self.value) > 1:
-            return self.value[1]
-        return None
-
-    def symbol_value(self) -> int:
-        """Return note symbol as an integer value."""
-        return Note._symbol_signs.get(self.symbol(), 0)
 
     def transpose(self, semitones: int, letter: int):
         """Transpose a note by specifying the change in semitone and letter intervals."""
@@ -115,8 +109,9 @@ class Note:
             note_list = Note._flat_tuple
         else:
             note_list = Note._sharp_tuple
-        new = note_list[(self.num_value() + semitones) % 12]
-        self.value = new
+        self.letter, self.symbol = note_list[
+            (self.num_value() + semitones) % 12
+        ]
         return self
 
     def __repr__(self):

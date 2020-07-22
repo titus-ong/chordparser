@@ -110,7 +110,7 @@ class Chord:
         degree = min(
             self.base_scale.notes.index(x)
             for x in self.base_scale.notes
-            if x.letter() == self.bass.letter()
+            if x.letter == self.bass.letter
             ) + 1
         self.degrees.insert(0, degree)
         (shift,) = self.NE.get_min_intervals(

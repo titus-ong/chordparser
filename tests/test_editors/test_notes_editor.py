@@ -54,7 +54,7 @@ def test_min_intervals(notes, interval):
 @pytest.mark.parametrize(
     "notes, difference", [
         (('C', 'B'), ((11, 6),)),
-        (('B', 'E', 'D'), ((5, 4), (10, 7))),
+        (('B', 'E', 'D'), ((5, 3), (10, 6))),
     ]
 )
 def test_tone_letter(notes, difference):

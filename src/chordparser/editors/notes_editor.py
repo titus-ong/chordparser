@@ -56,10 +56,11 @@ class NoteEditor:
         note_diff = []
         for each in notes:
             new_note = NoteEditor._notes_tuple.index(each.letter)
-            note_diff.append((new_note - old_note) % 8)
+            note_diff.append((new_note - old_note) % 7)
+            print(new_note, old_note)
             old_note = new_note
         note_diff.pop(0)
-        return note_diff
+        return tuple(note_diff)
 
     def get_intervals(self, *notes):
         """Return a tuple of semitone intervals between notes."""

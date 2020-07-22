@@ -83,12 +83,6 @@ class ChordEditor:
             return None
         return self.NE.create_note(string)
 
-    def _xstr(self, value):
-        # To print blank for None values
-        if value is None:
-            return ''
-        return value
-
     def create_diatonic(self, value: Union[Scale, Key], degree: int = 1):
         """Create a diatonic chord from a scale/key by specifying the scale degree."""
         if degree not in range(1, 8):

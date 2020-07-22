@@ -109,16 +109,6 @@ def test_transpose_simple_flats():
     assert "A\U0001D12B" == c.bass
 
 
-@pytest.mark.parametrize(
-    "input, output", [
-        ("hey", "hey"), (None, '')
-        ]
-    )
-def test_xstr(input, output):
-    c = CE.create_chord('C')
-    assert c._xstr(input) == output
-
-
 def test_chord_equality():
     c = CE.create_chord('C')
     assert c == CE.create_chord('C')

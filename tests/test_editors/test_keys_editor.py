@@ -1,5 +1,6 @@
-from chordparser.keys_editor import KeyEditor, ModeError
 import pytest
+
+from chordparser.editors.keys_editor import KeyEditor, ModeError
 
 
 KE = KeyEditor()

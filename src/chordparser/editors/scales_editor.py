@@ -1,6 +1,6 @@
-from chordparser.keys import Key
-from chordparser.scales import Scale
-from chordparser.keys_editor import KeyEditor
+from chordparser.editors.keys_editor import KeyEditor
+from chordparser.music.keys import Key
+from chordparser.music.scales import Scale
 
 
 class ScaleEditor:

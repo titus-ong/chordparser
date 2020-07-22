@@ -1,10 +1,11 @@
-from chordparser.scales import Scale
-from chordparser.roman import Roman
-from chordparser.notes_editor import NoteEditor
-from chordparser.scales_editor import ScaleEditor
-from chordparser.chords_editor import ChordEditor
-import warnings
 import re
+import warnings
+
+from chordparser.editors.chords_editor import ChordEditor
+from chordparser.editors.notes_editor import NoteEditor
+from chordparser.editors.scales_editor import ScaleEditor
+from chordparser.music.roman import Roman
+from chordparser.music.scales import Scale
 
 
 class ChordRomanConverter:

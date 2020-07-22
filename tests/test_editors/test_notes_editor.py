@@ -1,8 +1,9 @@
-from chordparser import notes_editor
 import pytest
 
+from chordparser.editors.notes_editor import NoteEditor
 
-NE = notes_editor.NoteEditor()
+
+NE = NoteEditor()
 
 
 @pytest.mark.parametrize(

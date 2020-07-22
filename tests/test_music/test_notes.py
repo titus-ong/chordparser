@@ -1,9 +1,10 @@
-from chordparser import notes
-from chordparser import notes_editor
 import pytest
 
+from chordparser.editors.notes_editor import NoteEditor
+from chordparser.music.notes import Note
 
-NE = notes_editor.NoteEditor()
+
+NE = NoteEditor()
 
 
 @pytest.mark.parametrize(
@@ -111,14 +112,14 @@ def test_note_creation_repr(note):
 
 
 @pytest.mark.parametrize(
-    "note", ['C', notes.Note('C')])
+    "note", ['C', Note('C')])
 def test_note_equality(note):
     new_note = NE.create_note('C')
     assert new_note == note
 
 
 @pytest.mark.parametrize(
-    "note", ['CA', notes.Note('D'), True, 10, 'B#'])
+    "note", ['CA', Note('D'), True, 10, 'B#'])
 def test_note_inequality(note):
     new_note = NE.create_note('C')
     assert new_note != note

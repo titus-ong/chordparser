@@ -1,10 +1,11 @@
-from chordparser.notes_editor import NoteEditor
-from chordparser.keys_editor import KeyEditor
-from chordparser.scales_editor import ScaleEditor
-from chordparser.chords_editor import ChordEditor
-from chordparser.chords_analyser import ChordAnalyser
-from chordparser.chord_roman_converter import ChordRomanConverter
 import os.path
+
+from chordparser.analysers.chords_analyser import ChordAnalyser
+from chordparser.editors.chord_roman_converter import ChordRomanConverter
+from chordparser.editors.chords_editor import ChordEditor
+from chordparser.editors.keys_editor import KeyEditor
+from chordparser.editors.notes_editor import NoteEditor
+from chordparser.editors.scales_editor import ScaleEditor
 
 
 class Parser(KeyEditor, NoteEditor, ScaleEditor, ChordEditor, ChordAnalyser, ChordRomanConverter):

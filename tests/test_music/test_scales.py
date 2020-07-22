@@ -1,10 +1,11 @@
-from chordparser import keys_editor
-from chordparser import scales_editor
 import pytest
 
+from chordparser.editors.keys_editor import KeyEditor
+from chordparser.editors.scales_editor import ScaleEditor
 
-KE = keys_editor.KeyEditor()
-SE = scales_editor.ScaleEditor()
+
+KE = KeyEditor()
+SE = ScaleEditor()
 
 
 @pytest.mark.parametrize(

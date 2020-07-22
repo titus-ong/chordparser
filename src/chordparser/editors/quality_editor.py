@@ -1,5 +1,6 @@
-from chordparser.quality import Quality
 import re
+
+from chordparser.music.quality import Quality
 
 
 class QualityEditor:

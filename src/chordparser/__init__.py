@@ -1,13 +1,13 @@
 """
 A package to parse ChordPro files.
 """
+from chordparser.music.keys import Key
+from chordparser.music.notes import Note
+from chordparser.music.scales import Scale
+from chordparser.music.quality import Quality
+from chordparser.music.roman import Roman
+from chordparser.music.chords import Chord
 from chordparser.parser import Parser
-from chordparser.notes import Note
-from chordparser.keys import Key
-from chordparser.scales import Scale
-from chordparser.chords import Chord
-from chordparser.quality import Quality
-from chordparser.roman import Roman
 
 
 __author__ = 'Titus Ong'

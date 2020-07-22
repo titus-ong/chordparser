@@ -1,5 +1,6 @@
-from chordparser.quality import Quality
 import pytest
+
+from chordparser.music.quality import Quality
 
 
 @pytest.mark.parametrize(

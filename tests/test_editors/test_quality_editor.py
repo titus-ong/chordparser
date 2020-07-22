@@ -1,5 +1,6 @@
-from chordparser.quality_editor import QualityEditor
 import pytest
+
+from chordparser.editors.quality_editor import QualityEditor
 
 
 QE = QualityEditor()

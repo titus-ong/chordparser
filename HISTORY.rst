@@ -2,6 +2,13 @@
 History
 -------
 
+0.3.8 (2020-07-23)
+~~~~~~~~~~~~~~~~~~
+* Reorganised code folder structure
+* Changed note structure to be split into letter and symbol
+* added ``get_letter_intervals`` method to NoteEditor
+* refactored tests to have more of a single responsibility
+
 0.3.7 (2020-07-20)
 ~~~~~~~~~~~~~~~~~~
 * Fixed empty README author (fixes failed build - PyPI could not read the README)

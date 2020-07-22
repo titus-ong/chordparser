@@ -25,28 +25,32 @@ class NoteEditor:
     _notes_tuple = (
         'C', 'D', 'E', 'F', 'G', 'A', 'B',
         'C', 'D', 'E', 'F', 'G', 'A', 'B')
+    _pattern = (
+        '^([a-gA-G])(\u266F|\u266D|\U0001D12B|\U0001D12A'
+        '|bb|##|b|#){0,1}$'
+    )
 
     def create_note(self, value):
         """Create a Note from a string."""
-        pattern = (
-            '^([a-gA-G])(\u266F|\u266D|\U0001D12B|\U0001D12A'
-            '|bb|##|b|#){0,1}$'
-        )
-        rgx = re.match(pattern, value, re.UNICODE)
+        letter, symbol = self._parse_note(value)
+        return Note(letter, symbol)
+
+    def _parse_note(self, value):
+        """Parse the note string."""
+        rgx = re.match(NoteEditor._pattern, value, re.UNICODE)
         if not rgx:
             raise SyntaxError(f"'{value}' could not be parsed")
         letter = rgx.group(1).upper()
         symbol = NoteEditor._symbol_converter.get(rgx.group(2))
-        notation = letter + symbol
-        return Note(notation)
+        return letter, symbol
 
     def get_tone_letter(self, *notes):
         """Return a nested tuple of (semitone interval, letter interval) between notes."""
         semitones = self.get_intervals(*notes)
-        old_note = NoteEditor._notes_tuple.index(notes[0].letter())
+        old_note = NoteEditor._notes_tuple.index(notes[0].letter)
         note_diff = []
         for each in notes:
-            new_note = NoteEditor._notes_tuple.index(each.letter())
+            new_note = NoteEditor._notes_tuple.index(each.letter)
             note_diff.append((new_note - old_note) % 8)
             old_note = new_note
         note_diff.pop(0)
@@ -77,8 +81,7 @@ class NoteEditor:
 
     def change_note(self, note, value, inplace=True):
         """Change a note's value. Use inplace=True to return a new note."""
-        new = self.create_note(value)
-        if inplace:
-            note.value = new.value
-            return note
-        return new
+        if not inplace:
+            note = self.create_note("C")
+        note.letter, note.symbol = self._parse_note(value)
+        return note

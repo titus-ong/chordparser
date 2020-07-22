@@ -57,7 +57,7 @@ class ChordRomanConverter:
         degree = min(
             scale.notes.index(x)
             for x in scale.notes
-            if x.letter() == chord.root.letter()
+            if x.letter == chord.root.letter
         ) + 1
         # lower/uppercase numeral
         if chord.quality.value in {"major", "augmented", "dominant"}:

@@ -1,11 +1,12 @@
-from chordparser import Parser
-from chordparser.notes import Note
-from chordparser.notes_editor import NoteEditor
-from chordparser.keys_editor import KeyEditor
-from chordparser.scales_editor import ScaleEditor
-from chordparser.chords_editor import ChordEditor
-from chordparser.chords_analyser import ChordAnalyser
 import pytest
+
+from chordparser.analysers.chords_analyser import ChordAnalyser
+from chordparser.editors.chords_editor import ChordEditor
+from chordparser.editors.keys_editor import KeyEditor
+from chordparser.editors.notes_editor import NoteEditor
+from chordparser.editors.scales_editor import ScaleEditor
+from chordparser.music.notes import Note
+from chordparser.parser import Parser
 
 
 NE = NoteEditor()

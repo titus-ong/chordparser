@@ -1,5 +1,5 @@
-from chordparser.notes_editor import NoteEditor
-from chordparser.keys import Key
+from chordparser.editors.notes_editor import NoteEditor
+from chordparser.music.keys import Key
 
 
 class Scale:

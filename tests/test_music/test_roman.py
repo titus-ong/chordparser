@@ -1,5 +1,6 @@
-from chordparser.roman import Roman
 import pytest
+
+from chordparser.music.roman import Roman
 
 
 def test_notation():

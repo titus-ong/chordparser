@@ -1,7 +1,8 @@
-from chordparser.notes import Note
-from chordparser.keys import Key
-from chordparser.notes_editor import NoteEditor
 from typing import Union
+
+from chordparser.editors.notes_editor import NoteEditor
+from chordparser.music.keys import Key
+from chordparser.music.notes import Note
 
 
 class ModeError(Exception):

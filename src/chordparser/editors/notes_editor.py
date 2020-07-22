@@ -1,5 +1,6 @@
-from chordparser.notes import Note
 import re
+
+from chordparser.music.notes import Note
 
 
 class NoteEditor:

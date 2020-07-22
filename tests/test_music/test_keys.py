@@ -1,8 +1,9 @@
-from chordparser import keys_editor
 import pytest
 
+from chordparser.editors.keys_editor import KeyEditor
 
-KE = keys_editor.KeyEditor()
+
+KE = KeyEditor()
 
 
 @pytest.mark.parametrize(

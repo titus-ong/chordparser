@@ -1,7 +1,8 @@
-from chordparser.scales_editor import ScaleEditor
-from chordparser.chords_editor import ChordEditor
-from chordparser.chord_roman_converter import ChordRomanConverter
 import pytest
+
+from chordparser.editors.chord_roman_converter import ChordRomanConverter
+from chordparser.editors.chords_editor import ChordEditor
+from chordparser.editors.scales_editor import ScaleEditor
 
 
 SE = ScaleEditor()

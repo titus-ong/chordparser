@@ -35,11 +35,7 @@ class Scale:
     def build(self):
         """Build the scale from its key."""
         self.scale_intervals = self._get_intervals()
-        self.notes = [self.NE.create_note(self.key.root.value)]
-        for interval in self.scale_intervals:
-            new_note = self.NE.create_note(self.notes[-1].value)
-            self.notes.append(new_note.transpose(interval, 1))
-        self.notes = tuple(self.notes)
+        self.notes = self._get_notes()
         return self
 
     def _get_intervals(self):
@@ -52,6 +48,14 @@ class Scale:
         submode_intervals = Scale._submodes[self.key.submode]
         intervals = [x + y for x, y in zip(mode_intervals, submode_intervals)]
         return tuple(intervals)
+
+    def _get_notes(self):
+        """Get notes based on intervals."""
+        notes = [self.NE.create_note(self.key.root.value)]
+        for interval in self.scale_intervals:
+            new_note = self.NE.create_note(notes[-1].value)
+            notes.append(new_note.transpose(interval, 1))
+        return tuple(notes)
 
     def transpose(self, semitones: int, letter: int):
         """Transpose the key of the scale."""

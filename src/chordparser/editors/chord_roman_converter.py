@@ -90,5 +90,5 @@ class ChordRomanConverter:
         q_str += ChordRomanConverter._q_dict.get(chord.quality.value, "")
         return q_str
 
-    def to_chord(self, roman, scale_key):
-        pass
+    # def to_chord(self, roman, scale_key):
+    #     pass

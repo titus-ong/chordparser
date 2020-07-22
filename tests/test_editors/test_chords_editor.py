@@ -4,6 +4,7 @@ from chordparser.editors.chords_editor import ChordEditor
 from chordparser.editors.keys_editor import KeyEditor
 from chordparser.editors.notes_editor import NoteEditor
 from chordparser.editors.scales_editor import ScaleEditor
+from chordparser.music.notes import Note
 
 
 NE = NoteEditor()
@@ -14,65 +15,71 @@ CE = ChordEditor()
 
 @pytest.mark.parametrize(
     "value", ["1", "H", "\u266fG"])
-def test_chord_valueerror(value):
+def test_chord_value_error(value):
     with pytest.raises(SyntaxError):
         CE.create_chord(value)
 
 
 @pytest.mark.parametrize(
-    "value, root", [
-        ('C', NE.create_note('C')),
-        ('E\u266f', NE.create_note('E\u266f')),
-    ]
+    "value", ['C', 'E\u266f']
 )
-def test_chord_root(value, root):
-    new_chord = CE.create_chord(value)
-    assert new_chord.root == root
+def test_chord_root(value):
+    new_chord = CE._parse_root(value)
+    assert new_chord == value
+    assert isinstance(new_chord, Note)
 
 
 def test_quality():
-    c = CE.create_chord("Cminmaj7")
-    assert "minor major seventh" == str(c.quality)
+    c = CE._parse_quality("minmaj7")
+    assert "minor major seventh" == str(c)
+
+
+def test_quality_capital():
+    c = CE.create_chord("c7")
+    assert "minor seventh" == str(c.quality)
 
 
 @pytest.mark.parametrize(
     "string, add", [
-        ('Cadd13', [('', 13)]),
-        ('cadd2#6', [('', 2), ('\u266f', 6)]),
-        ('cminmaj9b11', [('\u266d', 11)]),
-        ('C', None),
+        ('add13', [('', 13)]),
+        ('add2#6', [('', 2), ('\u266f', 6)]),
+        ('b11', [('\u266d', 11)]),
+        (None, None),
     ]
 )
 def test_add(string, add):
-    c = CE.create_chord(string)
-    assert c.add == add
+    c = CE._parse_add(string)
+    assert c == add
 
 
-def test_add_2():
-    c = CE.create_chord("C")
-    assert c.add is None
-
-
-def test_parse_error():
+def test_add_parse_error():
     with pytest.raises(SyntaxError):
-        c = CE.create_chord('Cadd21')
+        c = CE._parse_add('add21')
 
 
 @pytest.mark.parametrize(
     "string, bass", [
-        ('C', None),
-        ('C/G', NE.create_note('G')),
-        ('C/G#', NE.create_note('G\u266f')),
+        ('G', 'G'),
+        ('G#', 'G\u266f'),
     ]
 )
 def test_bass(string, bass):
-    c = CE.create_chord(string)
-    assert c.bass == bass
+    c = CE._parse_bass(string)
+    assert c == bass
+    assert isinstance(c, Note)
 
 
 def test_bass_2():
-    c = CE.create_chord("C")
-    assert None is c.bass
+    c = CE._parse_bass(None)
+    assert None is c
+
+
+def test_create_chord_everything():
+    c = CE.create_chord("C#dim7addb4/E")
+    assert "C\u266f" == c.root
+    assert "diminished seventh" == str(c.quality)
+    assert [("\u266d", 4)] == c.add
+    assert "E" == c.bass
 
 
 @pytest.mark.parametrize(

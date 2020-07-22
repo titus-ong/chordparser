@@ -3,6 +3,26 @@ import pytest
 from chordparser.music.quality import Quality
 
 
+def test_check_major():
+    with pytest.raises(ValueError):
+        Quality("major", "seventh")
+
+
+def test_check_diminished():
+    with pytest.raises(ValueError):
+        Quality("diminished", "seventh")
+
+
+def test_check_diminished_2():
+    with pytest.raises(ValueError):
+        Quality("minor", "diminished seventh")
+
+
+def test_check_flat_sevenths():
+    with pytest.raises(ValueError):
+        Quality("major", "major seventh", True)
+
+
 @pytest.mark.parametrize(
     "quality, interval", [
         ("major", (4, 3)),
@@ -125,3 +145,14 @@ def test_short_halfdim():
 def test_short_sus():
     q = Quality("sus4", "seventh")
     assert "7sus" == q.short()
+
+
+def test_equality_not_implemented():
+    q = Quality("major")
+    assert q != len
+
+
+def test_equality():
+    q1 = Quality("major", "major seventh")
+    q2 = Quality("major", "major seventh")
+    assert q1 == q2

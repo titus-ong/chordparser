@@ -27,3 +27,8 @@ def test_equality():
 def test_equality_2():
     r = Roman("IV", "+", (6,))
     assert "IV+6" == r
+
+
+def test_equality_not_implemented():
+    r = Roman("I", "", ())
+    assert r != len

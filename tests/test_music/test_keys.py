@@ -6,31 +6,10 @@ from chordparser.editors.keys_editor import KeyEditor
 KE = KeyEditor()
 
 
-@pytest.mark.parametrize(
-    "key, semitone, letter, new_key", [
-        ('C', 2, 1, 'D'), ('G\u266d', -5, -4, 'C\u266f'), ('A\U0001D12A', 1, 2, 'C')])
-def test_note_transpose(key, semitone, letter, new_key):
-    nkey = KE.create_key(key)
-    nkey.transpose(semitone, letter)
-    assert nkey.root == new_key
-
-
-@pytest.mark.parametrize(
-    "value", [
-        "H#", "Z", len])
-def test_root_transpose_error(value):
+def test_key_note_attribute():
     nkey = KE.create_key('C')
-    with pytest.raises(TypeError):
-        nkey.transpose(value, 1)
-
-
-@pytest.mark.parametrize(
-    "value", [
-        "H#", 10.0, "Z", len])
-def test_root_transpose_error_2(value):
-    nkey = KE.create_key('C')
-    with pytest.raises(TypeError):
-        nkey.transpose(1, value)
+    nkey.transpose(2, 1)
+    assert nkey.root == 'D'
 
 
 @pytest.mark.parametrize(

@@ -164,12 +164,6 @@ class Chord:
         self.build()
         return self
 
-    def _xstr(self, value):
-        # To print blank for None values
-        if value is None:
-            return ''
-        return value
-
     def __repr__(self):
         return f'{self.notation} chord'
 

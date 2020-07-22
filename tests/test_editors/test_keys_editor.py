@@ -1,49 +1,61 @@
 import pytest
 
 from chordparser.editors.keys_editor import KeyEditor, ModeError
+from chordparser.editors.notes_editor import NoteEditor
+from chordparser.music.notes import Note
 
 
 KE = KeyEditor()
+NE = NoteEditor()
+
+
+def test_check_root():
+    note = NE.create_note("C")
+    assert isinstance(KE._check_root(note), Note)
+
+
+def test_check_root_2():
+    note = "C"
+    assert isinstance(KE._check_root(note), Note)
 
 
 @pytest.mark.parametrize(
-    "mode, submode", [
-        ("major", None), ("MINOR", "harmonic"),
-        ("minor", "melodic"), ("minor", "natural"), ("ionian", None),
-        ("dorian", None), ("phrygian", None), ("lydian", None),
-        ("mixolydian", None), ("locrian", None)])
-def test_key_mode_submode(mode, submode):
-    nkey = KE.create_key('C', mode=mode, submode=submode)
-    if not nkey.submode:
-        assert str(nkey) == f'C {mode.lower()}'
-    else:
-        assert str(nkey) == f'C {submode.lower()} {mode.lower()}'
-
-
-def test_key_mode_submode_2():
-    nkey = KE.create_key('C', 'minor')
-    assert nkey.submode == 'natural'
+    "mode", ["major", "MINOR", "dOrIaN"]
+)
+def test_check_mode(mode):
+    assert KE._check_mode(mode) == mode.lower()
 
 
 @pytest.mark.parametrize(
     "mode", ["ionia", "hello", "1rh9"])
-def test_key_mode_error(mode):
+def test_check_mode_error(mode):
     with pytest.raises(SyntaxError):
-        nkey = KE.create_key('C', mode)
+        KE._check_mode(mode)
 
 
 @pytest.mark.parametrize(
-    "mode, submode", [("minor", "nothing")])
-def test_key_submode_key_error(mode, submode):
+    "mode, submode", [
+        ("major", None), ("minor", "harmonic"), ("locrian", None)])
+def test_check_submode(mode, submode):
+    assert KE._check_submode(mode, submode) == submode
+
+
+def test_check_submode_2():
+    assert KE._check_submode("minor", None) == 'natural'
+
+
+def test_check_submode_3():
+    assert KE._check_submode("minor", "Harmonic") == "harmonic"
+
+
+def test_check_submode_syntax_error():
     with pytest.raises(SyntaxError):
-        nkey = KE.create_key('C', mode, submode)
+        KE._check_submode("minor", "nothing")
 
 
-@pytest.mark.parametrize(
-    "mode, submode", [("major", "harmonic")])
-def test_key_submode_key_error_2(mode, submode):
+def test_check_submode_mode_error():
     with pytest.raises(ModeError):
-        nkey = KE.create_key('C', mode, submode)
+        KE._check_submode("major", "harmonic")
 
 
 @pytest.mark.parametrize(
@@ -64,18 +76,6 @@ def test_relative_major_incorrect_mode():
         KE.relative_major(nkey)
 
 
-def test_relative_minor_incorrect_mode():
-    nkey = KE.create_key('C', 'dorian')
-    with pytest.raises(ModeError):
-        KE.relative_minor(nkey)
-
-
-def test_relative_minor_incorrect_submode():
-    nkey = KE.create_key('C', 'major')
-    with pytest.raises(SyntaxError):
-        KE.relative_minor(nkey, 'blah')
-
-
 @pytest.mark.parametrize(
     "root, mode, submode, newroot, newmode, newsub", [
         ('A', 'major', 'harmonic', 'F\u266f', 'minor', 'harmonic'),
@@ -86,6 +86,18 @@ def test_relative_minor(root, mode, submode, newroot, newmode, newsub):
     nkey = KE.create_key(root, mode)
     rel_key = KE.relative_minor(nkey, submode)
     assert rel_key == KE.create_key(newroot, newmode, newsub)
+
+
+def test_relative_minor_incorrect_mode():
+    nkey = KE.create_key('C', 'dorian')
+    with pytest.raises(ModeError):
+        KE.relative_minor(nkey)
+
+
+def test_relative_minor_incorrect_submode():
+    nkey = KE.create_key('C', 'major')
+    with pytest.raises(SyntaxError):
+        KE.relative_minor(nkey, 'blah')
 
 
 def test_change_key():

@@ -10,21 +10,12 @@ SE = ScaleEditor()
 
 @pytest.mark.parametrize(
     "mode, submode, intervals", [
-        ("ionian", None, (2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1)),
-        ("MAJOR", None, (2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1)),
         ("dorian", None, (2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2)),
-        ("PhRyGiAn", None, (1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2)),
         ("lydian", None, (2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1)),
-        ("mixolydian", None, (2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2)),
-        ("aeolian", None, (2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2)),
-        ("minor", None, (2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2)),
-        ("minor", "natural", (2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2)),
         ("minor", "melodic", (2, 1, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 1)),
-        ("minor", "harmonic", (2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1)),
-        ("locrian", None, (1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2)),
     ]
 )
-def test_scale_modes(mode, submode, intervals):
+def test_scale_intervals(mode, submode, intervals):
     nkey = KE.create_key('D', mode=mode, submode=submode)
     scale = SE.create_scale(nkey)
     assert scale.scale_intervals == intervals

@@ -36,13 +36,19 @@ def test_alt5_2():
     assert "augmented" == q.value
 
 
+def test_alt5_3():
+    q = QE.create_quality("maj#5")
+    assert "augmented" == q.value
+
+
 @pytest.mark.parametrize(
     "quality, value", [
         ("7", "dominant"),
         ("m9", "minor"),
         ("augmaj7", "augmented"),
         ("maj7#5", "augmented"),
-        ("m7b5", "half-diminished"),
+        ("m9b5", "half-diminished"),
+        ("\u00f89", "half-diminished"),
     ]
 )
 def test_base_ext(quality, value):

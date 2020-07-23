@@ -15,4 +15,8 @@ class Parser(KeyEditor, NoteEditor, ScaleEditor, ChordEditor, ChordAnalyser, Cho
     The Parser can use the methods under all the various Editors and Analysers. This makes it more convenient to initialise the various musical classes and interact with them.
     """
     _path = os.path.join(os.path.dirname(__file__), 'sample_sheet.cho')
-    sample = open(_path, 'r')
+
+    def __init__(self):
+        chordpro = open(Parser._path, 'r')
+        self.sample = chordpro.read()
+        chordpro.close()

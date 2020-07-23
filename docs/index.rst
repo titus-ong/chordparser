@@ -1,13 +1,14 @@
 Welcome to chordparser's documentation!
 =======================================
 
-chordparser is a Python 3 package that provides a musical framework for analysing chords. The `Introduction <introduction.html>`_ covers what it is and why it is.
+chordparser is a Python 3 package that provides a musical framework for analysing chords. The :doc:`Introduction <introduction>` covers what it is and why it is.
 
-Get started with `Installation <installation.html>`_ and then get an overview with the `Quickstart <quickstart.html>`_. The rest of the docs describe each musical class that chordparser provides in detail so you can use the framework effectively.
+Get started with :doc:`Installation <installation>` and then jump right into using chordparser with the :doc:`Quick Start <quickstart>`. The rest of the docs describe the Parser and each musical class that chordparser provides in detail so you can use the framework effectively.
 
 --------
 Contents
 --------
+
 
 .. toctree::
    :maxdepth: 2
@@ -16,12 +17,8 @@ Contents
    installation
    quickstart
    parser
-   music/note
-   music/key
-   music/scale
-   music/chord
-   music/roman
-   helpers/quality
+   music/main
+   helpers/main
    authors
    contributing
    licence

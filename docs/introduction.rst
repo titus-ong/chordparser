@@ -20,5 +20,5 @@ Current songbooks and chord sheet applications can display chord sheets beautifu
 
 With chordparser's musical framework, chord structures from a basic V-I cadence to more complicated secondary chords can be analysed. Here are some examples of chords that can be analysed for: diatonic chords, mode mixture/ borrowed chords, secondary dominant chords (e.g. V/V), secondary leading tone chords.
 
-Possible applications of chordparser include incorporating it into a songbook application or reading and analysing your own chord sheets. Check out the `Quickstart <quickstart.html>`_ on how you can do that and more.
+Possible applications of chordparser include incorporating it into a songbook application or reading and analysing your own chord sheets. Check out the :doc:`Quick Start <quickstart>` on how you can do that and more.
 

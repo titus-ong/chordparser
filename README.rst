@@ -2,9 +2,9 @@
 chordparser
 ===========
 
-.. image:: https://travis-ci.org/titus-ong/chordparser.svg?branch=master
+.. image:: https://travis-ci.com/titus-ong/chordparser.svg?branch=master
    :alt: build status
-   :target: https://travis-ci.org/titus-ong/chordparser
+   :target: https://travis-ci.com/titus-ong/chordparser
 
 .. image:: https://readthedocs.org/projects/chordparser/badge/?version=latest
     :target: https://chordparser.readthedocs.io/en/latest/?badge=latest

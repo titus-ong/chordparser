@@ -66,6 +66,13 @@ def test_secondary_not_maj_min_dom():
     assert "" == CA.analyse_secondary(c, c, s)
 
 
+def test_secondary_tonic():
+    c = CE.create_chord("F")
+    c2 = CE.create_chord("C")
+    s = SE.create_scale("F")
+    assert "" == CA.analyse_secondary(c2, c, s)
+
+
 def test_secondary_dominant():
     c = CE.create_chord("C7")
     c2 = CE.create_chord("G")

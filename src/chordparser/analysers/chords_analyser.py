@@ -93,6 +93,9 @@ class ChordAnalyser:
         # We only care about chords leading to major/minor/dominant chords
         if next_chord.quality.value not in {"major", "minor", "dominant"}:
             return ""
+        next_roman = self.CRC.to_roman(next_chord, scale)
+        if next_roman.root in {"i", "I"}:  # ignore tonic next chords
+            return ""
         if next_chord.quality.value == "dominant":
             next_scale = self.SE.create_scale(next_chord.root, "major")
         else:

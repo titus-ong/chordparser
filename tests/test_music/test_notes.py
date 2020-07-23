@@ -143,7 +143,14 @@ def test_transpose_simple_flats():
     "note", ['C', 'D\u266F', 'G\u266D', 'A\U0001D12B', 'B\U0001D12A'])
 def test_note_creation_repr(note):
     new_note = NE.create_note(note)
-    assert repr(new_note) == note
+    assert repr(new_note) == note + " note"
+
+
+@pytest.mark.parametrize(
+    "note", ['C', 'D\u266F', 'G\u266D', 'A\U0001D12B', 'B\U0001D12A'])
+def test_note_creation_str(note):
+    new_note = NE.create_note(note)
+    assert str(new_note) == note
 
 
 @pytest.mark.parametrize(

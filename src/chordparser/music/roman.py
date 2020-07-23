@@ -10,6 +10,9 @@ class Roman:
         self.notation = self.root + self.quality + inv_str
 
     def __repr__(self):
+        return self.notation + " roman chord"
+
+    def __str__(self):
         return self.notation
 
     def __eq__(self, other):

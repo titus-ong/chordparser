@@ -72,6 +72,9 @@ class Scale:
     def __repr__(self):
         return f'{self.key} scale'
 
+    def __str__(self):
+        return str(self.key)
+
     def __eq__(self, other):
         # Allow comparison between Keys by checking their basic attributes
         if not isinstance(other, Scale):

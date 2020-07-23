@@ -71,20 +71,6 @@ def test_bass_notes(name, notes, sym, deg, intervals, inversion):
 
 
 @pytest.mark.parametrize(
-    "string, notation", [
-        ("Cmajsus2add9/G", "Csus2add9/G chord"),
-        ("Cmaj9sus4add#9#13/G#", "Cmaj9sus\u266F9\u266F13/G\u266F chord"),
-        ("Caugmaj11", "Cmaj11\u266F5 chord"),
-        ("Cadd2", "Cadd2 chord"),
-        ("Cadd2addb6", "Cadd2\u266d6 chord"),
-        ]
-    )
-def test_notation(string, notation):
-    c = CE.create_chord(string)
-    assert repr(c) == notation
-
-
-@pytest.mark.parametrize(
     "string, semitones, letter, notation", [
         ('C', 3, 1, 'D\u266f chord'),
         ('Dm7add4/A', -5, -3, 'Am7add4/E chord'),
@@ -107,6 +93,25 @@ def test_transpose_simple_flats():
     c.transpose_simple(1, use_flats=True)
     assert "D\u266d" == c.root
     assert "A\U0001D12B" == c.bass
+
+
+@pytest.mark.parametrize(
+    "string, notation", [
+        ("Cmajsus2add9/G", "Csus2add9/G chord"),
+        ("Cmaj9sus4add#9#13/G#", "Cmaj9sus\u266F9\u266F13/G\u266F chord"),
+        ("Caugmaj11", "Cmaj11\u266F5 chord"),
+        ("Cadd2", "Cadd2 chord"),
+        ("Cadd2addb6", "Cadd2\u266d6 chord"),
+        ]
+    )
+def test_notation(string, notation):
+    c = CE.create_chord(string)
+    assert repr(c) == notation
+
+
+def test_str():
+    c = CE.create_chord("Cmajsus2add9/G")
+    assert "Csus2add9/G" == str(c)
 
 
 def test_chord_equality():

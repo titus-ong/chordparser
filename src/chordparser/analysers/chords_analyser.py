@@ -88,10 +88,14 @@ class ChordAnalyser:
             incl_submodes: bool = False,
             allow_power_sus=False,
             default_power_sus="M",
+            limit=True,
     ):
-        """Return secondary chord notation."""
+        """Return secondary chord notation. To check for other secondary chords besides secondary dominants and secondary leading tone chords, use limit=False."""
         # We only care about chords leading to major/minor/dominant chords
         if next_chord.quality.value not in {"major", "minor", "dominant"}:
+            return ""
+        next_roman = self.CRC.to_roman(next_chord, scale)
+        if next_roman.root in {"i", "I"}:  # ignore tonic next chords
             return ""
         if next_chord.quality.value == "dominant":
             next_scale = self.SE.create_scale(next_chord.root, "major")
@@ -103,8 +107,7 @@ class ChordAnalyser:
             prev_chord, next_scale, incl_submodes,
             allow_power_sus, default_power_sus
         )
-        if results:
-            next_roman = self.CRC.to_roman(next_chord, scale)
+        if results and (not limit or results[0][0].root in {"V", "vii"}):
             return "{}/{}".format(results[0][0], next_roman.root)
         return ""
 

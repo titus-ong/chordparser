@@ -1,4 +1,5 @@
 Scale
 -----
 
-.. autoclass:: Scale
+.. autoclass:: chordparser.music.scales.Scale
+    :members:

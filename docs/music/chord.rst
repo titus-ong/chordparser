@@ -1,4 +1,5 @@
 Chord
 -----
 
-.. autoclass:: Chord
+.. autoclass:: chordparser.music.chords.Chord
+    :members:

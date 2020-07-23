@@ -1,4 +1,5 @@
 Note
 ----
 
-.. autoclass:: Note
+.. autoclass:: chordparser.music.notes.Note
+    :members:

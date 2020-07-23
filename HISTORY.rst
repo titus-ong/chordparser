@@ -2,12 +2,18 @@
 History
 -------
 
+0.3.9 (2020-07-23)
+~~~~~~~~~~~~~~~~~~
+* Fix accidental print in NoteEditor
+* Include ``__str__`` representation for printing musical classes
+* Fix file reading for Colab notebook
+
 0.3.8 (2020-07-23)
 ~~~~~~~~~~~~~~~~~~
 * Reorganised code folder structure
 * Changed note structure to be split into letter and symbol
-* added ``get_letter_intervals`` method to NoteEditor
-* refactored tests to have more of a single responsibility
+* Added ``get_letter_intervals`` method to NoteEditor
+* Refactored tests to have more of a single responsibility
 
 0.3.7 (2020-07-20)
 ~~~~~~~~~~~~~~~~~~

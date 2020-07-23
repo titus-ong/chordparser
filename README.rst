@@ -29,12 +29,11 @@ Features
 --------
 
 * Create and manipulate notes, keys, scales and chords easily
-* Accept complex chord notations
+* Parse complex chord notations
 * Transpose musical classes easily and accurately
 * Automatically generate notes for scales and chords from notation
-* Parse and store chord information to be easily analysed
 * Generate roman numeral notation from chords
-* Analyse chord-key/scale relationships
+* Analyse chord-scale relationships
 
 ------------
 Installation

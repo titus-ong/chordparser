@@ -99,3 +99,11 @@ def test_secondary_not_diatonic():
     c2 = CE.create_chord("Gm")
     s = SE.create_scale("F")
     assert "" == CA.analyse_secondary(c2, c, s)
+
+
+def test_secondary_limit():
+    c = CE.create_chord("C7")
+    c2 = CE.create_chord("Dm")
+    s = SE.create_scale("F")
+    assert "" == CA.analyse_secondary(c2, c, s)
+    assert "ii/V" == CA.analyse_secondary(c2, c, s, limit=False)

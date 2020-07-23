@@ -57,7 +57,6 @@ class NoteEditor:
         for each in notes:
             new_note = NoteEditor._notes_tuple.index(each.letter)
             note_diff.append((new_note - old_note) % 7)
-            print(new_note, old_note)
             old_note = new_note
         note_diff.pop(0)
         return tuple(note_diff)

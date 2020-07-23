@@ -33,7 +33,7 @@ class ChordAnalyser:
             allow_power_sus=False,
             default_power_sus="M",
     ) -> List[tuple]:
-        """Return all possible chord function (None if not found). Format: List[(Roman numeral, scale mode, scale submode)]. To convert power and sus chords to be parsed as Roman notation, use allow_power_sus=True and set default_power_sus ("M" for major, "m" for minor)."""
+        """Return all possible chord function. Format: List[(Roman numeral, scale mode, scale submode)]. To convert power and sus chords to be parsed as Roman notation, use allow_power_sus=True and set default_power_sus ("M" for major, "m" for minor)."""
         if chord.quality.value in {"power", "sus2", "sus4"}:
             if not allow_power_sus:
                 return []
@@ -69,7 +69,7 @@ class ChordAnalyser:
             allow_power_sus=False,
             default_power_sus="M",
     ):
-        """Return all possible chord function accounting for all modes (None if not found)."""
+        """Return all possible chord function accounting for all modes."""
         self.mode_list.remove(scale.key.mode)
         self.mode_list.insert(0, scale.key.mode)  # shift to the front
         chords = []
@@ -82,3 +82,29 @@ class ChordAnalyser:
             if result:
                 chords += result
         return chords
+
+    def analyse_secondary(
+            self, prev_chord, next_chord, scale,
+            incl_submodes: bool = False,
+            allow_power_sus=False,
+            default_power_sus="M",
+    ):
+        """Return secondary chord notation."""
+        # We only care about chords leading to major/minor/dominant chords
+        if next_chord.quality.value not in {"major", "minor", "dominant"}:
+            return ""
+        if next_chord.quality.value == "dominant":
+            next_scale = self.SE.create_scale(next_chord.root, "major")
+        else:
+            next_scale = self.SE.create_scale(
+                next_chord.root, next_chord.quality.value
+            )
+        results = self.analyse_diatonic(
+            prev_chord, next_scale, incl_submodes,
+            allow_power_sus, default_power_sus
+        )
+        if results:
+            next_roman = self.CRC.to_roman(next_chord, scale)
+            return "{}/{}".format(results[0][0], next_roman.root)
+        return ""
+

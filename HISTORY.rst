@@ -2,6 +2,10 @@
 History
 -------
 
+0.3.10 (2020-07-23)
+~~~~~~~~~~~~~~~~~~
+* Include ``analyse_secondary`` method
+
 0.3.9 (2020-07-23)
 ~~~~~~~~~~~~~~~~~~
 * Fix accidental print in NoteEditor

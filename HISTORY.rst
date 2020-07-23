@@ -3,12 +3,12 @@ History
 -------
 
 0.3.11 (2020-07-23)
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 * Updated ``analyse_secondary`` method to be limited to secondary dominants and secondary leading tone chords by default
 * Fixed ``analyse_secondary`` method to return an empty string if the next chord is the tonic
 
 0.3.10 (2020-07-23)
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 * Include ``analyse_secondary`` method
 
 0.3.9 (2020-07-23)

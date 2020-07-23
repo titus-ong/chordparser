@@ -49,7 +49,7 @@ To install chordparser, run this command in your terminal:
 Usage
 -----
 
-For a quick introduction and a working example, check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_.
+Check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_ for a quick introduction and a working example.
 
 The full documentation can be found `here <https://chordparser.readthedocs.io/en/latest/>`_.
 
@@ -57,8 +57,8 @@ The full documentation can be found `here <https://chordparser.readthedocs.io/en
 Contribute
 ----------
 
-- Issue Tracker: github.com/titus-ong/chordparser/issues
-- Source Code: github.com/titus-ong/chordparser
+- Issue Tracker: `github.com/titus-ong/chordparser/issues <github.com/titus-ong/chordparser/issues>`_
+- Source Code: `github.com/titus-ong/chordparser <github.com/titus-ong/chordparser>`_
 
 -------
 Support

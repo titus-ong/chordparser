@@ -15,29 +15,17 @@ Contents
    introduction
    installation
    quickstart
+   parser
+   music/note
+   music/key
+   music/scale
+   music/chord
+   music/roman
+   helpers/quality
    authors
    contributing
    licence
    history
-
-.. readme
-.. installation
-.. quickstart
-..    manip_classes
-..    transposing_classes
-..    parsing_chordsheet
-.. musical_classes
-..    notes
-..    keys
-..    scales
-..    chords
-..    romans
-.. helpers
-..    quality
-.. authors
-.. contributing
-.. licence
-.. history
 
 ------------------
 Indices and tables

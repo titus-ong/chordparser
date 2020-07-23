@@ -58,3 +58,37 @@ def test_all():
         ('\u266dII', 'locrian', None),
         ('\u266dII', 'phrygian', None)
     ]
+
+
+def test_secondary_not_maj_min_dom():
+    c = CE.create_chord("Cdim")
+    s = SE.create_scale("C")
+    assert "" == CA.analyse_secondary(c, c, s)
+
+
+def test_secondary_dominant():
+    c = CE.create_chord("C7")
+    c2 = CE.create_chord("G")
+    s = SE.create_scale("F")
+    assert "V/V" == CA.analyse_secondary(c2, c, s)
+
+
+def test_secondary_major():
+    c = CE.create_chord("C")
+    c2 = CE.create_chord("Bdim7")
+    s = SE.create_scale("F")
+    assert "vii\u00B07/V" == CA.analyse_secondary(c2, c, s)
+
+
+def test_secondary_minor():
+    c = CE.create_chord("Am")
+    c2 = CE.create_chord("E")
+    s = SE.create_scale("C")
+    assert "V/vi" == CA.analyse_secondary(c2, c, s, incl_submodes=True)
+
+
+def test_secondary_not_diatonic():
+    c = CE.create_chord("C7")
+    c2 = CE.create_chord("Gm")
+    s = SE.create_scale("F")
+    assert "" == CA.analyse_secondary(c2, c, s)

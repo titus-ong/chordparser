@@ -1,0 +1,4 @@
+Chord
+-----
+
+.. autoclass:: Chord

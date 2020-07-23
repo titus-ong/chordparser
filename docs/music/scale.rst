@@ -1,0 +1,4 @@
+Scale
+-----
+
+.. autoclass:: Scale

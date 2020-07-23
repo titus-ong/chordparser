@@ -1,0 +1,4 @@
+Key
+---
+
+.. autoclass:: Key

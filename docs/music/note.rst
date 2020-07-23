@@ -1,0 +1,4 @@
+Note
+----
+
+.. autoclass:: Note

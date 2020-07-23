@@ -172,6 +172,9 @@ class Quality:
         split_string.insert(-1, "flat")
         return " ".join(split_string)
 
+    def __str__(self):
+        return self.short()
+
     def __eq__(self, other):
         if not isinstance(other, Quality):
             return NotImplemented

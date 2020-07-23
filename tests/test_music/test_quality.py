@@ -93,40 +93,6 @@ def test_sym_base(quality, ext, sym):
     assert sym == q.base_symbols
 
 
-@pytest.mark.parametrize(
-    "quality, name", [
-        ("major", "major"),
-        ("sus2", "sus2"),
-    ]
-)
-def test_long_repr(quality, name):
-    q = Quality(quality)
-    assert name == str(q)
-
-
-@pytest.mark.parametrize(
-    "quality, ext, name", [
-        ("dominant", "ninth", "dominant ninth"),
-        ("major", "major seventh", "major seventh"),
-        ("diminished", "diminished seventh", "diminished seventh"),
-    ]
-)
-def test_long_repr_with_ext(quality, ext, name):
-    q = Quality(quality, ext)
-    assert name == str(q)
-
-
-@pytest.mark.parametrize(
-    "quality, ext, name", [
-        ("dominant", "ninth", "dominant flat ninth"),
-        ("major", "major eleventh", "major flat eleventh"),
-    ]
-)
-def test_long_repr_with_flat_ext(quality, ext, name):
-    q = Quality(quality, ext, True)
-    assert name == str(q)
-
-
 def test_short():
     q = Quality("diminished")
     assert "dim" == q.short()
@@ -145,6 +111,45 @@ def test_short_halfdim():
 def test_short_sus():
     q = Quality("sus4", "seventh")
     assert "7sus" == q.short()
+
+
+@pytest.mark.parametrize(
+    "quality, name", [
+        ("major", "major"),
+        ("sus2", "sus2"),
+    ]
+)
+def test_long_repr(quality, name):
+    q = Quality(quality)
+    assert name == repr(q)
+
+
+@pytest.mark.parametrize(
+    "quality, ext, name", [
+        ("dominant", "ninth", "dominant ninth"),
+        ("major", "major seventh", "major seventh"),
+        ("diminished", "diminished seventh", "diminished seventh"),
+    ]
+)
+def test_long_repr_with_ext(quality, ext, name):
+    q = Quality(quality, ext)
+    assert name == repr(q)
+
+
+@pytest.mark.parametrize(
+    "quality, ext, name", [
+        ("dominant", "ninth", "dominant flat ninth"),
+        ("major", "major eleventh", "major flat eleventh"),
+    ]
+)
+def test_long_repr_with_flat_ext(quality, ext, name):
+    q = Quality(quality, ext, True)
+    assert name == repr(q)
+
+
+def test_str():
+    q = Quality("major", "major seventh")
+    assert "maj7" == str(q)
 
 
 def test_equality_not_implemented():

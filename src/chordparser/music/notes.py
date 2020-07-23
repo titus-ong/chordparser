@@ -115,6 +115,9 @@ class Note:
         return self
 
     def __repr__(self):
+        return self.value + " note"
+
+    def __str__(self):
         return self.value
 
     def __eq__(self, other):

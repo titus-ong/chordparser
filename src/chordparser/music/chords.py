@@ -167,6 +167,9 @@ class Chord:
     def __repr__(self):
         return f'{self.notation} chord'
 
+    def __str__(self):
+        return self.notation
+
     def __eq__(self, other):
         # Allow comparison between Chords by checking their basic attributes
         if not isinstance(other, Chord):

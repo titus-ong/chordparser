@@ -88,6 +88,11 @@ def test_scale_repr():
     assert repr(new_scale) == "C harmonic minor scale"
 
 
+def test_scale_str():
+    new_scale = SE.create_scale('C', 'minor', 'harmonic')
+    assert str(new_scale) == "C harmonic minor"
+
+
 def test_scale_equality():
     s = SE.create_scale('C', 'dorian')
     assert s == SE.create_scale('C', 'dorian')

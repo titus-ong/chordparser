@@ -18,6 +18,11 @@ def test_notation_3():
     assert "IV+6" == str(r)
 
 
+def test_repr():
+    r = Roman("IV", "+", (6,))
+    assert "IV+6 roman chord" == repr(r)
+
+
 def test_equality():
     r = Roman("I", "+", (6,))
     o = Roman("I", "+", (6,))

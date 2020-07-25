@@ -45,6 +45,8 @@ Quick demo:
     II65 roman chord
 
     >>> e_fifth = cp.create_diatonic(e_scale, 5)
+    >>> e_fifth
+    B chord
     >>> cp.analyse_secondary(new_chord, e_fifth, e_scale)
     "V65/V"
 

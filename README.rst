@@ -24,6 +24,31 @@ chordparser
 
 chordparser is a Python 3 package that provides a musical framework to analyse chords. Chord notation can be parsed into Chords, which can then be analysed against other chords or the key of the song. This allows for harmonic progression analysis in chord sheets and helps musicians understand why and how chord progressions work.
 
+Quick demo:
+
+.. code-block:: console
+
+    >>> import chordparser
+    >>> cp = chordparser.Parser()
+
+    >>> new_chord = cp.create_chord("C7add4/E")
+    >>> new_chord.notes
+    (E note, C note, F note, G note, B♭ note)
+
+    >>> new_chord.transpose_simple(6)
+    F♯7add4/A♯ chord
+    >>> new_chord.notes
+    (A♯ note, F♯ note, B note, C♯ note, E note)
+
+    >>> e_scale = cp.create_scale("E", "major")
+    >>> cp.to_roman(new_chord, e_scale)
+    II65 roman chord
+
+    >>> e_fifth = cp.create_chord("Bsus")
+    >>> cp.analyse_secondary(new_chord, e_fifth, e_scale)
+    "V65/V"
+
+
 --------
 Features
 --------

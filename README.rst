@@ -26,7 +26,7 @@ chordparser is a Python 3 package that provides a musical framework to analyse c
 
 Quick demo:
 
-.. code-block:: console
+.. code-block:: python
 
     >>> import chordparser
     >>> cp = chordparser.Parser()

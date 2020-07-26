@@ -1,13 +1,24 @@
 class Note:
+    """A class representing a musical note.
+
+    The `Note` class consists of notation A-G with optional unicode accidental symbols \u266d, \u266f, \U0001D12B, or \U0001D12A. It is created by the `NoteEditor`.
+
+    Parameters
+    ----------
+    letter : str
+        The letter part of the `Note`'s notation. Consists of A-G.
+    symbol : str
+        The accidental part of the `Note`'s notation. Consists of the unicode characters \u266d, \u266f, \U0001D12B, or \U0001D12A. If there are no accidentals, it is an empty string.
+
+    Attributes
+    ----------
+    letter : str
+        The letter part of the `Note`'s notation.
+    symbol : str
+        The accidental part of the `Note`'s notation.
+
     """
-    Note class that composes of a note value.
 
-    The Note class consists of notation a-g or A-G, with optional unicode accidental symbols \u266d, \u266f, \U0001D12B, or \U0001D12A. It is created by the NoteEditor.
-
-    Notes can have accidentals set using the 'accidental' method, and can be shifted by semitones using the 'shift_s' method. The letter of the Note can be shifted using the 'shift_l' method. Notes also have 'letter' and 'symbol' methods to get their respective values. Numerical representation of the Note value can be accessed via the 'num_value', 'letter_value' and 'symbol_value' methods. Notes can be transposed using the 'transpose' or 'transpose_simple' methods.
-
-    Notes can be compared either with other Notes or with strings.
-    """
     _flat = '\u266d'
     _sharp = '\u266f'
     _doubleflat = '\U0001D12B'
@@ -52,23 +63,93 @@ class Note:
 
     @property
     def value(self):
+        """str: The full notation of the `Note`."""
         return self.letter + self.symbol
 
-    def num_value(self) -> int:
-        """Return numerical value (basis: C = 0)."""
+    def num_value(self):
+        """Return the `Note`'s numerical value (basis: C = 0).
+
+        The numerical value is based on the number of semitones above C.
+
+        Returns
+        -------
+        int
+            The numerical value.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> d = NE.create_note("D")
+        >>> d.num_value()
+        2
+
+        """
         num = (self.letter_value() + self.symbol_value()) % 12
         return num
 
-    def letter_value(self) -> int:
-        """Return note letter as an integer value (Basis: C = 0)."""
+    def letter_value(self):
+        """Return the `Note`'s letter as an integer value (basis: C = 0).
+
+        The value is based on the number of scale degrees above C.
+
+        Returns
+        -------
+        int
+            The letter's value.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> d = NE.create_note("D")
+        >>> d.letter_value()
+        1
+
+        """
         return Note._note_values[self.letter]
 
-    def symbol_value(self) -> int:
-        """Return note symbol as an integer value."""
+    def symbol_value(self):
+        """Return the `Note`'s symbol as an integer value (basis: natural = 0).
+
+        The value is based on the number of semitones away from the natural `Note`.
+
+        Returns
+        -------
+        int
+            The symbol's value.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> d_sharp = NE.create_note("D#")
+        >>> d_sharp.symbol_value()
+        1
+
+        """
         return Note._symbol_signs[self.symbol]
 
     def accidental(self, value: int):
-        """Change a note's accidental by specifying a value from -2(doubleflat) to 2(doublesharp)."""
+        """Change a `Note`'s accidental by specifying a `value` from -2 to 2.
+
+        The range of `values` [-2, 2] correspond to the values a symbol can take, from doubleflat (-2) to doublesharp (2).
+
+        Parameters
+        ----------
+        value : int
+            The accidental's integer value.
+
+        Raises
+        ------
+        ValueError
+            If `value` is not in the range of [-2, 2].
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> d_sharp = NE.create_note("D#")
+        >>> d_sharp.accidental(-1)
+        D\u266d note
+
+        """
         if value not in range(-2, 3):
             raise ValueError(
                 "Only integers between -2 and 2 are accepted"
@@ -77,7 +158,28 @@ class Note:
         return self
 
     def shift_s(self, value: int):
-        """Shift a note's accidental."""
+        """Shift a `Note`'s accidental.
+
+        The `Note`'s `symbol_value()` must be in the range of [-2, 2] after the shift, which corresponds to the values a symbol can take from doubleflat (-2) to doublesharp (2).
+
+        Parameters
+        ----------
+        value : int
+            The value of the shift in accidentals.
+
+        Raises
+        ------
+        ValueError
+            If the `Note`'s `symbol_value()` is not in the range of [-2, 2] after the shift.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> d_sharp = NE.create_note("D#")
+        >>> d_sharp.shift_s(-1)
+        D note
+
+        """
         value += self.symbol_value()
         if value not in range(-2, 3):
             raise ValueError(
@@ -87,16 +189,50 @@ class Note:
         return self
 
     def shift_l(self, value: int):
-        """Shift a note's letter."""
+        """Shift a `Note`'s letter.
+
+        The `value` corresponds to the change in scale degree of the `Note`.
+
+        Parameters
+        ----------
+        value : int
+            The value of the letter shift.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> d_sharp = NE.create_note("D#")
+        >>> d_sharp.shift_l(3)
+        G\u266f note
+
+        """
         pos = (Note._notes_tuple.index(self.letter) + value) % 7
         new_letter = Note._notes_tuple[pos]
         self.letter = new_letter
         return self
 
-    def transpose(self, semitones: int, letter: int):
-        """Transpose a note by specifying the change in semitone and letter intervals."""
+    def transpose(self, semitones: int, letters: int):
+        """Transpose a `Note` according to semitone and letter intervals.
+
+        Parameters
+        ----------
+        semitones
+            The difference in semitones to the new transposed `Note`.
+        letters
+            The difference in scale degrees to the new transposed `Note`.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> c = NE.create_note("C")
+        >>> c.transpose(6, 3)
+        F\u266f note
+        >>> c.transpose(0, 1)
+        G\u266d note
+
+        """
         new_val = (self.num_value() + semitones) % 12
-        self.shift_l(letter)
+        self.shift_l(letters)
         curr_val = self.num_value()
         shift = (new_val - curr_val) % 12
         shift = shift - 12 if shift > 6 else shift  # shift downwards if closer
@@ -104,7 +240,25 @@ class Note:
         return self
 
     def transpose_simple(self, semitones: int, use_flats=False):
-        """Transpose a note by specifying the change in semitone intervals. Use use_flats=True to transpose using flat accidentals."""
+        """Transpose a `Note` according to semitone intervals.
+
+        Parameters
+        ----------
+        semitones : int
+            The difference in semitones to the new transposed `Note`.
+        use_flats : boolean, Optional
+            Selector to use flats or sharps for black keys. Default ``False`` when optional.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> c = NE.create_note("C")
+        >>> c.transpose_simple(6)
+        F\u266f note
+        >>> c.transpose(2, use_flats=True)
+        A\u266d note
+
+        """
         if use_flats:
             note_list = Note._flat_tuple
         else:
@@ -121,7 +275,43 @@ class Note:
         return self.value
 
     def __eq__(self, other):
-        # Allow comparison between other Notes and strings
+        """Compare between other `Notes` and strings.
+
+        Returns ``True`` if the other `Note` has the same `value`, or the other string equals to the `Note`'s `value`, else returns ``False``. Returns ``False`` if the other object is not a `Note` or ``str``.
+
+        Parameters
+        ----------
+        other
+            The object to be compared with.
+
+        Returns
+        -------
+        boolean
+            The outcome of the `value` comparison.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> d = NE.create_note("D")
+        >>> d2 = NE.create_note("D")
+        >>> d_str = "D"
+        >>> d == d2
+        True
+        >>> d == d_str
+        True
+
+        Note that symbols are converted to their unicode characters when a `Note` is created.
+
+        >>> NE = NoteEditor()
+        >>> ds = NE.create_note("D#")
+        >>> ds_str = "D#"
+        >>> ds_str_2 = "D\u266f"
+        >>> ds == ds_str
+        False
+        >>> ds == ds_str_2
+        True
+
+        """
         if isinstance(other, Note):
             return self.value == other.value
         elif isinstance(other, str):

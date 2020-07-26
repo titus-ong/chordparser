@@ -4,10 +4,28 @@ from chordparser.music.notes import Note
 
 
 class Key:
-    """
-    Key class that composes of a Note as the root and its mode and submode.
+    """A class representing a musical key.
 
-    The Key class composes of a Note class with the additional attributes 'mode' and 'submode' (e.g. types of minor keys). It is created by the KeyEditor. Keys have the same methods as Notes.
+    The `Key` class composes of a `Note` class as its `root` as well as the attributes `mode` and `submode`. It is created by the `KeyEditor`. `Keys` can use the same methods as `Notes` to manipulate their `root`.
+
+    Parameters
+    ----------
+    root : Note
+        The root note of the `Key`.
+    mode : {'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}
+        The mode of the `Key`.
+    submode : {None, 'natural', 'harmonic', 'melodic'}
+        The submode of the `Key`. If the `mode` is not ``'minor'``/``'aeolian'``, the submode is ``None``. Else, the `submode` is one of the strings.
+
+    Attributes
+    ----------
+    root : Note
+        The root note of the `Key`.
+    mode : {'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}
+        The mode of the `Key`.
+    submode : {None, 'natural', 'harmonic', 'melodic'}
+        The submode of the `Key`. If the `mode` is not ``'minor'``/``'aeolian'``, the submode is ``None``. Else, the `submode` is one of the strings.
+
     """
 
     def __init__(
@@ -19,7 +37,7 @@ class Key:
         self.submode = submode
 
     def __getattr__(self, attribute):
-        # So Note methods can be used on Key
+        """Allow `Note` methods to be used on the `Key`'s `root`."""
         if attribute in Note.__dict__:
             return getattr(self.root, attribute)
         raise AttributeError(f"'Key' object has no attribute '{attribute}'")
@@ -30,7 +48,44 @@ class Key:
         return f'{self.root} {self.submode} {self.mode}'
 
     def __eq__(self, other):
-        # Allow comparison between Keys by checking their basic attributes
+        """Compare between other `Keys`.
+
+        Returns ``True`` if the other `Key` has the same `root`, `mode` and `submode`, else returns ``False``. Returns ``False`` if the other object is not a `Key`.
+
+        Parameters
+        ----------
+        other
+            The object to be compared with.
+
+        Returns
+        -------
+        boolean
+            The outcome of the comparison.
+
+        Examples
+        --------
+        >>> KE = KeyEditor()
+        >>> d = KE.create_key("D", "minor")
+        >>> d2 = KE.create_key("D", "minor", "natural")
+        >>> d == d2
+        True
+        >>> d3 = KE.create_key("D", "minor", "harmonic")
+        >>> d == d3
+        False
+
+        Note that the major mode is the same as ionian, and the minor mode is the same as aeolian.
+
+        >>> KE = KeyEditor()
+        >>> e = KE.create_key("E", "major")
+        >>> e2 = KE.create_key("E", "ionian")
+        >>> e == e2
+        True
+        >>> f = KE.create_key("F", "minor")
+        >>> f2 = KE.create_key("F", "aeolian")
+        >>> f == f2
+        True
+
+        """
         if not isinstance(other, Key):
             return NotImplemented
         if self.mode in {'major', 'ionian'}:

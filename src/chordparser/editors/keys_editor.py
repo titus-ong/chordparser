@@ -154,7 +154,6 @@ class KeyEditor:
         >>> key = KE.create_key("D", "major")
         >>> KE.relative_minor(key)
         D natural minor
-
         >>> key2 = KE.create_key("E", "major")
         >>> KE.relative_minor(key, "melodic")
         E melodic minor
@@ -198,7 +197,6 @@ class KeyEditor:
         >>> c = KE.create_key("C", "dorian")
         >>> KE.change_key(c, root="D", mode="minor", submode="harmonic")
         D harmonic minor
-
         >>> KE.change_key(c, mode="major", inplace=False)
         D major
         >>> c

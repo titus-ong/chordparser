@@ -228,7 +228,6 @@ class NoteEditor:
         >>> a = NE.create_note("A")
         >>> NE.change_note(a, "Bb")
         B\u266d note
-
         >>> NE.change_note(a, "C#", inplace=False)
         C\u266f note
         >>> a

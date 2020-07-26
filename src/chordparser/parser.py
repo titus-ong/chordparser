@@ -17,6 +17,8 @@ class Parser(KeyEditor, NoteEditor, ScaleEditor, ChordEditor, ChordAnalyser, Cho
     _path = os.path.join(os.path.dirname(__file__), 'sample_sheet.cho')
 
     def __init__(self):
-        chordpro = open(Parser._path, 'r')
-        self.sample = chordpro.read()
-        chordpro.close()
+        try:
+            with open(Parser._path, 'r') as f:
+                self.sample = f.read()
+        except IOError:
+            self.sample = ""

@@ -1,3 +1,5 @@
+from unittest import mock
+
 import pytest
 
 from chordparser.analysers.chords_analyser import ChordAnalyser
@@ -42,3 +44,10 @@ def test_CA():
 def test_attribute_error():
     with pytest.raises(AttributeError):
         Note.num_value(cp)
+
+
+@mock.patch("chordparser.parser.Parser")
+def test_IO_error(mock_parser):
+    mock_parser._path = ""
+    p = Parser()
+    assert "" == p.sample

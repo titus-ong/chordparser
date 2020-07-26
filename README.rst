@@ -75,7 +75,7 @@ To install chordparser, run this command in your terminal:
 Usage
 -----
 
-Check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_ for a quick introduction and a working example.
+Check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_, which runs through a working example to showcase chordparser's functions and help you get started on using it.
 
 The full documentation can be found `here <https://chordparser.readthedocs.io/en/latest/>`_.
 

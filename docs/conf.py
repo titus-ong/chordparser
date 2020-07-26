@@ -85,4 +85,4 @@ html_theme = 'alabaster'
 html_static_path = ['_static']
 
 # -- Extensions configuration -------------------------------------------------
-
+napoleon_include_special_with_doc = True

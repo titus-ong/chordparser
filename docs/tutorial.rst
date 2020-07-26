@@ -1,0 +1,4 @@
+Tutorial
+========
+
+chordparser's tutorial can be found at the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_. Simply follow along the code cells, and you'll learn how to write a script using chordparser that can read chord notation, transpose chords, convert them to roman numeral notation and analyse them.

@@ -9,6 +9,11 @@ from chordparser.music.scales import Scale
 
 
 class ChordRomanConverter:
+    """A `Chord`-`Roman` converter.
+
+    The `ChordRomanConverter` can convert `Chords` to `Romans` based on a `Scale` or `Key`.
+
+    """
     _symbols = {
         -1: '\u266d', -2: '\U0001D12B',
         +1: '\u266f', +2: '\U0001D12A',
@@ -30,23 +35,59 @@ class ChordRomanConverter:
         'augmented': '+',
         'half-diminished': '\u00f8',
     }
-    NE = NoteEditor()
-    CE = ChordEditor()
-    SE = ScaleEditor()
+    _NE = NoteEditor()
+    _CE = ChordEditor()
+    _SE = ScaleEditor()
 
     def to_roman(self, chord, scale_key):
-        """Return roman numeral notation."""
+        """Converts a `Chord` to `Roman`.
+
+        Creates the `Roman` based on the `Chord` and a `Scale` or `Key`.
+
+        Parameters
+        ----------
+        chord : Chord
+            The `Chord` to be converted.
+        scale_key : Scale or Key
+            The `Scale` or `Key` to base the `Roman` on.
+
+        Returns
+        -------
+        Roman
+            The `Roman` of the `Chord`.
+
+        Warns
+        -----
+        UserWarning
+            If the `Chord` is a power or sus chord.
+
+        Examples
+        --------
+        >>> KE = KeyEditor()
+        >>> SE = ScaleEditor()
+        >>> CE = ChordEditor()
+        >>> CRC = ChordRomanConverter()
+        >>> c_key = KE.create_key("C")
+        >>> c_scale = SE.create_scale(c_key)
+        >>> d = CE.create_diatonic(c_scale, 2)
+        >>> CRC.to_roman(d, c_key)
+        ii roman chord
+        >>> f = CE.create_diatonic(c_scale, 4)
+        >>> CRC.to_roman(f, c_scale)
+        IV roman chord
+
+        """
         if chord.quality.value in {"power", "sus2", "sus4"}:
             warnings.warn(
                 "Warning: Power and sus chords are defaulted to major chords",
                 UserWarning
             )
-            chord = self.CE.change_chord(chord, quality="Maj", inplace=False)
+            chord = self._CE.change_chord(chord, quality="Maj", inplace=False)
         if isinstance(scale_key, Scale):
             scale_root = scale_key.key.root
         else:
             scale_root = scale_key.root
-        scale = self.SE.create_scale(scale_root, "major")
+        scale = self._SE.create_scale(scale_root, "major")
         root = self._get_roman_root(chord, scale)
         quality = self._get_roman_quality(chord)
         inversion = self._get_roman_inversion(chord)
@@ -65,7 +106,7 @@ class ChordRomanConverter:
         else:
             quality_fn = str.lower
         root = quality_fn(ChordRomanConverter._roman_deg[degree])
-        (shift,) = self.NE.get_min_intervals(scale.notes[degree-1], chord.root)
+        (shift,) = self._NE.get_min_intervals(scale.notes[degree-1], chord.root)
         sym = ChordRomanConverter._symbols[shift]  # accidental of root
         return sym + root
 

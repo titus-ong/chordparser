@@ -1,7 +1,7 @@
 class Note:
     """A class representing a musical note.
 
-    The `Note` class consists of notation A-G with optional unicode accidental symbols \u266d, \u266f, \U0001D12B, or \U0001D12A. It is created by the `NoteEditor`.
+    The `Note` class consists of notation A-G with optional unicode accidental symbols \u266d, \u266f, \U0001D12B, or \U0001D12A. It is created by the `NoteEditor`. When printed, only the `value` of the `Note` is displayed.
 
     Parameters
     ----------

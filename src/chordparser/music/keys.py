@@ -37,7 +37,12 @@ class Key:
         self.submode = submode
 
     def __getattr__(self, attribute):
-        """Allow `Note` methods to be used on the `Key`'s `root`."""
+        """Allow `Note` methods to be used on the `Key`'s `root`.
+
+        See Also
+        --------
+        chordparser.music.notes.Note : For a list of `Note` methods.
+        """
         if attribute in Note.__dict__:
             return getattr(self.root, attribute)
         raise AttributeError(f"'Key' object has no attribute '{attribute}'")

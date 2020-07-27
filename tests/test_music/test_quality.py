@@ -95,22 +95,22 @@ def test_sym_base(quality, ext, sym):
 
 def test_short():
     q = Quality("diminished")
-    assert "dim" == q.short()
+    assert "dim" == str(q)
 
 
 def test_short_flat():
     q = Quality("minor", "ninth", True)
-    assert "m\u266d9" == q.short()
+    assert "m\u266d9" == str(q)
 
 
 def test_short_halfdim():
     q = Quality("half-diminished", "eleventh")
-    assert "m11\u266d5" == q.short()
+    assert "m11\u266d5" == str(q)
 
 
 def test_short_sus():
     q = Quality("sus4", "seventh")
-    assert "7sus" == q.short()
+    assert "7sus" == str(q)
 
 
 @pytest.mark.parametrize(
@@ -121,7 +121,7 @@ def test_short_sus():
 )
 def test_long_repr(quality, name):
     q = Quality(quality)
-    assert name == repr(q)
+    assert name + " quality" == repr(q)
 
 
 @pytest.mark.parametrize(
@@ -133,7 +133,7 @@ def test_long_repr(quality, name):
 )
 def test_long_repr_with_ext(quality, ext, name):
     q = Quality(quality, ext)
-    assert name == repr(q)
+    assert name + " quality" == repr(q)
 
 
 @pytest.mark.parametrize(
@@ -144,7 +144,7 @@ def test_long_repr_with_ext(quality, ext, name):
 )
 def test_long_repr_with_flat_ext(quality, ext, name):
     q = Quality(quality, ext, True)
-    assert name == repr(q)
+    assert name + " quality" == repr(q)
 
 
 def test_str():

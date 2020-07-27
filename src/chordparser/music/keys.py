@@ -15,7 +15,7 @@ class Key:
     mode : {'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}
         The mode of the `Key`.
     submode : {None, 'natural', 'harmonic', 'melodic'}
-        The submode of the `Key`. If the `mode` is not ``'minor'``/``'aeolian'``, the submode is ``None``. Else, the `submode` is one of the strings.
+        The submode of the `Key`. If the `mode` is not 'minor'/'aeolian', `submode` is None. Else, `submode` is one of the strings.
 
     Attributes
     ----------
@@ -24,7 +24,7 @@ class Key:
     mode : {'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}
         The mode of the `Key`.
     submode : {None, 'natural', 'harmonic', 'melodic'}
-        The submode of the `Key`. If the `mode` is not ``'minor'``/``'aeolian'``, the submode is ``None``. Else, the `submode` is one of the strings.
+        The submode of the `Key`. If the `mode` is not 'minor'/'aeolian', `submode` is None. Else, `submode` is one of the strings.
 
     """
 
@@ -50,7 +50,7 @@ class Key:
     def __eq__(self, other):
         """Compare between other `Keys`.
 
-        Returns ``True`` if the other `Key` has the same `root`, `mode` and `submode`, else returns ``False``. Returns ``False`` if the other object is not a `Key`.
+        Checks if the other `Key` has the same attributes.
 
         Parameters
         ----------

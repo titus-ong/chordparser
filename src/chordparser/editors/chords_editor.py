@@ -10,13 +10,14 @@ from chordparser.music.scales import Scale
 
 
 class ChordEditor:
-    """
-    ChordEditor class that creates a Chord from either a string or a Scale/Key.
+    """A `Chord` editor that can create and change `Chords`.
 
-    The ChordEditor class can parse a chord notation string to create a Chord using the 'create_chord' method, or create a Chord by specifying a Scale/Key and scale degree using the 'create_diatonic' method. The ChordEditor can also change a chord using the 'change_chord' method.
+    The `ChordEditor` can create a `Chord` from standard chord notation, or by specifying a scale degree based on a `Scale`. It can also change the `Chord`'s attributes.
+
     """
-    NE = NoteEditor()
-    QE = QualityEditor()
+
+    _NE = NoteEditor()
+    _QE = QualityEditor()
     _letter_pattern = '[a-gA-G]'
     _flat_pattern = '\u266D|\U0001D12B|bb|b'
     _sharp_pattern = '\u266F|\U0001D12A|##|#'
@@ -26,7 +27,7 @@ class ChordEditor:
     _added = f"(?:add){{0,1}}({_symbol_pattern}){{0,1}}(2|4|6|9|11|13)"
     _pattern = (
         f"({_note_pattern})"
-        f"({QE.quality_pattern})"
+        f"({_QE.quality_pattern})"
         f"({_others}){{0,1}}"
         f"(?:/({_note_pattern})){{0,1}}"
     )
@@ -36,11 +37,43 @@ class ChordEditor:
         None: '',
     }
 
-    def create_chord(self, value):
-        """Create a chord from a string (do not use any spaces)."""
-        rgx = re.match(ChordEditor._pattern, value, re.UNICODE)
+    def create_chord(self, notation):
+        """Create a `Chord`.
+
+        Parameters
+        ----------
+        notation : str
+            The `Chord` notation. Standard chord notation [1]_ is accepted.
+
+        Returns
+        -------
+        Chord
+            The created `Chord`.
+
+        Raises
+        ------
+        SyntaxError
+            If the notation is invalid.
+        SyntaxError
+            If the string of added notes is invalid.
+
+        References
+        ----------
+        .. [1] 'Chord letters' (2020) *Wikipedia*. Available at `https://en.wikipedia.org/wiki/Chord_letters <https://en.wikipedia.org/wiki/Chord_letters>`_ (Accessed: 28 July 2020)
+
+        Examples
+        --------
+        >>> CE = ChordEditor()
+        >>> CE.create_chord("C#dim7addb4/E")
+        C\u266fdim7add\u266d4/E chord
+        >>> CE.create_chord("Ebsus4add#9/G")
+        E\u266dsus\u266f9/G chord
+
+        """
+
+        rgx = re.match(ChordEditor._pattern, notation, re.UNICODE)
         if not rgx:
-            raise SyntaxError(f"'{value}' could not be parsed")
+            raise SyntaxError(f"'{notation}' could not be parsed")
         root, quality, add, bass = self._parse_rgx(rgx)
         return Chord(root, quality, add, bass, string=rgx.group(0))
 
@@ -54,11 +87,11 @@ class ChordEditor:
 
     def _parse_root(self, root):
         """Return chord root."""
-        return self.NE.create_note(root)
+        return self._NE.create_note(root)
 
     def _parse_quality(self, string, capital_note=True):
         """Return chord quality."""
-        return self.QE.create_quality(string, capital_note)
+        return self._QE.create_quality(string, capital_note)
 
     def _parse_add(self, string):
         """Parse added notes."""
@@ -81,16 +114,47 @@ class ChordEditor:
         """Parse the bass note."""
         if not string:
             return None
-        return self.NE.create_note(string)
+        return self._NE.create_note(string)
 
-    def create_diatonic(self, value: Union[Scale, Key], degree: int = 1):
-        """Create a diatonic chord from a scale/key by specifying the scale degree."""
+    def create_diatonic(self, scale_key: Union[Scale, Key], degree: int = 1):
+        """Create a diatonic `Chord` from a `Scale` or `Key`.
+
+        Parameters
+        ----------
+        scale_key : Scale or Key
+            The `Scale` or `Key` to create the diatonic `Chord` from.
+        degree : int, Optional
+            The scale degree of the diatonic `Chord`. Default 1 when optional.
+
+        Returns
+        -------
+        Chord
+            The created diatonic `Chord`.
+
+        Raises
+        ------
+        ValueError
+            If `degree` is not in the range [1, 7].
+
+        Examples
+        --------
+        >>> KE = KeyEditor()
+        >>> SE = ScaleEditor()
+        >>> c_key = KE.create_key("C", "major")
+        >>> c_scale = SE.create_scale(c_key)
+        >>> CE = ChordEditor()
+        >>> CE.create_diatonic(c_key, 3)
+        Em chord
+        >>> CE.create_diatonic(c_scale, 7)
+        Bdim chord
+
+        """
         if degree not in range(1, 8):
             raise ValueError("Scale degree must be between 1 and 7")
-        if not isinstance(value, Scale):
-            scale_ = Scale(value)
+        if not isinstance(scale_key, Scale):
+            scale_ = Scale(scale_key)
         else:
-            scale_ = value
+            scale_ = scale_key
         root = scale_.notes[degree - 1]
         bass = None
         add = None
@@ -105,9 +169,9 @@ class ChordEditor:
             (3, 3): 'dim',
             (4, 4): 'aug',
         }
-        interval = self.NE.get_intervals(*base_chord)
+        interval = self._NE.get_intervals(*base_chord)
         q_str = quality_intervals[interval]
-        quality = self.QE.create_quality(q_str)
+        quality = self._QE.create_quality(q_str)
         return Chord(root, quality, add, bass)
 
     def change_chord(
@@ -120,7 +184,44 @@ class ChordEditor:
             bass: Union[str, bool, None] = None,
             inplace=True,
     ):
-        """Change the chord by specifying root, quality, add, remove (you can only remove added notes), and/or bass. To remove the bass note, use bass=False. To remove all added notes, use remove=True."""
+        """Change a `Chord`'s attributes.
+
+        Alter parts of the `Chord` by specifying the standard chord notation for each attribute.
+
+        Parameters
+        ----------
+        chord : Chord
+            The `Chord` to be changed.
+        root : str, Optional
+            The root of the `Chord`.
+        quality : str, Optional
+            The quality of the `Chord`.
+        add : str, Optional
+            The added notes of the `Chord`.
+        remove : str, Optional
+            The added notes of the `Chord` that are to be removed.
+        bass : str or boolean, Optional
+            The bass note of the `Chord`. Specify False to remove the bass note.
+        inplace : boolean, Optional
+            Selector to change the current `Chord` or to return a new `Chord`. Default True when optional.
+
+        Returns
+        -------
+        Chord
+            The changed `Chord`.
+
+        Examples
+        --------
+        >>> CE = ChordEditor()
+        >>> c = CE.create_chord("C7add4/G")
+        >>> CE.change_chord(c, root="D#", quality="maj7", add="b6", remove="4", bass=False)
+        D\u266fmaj7\u266d6 chord
+        >>> CE.change_chord(c, root="E", quality="m", bass="C#", inplace=False)
+        Em\u266d6/C\u266f chord
+        >>> c
+        D\u266fmaj7\u266d6 chord
+
+        """
         if not inplace:
             chord = Chord(
                 chord.root, chord.quality,

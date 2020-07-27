@@ -1,11 +1,49 @@
 class Quality:
-    """
-    Quality class that is built from a chord's quality and provides intervals and scale degrees.
+    """A class representing the quality of a `Chord`.
 
-    The Quality class is built from the base chord quality, extensions, and optional flat extension. It has the 'base_intervals' and 'base_degrees' attributes for the intervals and scale degrees of the base chord, and 'intervals' and 'degrees' attributes for that of the proper chord.
+    The `Quality` class composes of its base `Chord` quality, extensions to the `Chord`, and optional flats on the extended `Note`.
 
-    The Quality is represented by its full name by default. The short form of the Quality can be accessed via the 'short' method.
+    Parameters
+    ----------
+    quality_str : str
+        The `Quality`'s notation.
+    ext_str : str, Optional
+        The extended `Chord`'s notation.
+    flat_ext : boolean, Optional
+        Selector for the flat of the extended `Note`. Default False when optional.
+
+    Attributes
+    ----------
+    value : str
+        The `Quality`'s notation.
+    ext : str, Optional
+        The extended `Chord`'s notation.
+    flat_ext : boolean, Optional
+        Selector for the flat of the extended `Note`. Default False when optional.
+    base_intervals : tuple of int
+        The intervals of the triad of a `Chord` with this `Quality`.
+    base_degrees : tuple of int
+        The scale degrees of the triad of a `Chord` with this `Quality`.
+    base_symbols : tuple of str
+        The accidentals of the triad of a `Chord` with this `Quality`.
+    intervals : tuple of int
+        The intervals of a `Chord` with this `Quality`.
+    degrees : tuple of int
+        The scale degrees of a `Chord` with this `Quality`.
+    symbols : tuple of str
+        The accidentals of a `Chord` with this `Quality`.
+
+    Raises
+    ------
+    ValueError
+        If a dominant chord has a `value` of 'major' (`value` should be 'dominant')
+    ValueError
+        If a diminished extended chord does not have a `ext` of 'diminished seventh'
+    ValueError
+        If a 'seventh' extended chord has a flat extension (should be reflected in `ext` and not in `flat_ext`)
+
     """
+
     _flat = '\u266d'
     _sharp = '\u266f'
     _doubleflat = '\U0001D12B'
@@ -67,19 +105,12 @@ class Quality:
     }
 
     def __init__(self, quality_str, ext_str=None, flat_ext=False):
-        """Quality that composes of chord quality, chord extension and any alterations to the extension.
-
-        Arguments:
-        quality_str -- chord quality e.g. major, minor (str)
-        ext_str -- chord extension e.g. seventh, major ninth (str)
-        flat_ext -- if flat extension e.g. flat ninth (bool)
-        """
         self.value = quality_str
         self.ext = ext_str
         self.flat_ext = flat_ext
-        self.build()
+        self._build()
 
-    def build(self):
+    def _build(self):
         """Build intervals, scale degrees, and symbols."""
         self._check()
         self._base()
@@ -136,7 +167,7 @@ class Quality:
             self.base_symbols = tuple(symbols[0:3])
         self.symbols = tuple(symbols)
 
-    def short(self):
+    def _short(self):
         """Return short form for quality."""
         string = Quality._shortform[self.value]
         if not self.ext:
@@ -160,22 +191,48 @@ class Quality:
 
     def __repr__(self):
         if not self.ext:
-            return self.value
+            return self.value + " quality"
         if self.value in {"major", "diminished"}:
             # avoid word overlap
             string = self.ext
         else:
             string = self.value + " " + self.ext
         if not self.flat_ext:
-            return string
+            return string + " quality"
         split_string = string.split()
         split_string.insert(-1, "flat")
-        return " ".join(split_string)
+        return " ".join(split_string) + " quality"
 
     def __str__(self):
-        return self.short()
+        return self._short()
 
     def __eq__(self, other):
+        """Compare between other `Qualitys`.
+
+        Checks if the other `Quality` has the same `value`, `ext` and `flat_ext`.
+
+        Parameters
+        ----------
+        other
+            The object to be compared with.
+
+        Returns
+        -------
+        boolean
+            The outcome of the `value` comparison.
+
+        Examples
+        --------
+        >>> QE = QualityEditor()
+        >>> q = QE.create_quality("maj9")
+        >>> q2 = QE.create_quality("maj9")
+        >>> q == q2
+        True
+        >>> q3 = QE.create_quality("majb9")
+        >>> q == q3
+        False
+
+        """
         if not isinstance(other, Quality):
             return NotImplemented
         return (

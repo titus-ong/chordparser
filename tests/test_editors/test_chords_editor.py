@@ -31,12 +31,12 @@ def test_chord_root(value):
 
 def test_quality():
     c = CE._parse_quality("minmaj7")
-    assert "minor major seventh" == repr(c)
+    assert "minor major seventh quality" == repr(c)
 
 
 def test_quality_capital():
     c = CE.create_chord("c7")
-    assert "minor seventh" == repr(c.quality)
+    assert "minor seventh quality" == repr(c.quality)
 
 
 @pytest.mark.parametrize(
@@ -77,7 +77,7 @@ def test_bass_2():
 def test_create_chord_everything():
     c = CE.create_chord("C#dim7addb4/E")
     assert "C\u266f" == c.root
-    assert "diminished seventh" == repr(c.quality)
+    assert "diminished seventh quality" == repr(c.quality)
     assert [("\u266d", 4)] == c.add
     assert "E" == c.bass
 
@@ -92,7 +92,7 @@ def test_create_chord_everything():
 def test_diatonic(degree, quality):
     s = SE.create_scale('C', 'major')
     c = CE.create_diatonic(s, degree)
-    assert repr(c.quality) == quality
+    assert repr(c.quality) == quality + " quality"
 
 
 @pytest.mark.parametrize(
@@ -105,7 +105,7 @@ def test_diatonic(degree, quality):
 def test_diatonic_2(degree, quality):
     s = KE.create_key('C', 'major')
     c = CE.create_diatonic(s, degree)
-    assert repr(c.quality) == quality
+    assert repr(c.quality) == quality + " quality"
 
 
 @pytest.mark.parametrize("degree", [0, len])

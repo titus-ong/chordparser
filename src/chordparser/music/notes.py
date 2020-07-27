@@ -247,7 +247,7 @@ class Note:
         semitones : int
             The difference in semitones to the new transposed `Note`.
         use_flats : boolean, Optional
-            Selector to use flats or sharps for black keys. Default ``False`` when optional.
+            Selector to use flats or sharps for black keys. Default False when optional.
 
         Examples
         --------
@@ -277,7 +277,7 @@ class Note:
     def __eq__(self, other):
         """Compare between other `Notes` and strings.
 
-        Returns ``True`` if the other `Note` has the same `value`, or the other string equals to the `Note`'s `value`, else returns ``False``. Returns ``False`` if the other object is not a `Note` or ``str``.
+        Checks if the other `Note`'s value or the string is the same as this `Note`.
 
         Parameters
         ----------

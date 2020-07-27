@@ -82,7 +82,7 @@ class NoteEditor:
 
         Returns
         -------
-        nested tuple of (int, int)
+        tuple of (int, int)
             The nested tuple of semitone and letter intervals between all adjacent `Notes`. The inner tuple is the semitone and letter intervals between two adjacent `Notes`.
 
         Examples
@@ -215,7 +215,7 @@ class NoteEditor:
         notation : str
             The new notation for the `Note`.
         inplace : boolean, optional
-            Selector to change the notation of current `Note` or to return a new `Note`. Default ``True`` when optional.
+            Selector to change the notation of current `Note` or to return a new `Note`. Default True when optional.
 
         Returns
         -------

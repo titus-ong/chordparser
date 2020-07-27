@@ -130,7 +130,7 @@ class Chord:
         add = ""
         if self.add:
             for each in self.add:
-                if not add and not self.quality.short():
+                if not add and not str(self.quality):
                     string = 'add'  # when quality is blank
                 elif not each[0]:
                     string = 'add'  # when there's no accidental
@@ -141,7 +141,7 @@ class Chord:
             bass = '/'+str(self.bass)
         else:
             bass = ''
-        self.notation = str(self.root) + self.quality.short() + add + bass
+        self.notation = str(self.root) + str(self.quality) + add + bass
         if not self.string:
             self.string = self.notation
 

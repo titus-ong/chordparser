@@ -23,7 +23,7 @@ class KeyEditor:
     )
     _modes_with_submodes = ('minor', 'aeolian')
     _submodes = ('harmonic', 'melodic', 'natural')
-    NE = NoteEditor()
+    _NE = NoteEditor()
 
     def create_key(
             self,
@@ -33,16 +33,16 @@ class KeyEditor:
     ):
         """Create a `Key` from a root note, mode and submode.
 
-        The root note must be a valid `Note` notation if type ``str``. The submode refers to the different types of minor/aeolian mode, i.e. natural, harmonic and melodic. Hence, other than the ``'minor'``/``'aeolian'`` mode, the submode must be ``None``.
+        The root note must be a valid `Note` notation if type `str`. The submode refers to the different types of minor/aeolian mode, i.e. natural, harmonic and melodic. Hence, other than the 'minor'/'aeolian' mode, the submode must be None.
 
         Parameters
         ----------
         root : Note or str
             The root note of the `Key`.
         mode : {'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}, Optional
-            The mode of the `Key`. Default ``'major'`` when optional.
+            The mode of the `Key`.
         submode: {None, 'natural', 'harmonic', 'melodic'}, Optional
-            The submode of the `Key`. Default ``'natural'`` for the ``'minor'``/``'aeolian'`` mode and ``None`` for the other modes when optional.
+            The submode of the `Key`. Default 'natural' for the 'minor'/'aeolian' mode and None for the other modes when optional.
 
         Returns
         -------
@@ -52,9 +52,9 @@ class KeyEditor:
         Raises
         ------
         ModeError
-            If the `mode` is not ``'minor'``/``'aeolian'`` and the `submode` has been specified.
+            If the `mode` is not 'minor'/'aeolian' and the `submode` has been specified.
         SyntaxError
-            If the `mode` is ``'minor'``/``'aeolian'`` and the `submode` is invalid.
+            If the `mode` is 'minor'/'aeolian' and the `submode` is invalid.
 
         Examples
         --------
@@ -77,7 +77,7 @@ class KeyEditor:
     def _check_root(self, root):
         """Check if root note is valid."""
         if not isinstance(root, Note):
-            root = KeyEditor.NE.create_note(root)
+            root = KeyEditor._NE.create_note(root)
         return root
 
     def _check_mode(self, mode):
@@ -102,7 +102,7 @@ class KeyEditor:
     def relative_major(self, key):
         """Change a `Key` to its relative major.
 
-        The `Key`'s `mode` must be ``'minor'``/``'aeolian'``.
+        The `Key`'s `mode` must be 'minor'/'aeolian'.
 
         Parameters
         ----------
@@ -112,7 +112,7 @@ class KeyEditor:
         Raises
         ------
         ModeError
-            If the `Key` is not ``'minor'``/``'aeolian'``.
+            If the `Key` is not 'minor'/'aeolian'.
 
         Examples
         --------
@@ -132,19 +132,19 @@ class KeyEditor:
     def relative_minor(self, key, submode='natural'):
         """Change a `Key` to its relative minor.
 
-        The `Key`'s `mode` must be ``'major'``/``'ionian'``.
+        The `Key`'s `mode` must be 'major'/'ionian'.
 
         Parameters
         ----------
         key : Key
             The `Key` to be changed.
         submode : {'natural', 'harmonic', 'melodic'}, Optional
-            The new submode of the relative minor `Key`. Default ``'natural'`` when optional.
+            The new submode of the relative minor `Key`.
 
         Raises
         ------
         ModeError
-            If the `Key` is not ``'major'``/``'ionian'``.
+            If the `Key` is not 'major'/'ionian'.
         SyntaxError
             If the `submode` is invalid.
 
@@ -171,20 +171,20 @@ class KeyEditor:
     def change_key(self, key, root=None, mode=None, submode=None, inplace=True):
         """Change a `Key`'s `root`, `mode` and/or `submode` attributes.
 
-        The root note must be a valid `Note` notation if type ``str``. The submode refers to the different types of minor/aeolian mode, i.e. natural, harmonic and melodic. Hence, other than the ``'minor'``/``'aeolian'`` mode, the submode must be ``None``.
+        The root note must be a valid `Note` notation if type `str`. The submode refers to the different types of 'minor'/'aeolian' mode, i.e. 'natural', 'harmonic' and 'melodic'. Hence, other than the 'minor'/'aeolian' mode, the submode must be None.
 
         Parameters
         ----------
         key : Key
             The `Key` which attributes you want to change.
-        root : Note or None, Optional
+        root : Note, Optional
             The `root` of the `Key` to be changed.
         mode : {None, 'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}, Optional
-            The `mode` of the `Key` to be changed. Default ``None`` when optional.
+            The `mode` of the `Key` to be changed.
         submode: {None, 'natural', 'harmonic', 'melodic'}, Optional
-            The submode of the `Key` to be changed. Default ``'natural'`` for the ``'minor'``/``'aeolian'`` mode and ``None`` for the other modes when optional.
+            The submode of the `Key` to be changed. Default 'natural' for the 'minor'/'aeolian' mode and None for the other modes when optional.
         inplace : boolean, optional
-            Selector to change the notation of current `Key` or to return a new `Key`. Default ``True`` when optional.
+            Selector to change the notation of current `Key` or to return a new `Key`. Default True when optional.
 
         Returns
         -------

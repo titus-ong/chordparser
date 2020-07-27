@@ -1,6 +1,15 @@
 History
 =======
 
+0.4.0 (2020-07-28)
+~~~~~~~~~~~~~~~~~~
+* Reorganised documentation to follow Divio documentation
+* Updated README with quick demo
+* Completed Colab notebook as a tutorial and showcase
+* Included first draft of reference documentation in NumPy documentation style
+* Catch errors in Parser if ``Parser.sample`` fails to be read
+* Changed some keyword argument names to better fit with documentation
+
 0.3.11 (2020-07-23)
 ~~~~~~~~~~~~~~~~~~~
 * Updated ``analyse_secondary`` method to be limited to secondary dominants and secondary leading tone chords by default

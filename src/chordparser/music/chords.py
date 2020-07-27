@@ -8,15 +8,54 @@ from chordparser.music.quality import Quality
 
 
 class Chord:
-    """
-    Chord class that is composed of a root note, chord quality, optional added notes and an optional bass note.
+    """A musical class representing a chord.
 
-    The Chord class accepts the chord components and builds a tuple of notes provided by the 'notes' method.
+    The `Chord` is composed of a `root` `Note`, `quality`, optional `add` `Notes` and an optional `bass` `Note`. It automatically builds its `notes` from these components. When printed, a standardised short notation meant for chord sheets is displayed.
 
-    The Chord class can be transposed using the 'transpose' method.
+    Parameters
+    ----------
+    root : Note
+        The root note.
+    quality : Quality
+        The `Chord` quality.
+    add : list of (str, int), Optional
+        List of added notes.
+    bass : Note, Optional
+        Bass note.
+    string : str, Optional
+        The `Chord` notation string input.
+
+    Attributes
+    ----------
+    root : Note
+        The root note.
+    quality : Quality
+        The `Chord` quality.
+    add : list of (str, int), Optional
+        List of added notes.
+    bass : Note, Optional
+        Bass note.
+    string : str, Optional
+        The `Chord` notation string input.
+    base_intervals : tuple of int
+        The intervals of the `Chord` solely based on its `quality`.
+    base_degrees : tuple of int
+        The scale degrees of the `Chord` solely based on its `quality`.
+    base_symbols : tuple of str
+        The accidentals of the `Chord` solely based on its `quality`.
+    intervals : tuple of int
+        The intervals of the `Chord`.
+    degrees : tuple of int
+        The scale degrees of the `Chord`.
+    symbols : tuple of str
+        The accidentals of the `Chord`.
+    notes : tuple of Note
+        The tuple of `Notes` in the `Chord`.
+
     """
-    SE = ScaleEditor()
-    NE = NoteEditor()
+
+    _SE = ScaleEditor()
+    _NE = NoteEditor()
 
     def __init__(
             self,
@@ -34,23 +73,27 @@ class Chord:
         self.build()
 
     def build(self):
-        """Build the chord."""
+        """Build the `Chord` from its attributes.
+
+        This method does not need to be used if `Chord` adjustments are done through the proper channels (i.e. `ChordEditor` or using other `Chord` methods), since those would build the `Chord` automatically.
+
+        """
         self._build_base_chord()
         self._build_full_chord()
         self._build_notation()
 
     def _build_base_chord(self):
         """Build the chord without any added or bass notes."""
-        self.base_scale = self.SE.create_scale(self.root.value)
+        self._base_scale = self._SE.create_scale(self.root.value)
         self.base_intervals = self.quality.intervals
         self.base_degrees = self.quality.degrees
         self.base_symbols = self.quality.symbols
         # get a copy of the root
-        root = self.NE.create_note(self.root.value)
+        root = self._NE.create_note(self.root.value)
         notes = [root]
         idx = len(self.base_intervals)
         for i in range(idx):
-            new = self.NE.create_note(notes[-1].value)
+            new = self._NE.create_note(notes[-1].value)
             new.transpose(
                 self.base_intervals[i],
                 self.base_degrees[i+1] - self.base_degrees[i]
@@ -67,7 +110,7 @@ class Chord:
         self.notes = tuple(self.notes)
         self.degrees = tuple(self.degrees)
         self.symbols = tuple(self.symbols)
-        self.intervals = self.NE.get_intervals(*self.notes)
+        self.intervals = self._NE.get_intervals(*self.notes)
 
     def _build_add(self):
         """Add notes for chords with added notes."""
@@ -90,7 +133,7 @@ class Chord:
             self.symbols.insert(pos, sym)
             self.degrees.insert(pos, tone)
             # copy the note
-            new_note = self.NE.create_note(self.base_scale.notes[tone-1].value)
+            new_note = self._NE.create_note(self._base_scale.notes[tone-1].value)
             new_note.shift_s(shift)
             self.notes.insert(pos, new_note)
 
@@ -108,13 +151,13 @@ class Chord:
             return
         self.notes.insert(0, self.bass)
         degree = min(
-            self.base_scale.notes.index(x)
-            for x in self.base_scale.notes
+            self._base_scale.notes.index(x)
+            for x in self._base_scale.notes
             if x.letter == self.bass.letter
             ) + 1
         self.degrees.insert(0, degree)
-        (shift,) = self.NE.get_min_intervals(
-            self.base_scale.notes[degree-1],
+        (shift,) = self._NE.get_min_intervals(
+            self._base_scale.notes[degree-1],
             self.bass
         )
         symbols = {
@@ -130,7 +173,7 @@ class Chord:
         add = ""
         if self.add:
             for each in self.add:
-                if not add and not self.quality.short():
+                if not add and not str(self.quality):
                     string = 'add'  # when quality is blank
                 elif not each[0]:
                     string = 'add'  # when there's no accidental
@@ -141,12 +184,30 @@ class Chord:
             bass = '/'+str(self.bass)
         else:
             bass = ''
-        self.notation = str(self.root) + self.quality.short() + add + bass
+        self._notation = str(self.root) + str(self.quality) + add + bass
         if not self.string:
-            self.string = self.notation
+            self.string = self._notation
 
     def transpose(self, semitones: int, letter: int):
-        """Transpose the chord by specifying the semitone and letter intervals."""
+        """Transpose a `Chord` according to semitone and letter intervals.
+
+        Parameters
+        ----------
+        semitones
+            The difference in semitones to the new transposed `root` of the `Chord`.
+        letters
+            The difference in scale degrees to the new transposed `root` of the `Chord`.
+
+        Examples
+        --------
+        >>> CE = ChordEditor()
+        >>> c = CE.create_chord("Csus")
+        >>> c.transpose(6, 3)
+        F\u266fsus chord
+        >>> c.transpose(0, 1)
+        G\u266dsus chord
+
+        """
         self.root.transpose(semitones, letter)
         if self.bass:
             self.bass.transpose(semitones, letter)
@@ -154,24 +215,75 @@ class Chord:
         return self
 
     def transpose_simple(self, semitones: int, use_flats=False):
-        """Transpose a Chord by specifying the change in semitone intervals. Use use_flats=True to transpose using flat accidentals."""
-        prev = self.NE.create_note(self.root.value)
+        """Transpose a `Chord` according to semitone intervals.
+
+        Parameters
+        ----------
+        semitones : int
+            The difference in semitones to the new transposed `root` of the `Chord`.
+        use_flats : boolean, Optional
+            Selector to use flats or sharps for black keys. Default False when optional.
+
+        Examples
+        --------
+        >>> CE = ChordEditor()
+        >>> c = CE.create_chord("Cm")
+        >>> c.transpose_simple(6)
+        F\u266fm chord
+        >>> c.transpose(2, use_flats=True)
+        A\u266dm chord
+
+        """
+        prev = self._NE.create_note(self.root.value)
         self.root.transpose_simple(semitones, use_flats)
         if self.bass:
             # bass has to be transposed exact!
-            (diff,) = self.NE.get_tone_letter(prev, self.root)
+            (diff,) = self._NE.get_tone_letter(prev, self.root)
             self.bass.transpose(*diff)
         self.build()
         return self
 
     def __repr__(self):
-        return f'{self.notation} chord'
+        return f'{self._notation} chord'
 
     def __str__(self):
-        return self.notation
+        return self._notation
 
     def __eq__(self, other):
-        # Allow comparison between Chords by checking their basic attributes
+        """Compare between other `Chords`.
+
+        Checks if the other `Chord` has the same attributes. Since the attributes and not the notation is being compared, `Chords` with different notation but same structure are equal (see ``Examples``).
+
+        Parameters
+        ----------
+        other
+            The object to be compared with.
+
+        Returns
+        -------
+        boolean
+            The outcome of the `value` comparison.
+
+        Examples
+        --------
+        >>> CE = ChordEditor()
+        >>> d = CE.create_chord("Dsus")
+        >>> d2 = CE.create_chord("Dsus4")
+        >>> d == d2
+        True
+        >>> d3 = CE.create_chord("Dsus2")
+        >>> d == d3
+        False
+
+        Another example of the same `Chord` with different notation:
+
+        >>> CE = ChordEditor()
+        >>> e = CE.create_chord("Eaug7")
+        >>> e2 = CE.create_chord("E7#5")
+        >>> e == e2
+        True
+
+        """
         if not isinstance(other, Chord):
             return NotImplemented
         return (

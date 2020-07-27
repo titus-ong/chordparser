@@ -3,11 +3,26 @@ from chordparser.music.keys import Key
 
 
 class Scale:
-    """
-    Scale class that composes of a Key and Notes.
+    """A class representing a musical scale.
 
-    The Scale class accepts a Key and generates a 2-octave Note tuple in its 'notes' attribute. The Scale can be changed by transposing its key using the 'transpose' method.
+    The `Scale` composes of a `Key` on which it is based on, and a tuple of `Notes` as part of its `notes` attribute.
+
+    Parameters
+    ----------
+    key : Key
+        The `Key` which the `Scale` is based on.
+
+    Attributes
+    ----------
+    key : Key
+        The `Key` which the `Scale` is based on.
+    notes : tuple
+        A two-octave tuple of `Notes` of the `Scale`.
+    scale_intervals : tuple
+        The semitone intervals between `notes`.
+
     """
+
     _heptatonic_base = (2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1)
     _scales = {
         "major": 0,
@@ -26,14 +41,18 @@ class Scale:
         "melodic": (0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0, 1, 0, -1),
         "harmonic": (0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 1, -1),
     }
-    NE = NoteEditor()
+    _NE = NoteEditor()
 
     def __init__(self, key: Key):
         self.key = key
         self.build()
 
     def build(self):
-        """Build the scale from its key."""
+        """Build the `Scale` from its `Key`.
+
+        This method does not need to be used if `Scale` adjustments are done through the proper channels (i.e. `ScaleEditor` or using other `Scale` methods), since those would build the `Scale` automatically.
+
+        """
         self.scale_intervals = self._get_intervals()
         self.notes = self._get_notes()
         return self
@@ -51,20 +70,56 @@ class Scale:
 
     def _get_notes(self):
         """Get notes based on intervals."""
-        notes = [self.NE.create_note(self.key.root.value)]
+        notes = [self._NE.create_note(self.key.root.value)]
         for interval in self.scale_intervals:
-            new_note = self.NE.create_note(notes[-1].value)
+            new_note = self._NE.create_note(notes[-1].value)
             notes.append(new_note.transpose(interval, 1))
         return tuple(notes)
 
     def transpose(self, semitones: int, letter: int):
-        """Transpose the key of the scale."""
+        """Transpose a `Scale` according to semitone and letter intervals.
+
+        Parameters
+        ----------
+        semitones
+            The difference in semitones to the new transposed `root` of the `Scale`'s `Key`.
+        letters
+            The difference in scale degrees to the new transposed `root` of the `Scale`'s `Key`.
+
+        Examples
+        --------
+        >>> SE = ScaleEditor()
+        >>> c = SE.create_scale("C", "major")
+        >>> c.transpose(6, 3)
+        F\u266f major scale
+        >>> c.transpose(0, 1)
+        G\u266d major scale
+
+        """
         self.key.transpose(semitones, letter)
         self.build()
         return self
 
     def transpose_simple(self, semitones: int, use_flats=False):
-        """Transpose the key of the scale by specifying the change in semitone intervals. Use use_flats=True to transpose using flat accidentals."""
+        """Transpose a `Scale` according to semitone intervals.
+
+        Parameters
+        ----------
+        semitones : int
+            The difference in semitones to the new transposed `root` of the `Scale`'s `Key`.
+        use_flats : boolean, Optional
+            Selector to use flats or sharps for black keys. Default False when optional.
+
+        Examples
+        --------
+        >>> SE = ScaleEditor()
+        >>> c = SE.create_scale("C", "minor")
+        >>> c.transpose_simple(6)
+        F\u266f natural minor scale
+        >>> c.transpose(2, use_flats=True)
+        A\u266d natural minor scale
+
+        """
         self.key.transpose_simple(semitones, use_flats)
         self.build()
         return self
@@ -76,7 +131,32 @@ class Scale:
         return str(self.key)
 
     def __eq__(self, other):
-        # Allow comparison between Keys by checking their basic attributes
+        """Compare between other `Scales`.
+
+        Checks if the other `Scale` has the same `Key` and `notes`.
+
+        Parameters
+        ----------
+        other
+            The object to be compared with.
+
+        Returns
+        -------
+        boolean
+            The outcome of the `value` comparison.
+
+        Examples
+        --------
+        >>> SE = ScaleEditor()
+        >>> d = SE.create_scale("D", "minor")
+        >>> d2 = SE.create_scale("D", "minor")
+        >>> d == d2
+        True
+        >>> d3 = SE.create_scale("D", "minor", "harmonic")
+        >>> d == d3
+        False
+
+        """
         if not isinstance(other, Scale):
             return NotImplemented
         return self.key == other.key and self.notes == other.notes

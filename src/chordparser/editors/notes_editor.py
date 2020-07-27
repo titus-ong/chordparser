@@ -4,13 +4,12 @@ from chordparser.music.notes import Note
 
 
 class NoteEditor:
-    """
-    NoteEditor class that can create a Note and get intervals between Notes.
+    """A `Note` editor that can create `Notes` and manipulate them.
 
-    The NoteEditor class can create a Note using the 'create_note' method by accepting a string with notation a-g or A-G and optional accidental symbols. The symbols that can be used are b (flat), bb (doubleflat), # (sharp), ## (doublesharp) and their respective unicode characters.
+    The `NoteEditor` can create a `Note` from its notation and change it by specifying a different notation. It can also get semitone and letter intervals between `Notes`.
 
-    The NoteEditor can also find the intervals between Notes using the 'get_intervals', 'get_min_intervals' and 'get_tone_notes' methods. The 'change_note' method allows for changing a note's value.
     """
+
     _flat = '\u266d'
     _sharp = '\u266f'
     _doubleflat = '\U0001D12B'
@@ -30,28 +29,101 @@ class NoteEditor:
         '|bb|##|b|#){0,1}$'
     )
 
-    def create_note(self, value):
-        """Create a Note from a string."""
-        letter, symbol = self._parse_note(value)
+    def create_note(self, notation):
+        """Create a `Note` from its notation.
+
+        Accepts a-g or A-G and optional accidental symbols (b, bb, #, ##, or their respective unicode characters \u266d, \u266f, \U0001D12B, or \U0001D12A).
+
+        Parameters
+        ----------
+        notation : str
+            The notation of the `Note`.
+
+        Returns
+        -------
+        Note
+            A `Note` object with value equal to its notation.
+
+        Raises
+        ------
+        SyntaxError
+            If the notation does not follow accepted notation.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> NE.create_note("C")
+        C note
+        >>> NE.create_note("D#")
+        D\u266f note
+
+        """
+        letter, symbol = self._parse_note(notation)
         return Note(letter, symbol)
 
-    def _parse_note(self, value):
+    def _parse_note(self, notation):
         """Parse the note string."""
-        rgx = re.match(NoteEditor._pattern, value, re.UNICODE)
+        rgx = re.match(NoteEditor._pattern, notation, re.UNICODE)
         if not rgx:
-            raise SyntaxError(f"'{value}' could not be parsed")
+            raise SyntaxError(f"'{notation}' could not be parsed")
         letter = rgx.group(1).upper()
         symbol = NoteEditor._symbol_converter.get(rgx.group(2))
         return letter, symbol
 
     def get_tone_letter(self, *notes):
-        """Return a nested tuple of (semitone interval, letter interval) between notes."""
+        """Get the semitone and letter intervals between `Notes`.
+
+        Multiple `Notes` as arguments are accepted. The intervals for each `Note` are relative to the previous `Note`.
+
+        Parameters
+        ----------
+        *notes : Note
+            Any number of `Notes`.
+
+        Returns
+        -------
+        tuple of (int, int)
+            The nested tuple of semitone and letter intervals between all adjacent `Notes`. The inner tuple is the semitone and letter intervals between two adjacent `Notes`.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> c = NE.create_note("C")
+        >>> f = NE.create_note("F")
+        >>> a = NE.create_note("A")
+        >>> NE.get_tone_letter(c, f, a)
+        ((5, 3), (4, 2))
+
+        """
         semitones = self.get_intervals(*notes)
         letters = self.get_letter_intervals(*notes)
         return tuple(zip(semitones, letters))
 
     def get_letter_intervals(self, *notes):
-        """Return a tuple of letter intervals between notes."""
+        """Get the letter intervals between `Notes`.
+
+        Multiple `Notes` as arguments are accepted. The interval for each `Note` is relative to the previous `Note`.
+
+        Parameters
+        ----------
+        *notes : Note
+            Any number of `Notes`.
+
+        Returns
+        -------
+        tuple of int
+            The tuple of letter intervals between all adjacent `Notes`.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> c = NE.create_note("C")
+        >>> f = NE.create_note("F")
+        >>> a = NE.create_note("A")
+        >>> NE.get_letter_intervals(c, f, a)
+        (3, 2)
+
+        """
         old_note = NoteEditor._notes_tuple.index(notes[0].letter)
         note_diff = []
         for each in notes:
@@ -62,7 +134,30 @@ class NoteEditor:
         return tuple(note_diff)
 
     def get_intervals(self, *notes):
-        """Return a tuple of semitone intervals between notes."""
+        """Get the semitone intervals between `Notes`.
+
+        Multiple `Notes` as arguments are accepted. The interval for each `Note` is relative to the previous `Note`.
+
+        Parameters
+        ----------
+        *notes : Note
+            Any number of `Notes`.
+
+        Returns
+        -------
+        tuple of int
+            The tuple of semitone intervals between all adjacent `Notes`.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> c = NE.create_note("C")
+        >>> f = NE.create_note("F")
+        >>> a = NE.create_note("A")
+        >>> NE.get_intervals(c, f, a)
+        (5, 4)
+
+        """
         old_val = notes[0].num_value()
         intervals = []
         for each in notes:
@@ -73,7 +168,31 @@ class NoteEditor:
         return tuple(intervals)
 
     def get_min_intervals(self, *notes):
-        """Return a tuple of the shortest semitone distance between notes."""
+        """Get the shortest semitone distance between `Notes`.
+
+        Multiple `Notes` as arguments are accepted. The distance for each `Note` is relative to the previous `Note`.
+
+        Parameters
+        ----------
+        *notes : Note
+            Any number of `Notes`.
+
+        Returns
+        -------
+        tuple of int
+            The tuple of the shortest semitone distances between all adjacent `Notes`.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> c = NE.create_note("C")
+        >>> b = NE.create_note("B")
+        >>> NE.get_intervals(c, b)
+        (11,)
+        >>> NE.get_min_intervals(c, b)
+        (-1,)
+
+        """
         intervals = self.get_intervals(*notes)
         min_int = []
         for each in intervals:
@@ -84,9 +203,38 @@ class NoteEditor:
             min_int.append(shift)
         return tuple(min_int)
 
-    def change_note(self, note, value, inplace=True):
-        """Change a note's value. Use inplace=True to return a new note."""
+    def change_note(self, note, notation, inplace=True):
+        """Change a `Note`'s notation.
+
+        Accepts a-g or A-G and optional accidental symbols (b, bb, #, ##, or their respective unicode characters \u266d, \u266f, \U0001D12B, or \U0001D12A).
+
+        Parameters
+        ----------
+        note : Note
+            The `Note` which value you want to change.
+        notation : str
+            The new notation for the `Note`.
+        inplace : boolean, optional
+            Selector to change the notation of current `Note` or to return a new `Note`. Default True when optional.
+
+        Returns
+        -------
+        Note
+            The `Note` with the new notation.
+
+        Examples
+        --------
+        >>> NE = NoteEditor()
+        >>> a = NE.create_note("A")
+        >>> NE.change_note(a, "Bb")
+        B\u266d note
+        >>> NE.change_note(a, "C#", inplace=False)
+        C\u266f note
+        >>> a
+        B\u266d note
+
+        """
         if not inplace:
             note = self.create_note("C")
-        note.letter, note.symbol = self._parse_note(value)
+        note.letter, note.symbol = self._parse_note(notation)
         return note

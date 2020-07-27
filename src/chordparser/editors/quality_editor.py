@@ -4,6 +4,17 @@ from chordparser.music.quality import Quality
 
 
 class QualityEditor:
+    """A `Quality` editor for creating `Chords'` `Qualities`.
+
+    The `QualityEditor` can create a `Chord`'s `Quality` from its notation.
+
+    Attributes
+    ----------
+    quality_pattern : str
+        The regex pattern for parsing a `Quality` notation.
+
+    """
+
     _flat_pattern = '\u266D|\U0001D12B|bb|b'
     _sharp_pattern = '\u266F|\U0001D12A|##|#'
     _symbol_pattern = f"{_flat_pattern}|{_sharp_pattern}"
@@ -59,13 +70,37 @@ class QualityEditor:
     #         altered 5ths [20],
     #         sus [21] 2/4 [22]
 
-    def create_quality(self, string, capital_note=True):
-        """Return chord quality."""
-        if string is None:
+    def create_quality(self, notation, capital_note=True):
+        """Create a `Quality`.
+
+        Create a `Quality` from its notation and whether the `root` of the `Chord` was uppercase.
+
+        Parameters
+        ----------
+        notation : str
+            The `Quality`'s notation.
+        *capital_note : boolean, Optional
+            Selector for the case of the `root` of the `Chord`. Default True when optional.
+
+        Returns
+        -------
+        Quality
+            The created `Quality`.
+
+        Examples
+        --------
+        >>> QE = QualityEditor()
+        >>> QE.create_quality("sus4")
+        sus4 quality
+        >>> QE.create_quality("maj7")
+        major seventh quality
+
+        """
+        if notation is None:
             if capital_note:
                 return Quality("major")
             return Quality("minor")
-        rgx = re.match(QualityEditor.quality_pattern, string, re.UNICODE)
+        rgx = re.match(QualityEditor.quality_pattern, notation, re.UNICODE)
         if rgx.group(2):  # power
             return Quality("power")
         alt5 = self._parse_alt5(rgx.group(20))
@@ -83,6 +118,7 @@ class QualityEditor:
         return 1
 
     def _parse_base(self, rgx, alt5, capital_note):
+        """Parse the base quality."""
         if rgx.group(21):
             return self._parse_sus(rgx)
         if rgx.group(15):
@@ -94,10 +130,12 @@ class QualityEditor:
         return "augmented" if alt5 > 0 else "major"
 
     def _parse_sus(self, rgx):
+        """Parse sus quality."""
         note = rgx.group(22) or "4"  # if 'sus'
         return "sus" + note
 
     def _parse_triad(self, rgx, alt5):
+        """Parse quality of triads."""
         if rgx.group(16):
             return "augmented"
         if rgx.group(17):
@@ -152,6 +190,7 @@ class QualityEditor:
         return ext_str
 
     def _parse_flat_ext(self, flat):
+        """Parse extensions with flats."""
         if flat:
             return True
         return False

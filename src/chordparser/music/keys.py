@@ -36,7 +36,7 @@ class Key:
 
         See Also
         --------
-        chordparser.music.notes.Note : For a list of `Note` methods.
+        chordparser.Note : For a list of `Note` methods.
         """
         if attribute in Note.__dict__:
             return getattr(self.root, attribute)

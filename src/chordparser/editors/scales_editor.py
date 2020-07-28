@@ -33,7 +33,7 @@ class ScaleEditor:
 
         See Also
         --------
-        chordparser.editors.keys_editor.KeyEditor.create_key : See the necessary parameters for creating a `Key`.
+        chordparser.KeyEditor.create_key : See the necessary parameters for creating a `Key`.
 
         Examples
         --------

@@ -2,24 +2,28 @@ chordparser
 ===========
 
 .. image:: https://travis-ci.com/titus-ong/chordparser.svg?branch=master
-   :alt: build status
+   :alt: Build status
    :target: https://travis-ci.com/titus-ong/chordparser
 
 .. image:: https://readthedocs.org/projects/chordparser/badge/?version=latest
     :target: https://chordparser.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
+    :alt: Documentation status
 
 .. image:: https://coveralls.io/repos/github/titus-ong/chordparser/badge.svg?branch=master
-   :alt: coverage
+   :alt: Coverage
    :target: https://coveralls.io/github/titus-ong/chordparser
 
 .. image:: https://img.shields.io/pypi/v/chordparser.svg
    :target: https://pypi.org/pypi/chordparser
-   :alt: downloads
+   :alt: Downloads
 
 .. image:: https://img.shields.io/pypi/pyversions/chordparser.svg
    :target: https://pypi.org/pypi/chordparser
-   :alt: downloads
+   :alt: Downloads
+
+.. image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/titus-ong/chordparser/blob/master/notebooks/chordparser-tutorial.ipynb
+   :alt: Open in Colab
 
 chordparser is a Python 3 package that provides a musical framework to analyse chords. Chord notation can be parsed into Chords, which can then be analysed against other chords or the key of the song. This allows for harmonic analysis in chord sheets and helps musicians understand why and how chord progressions work.
 
@@ -75,7 +79,7 @@ To install chordparser, run this command in your terminal:
 Usage
 -----
 
-Check out the `Colab notebook <https://colab.research.google.com/drive/1T5WcH2WMHqpqbJrzxDt_Mg03lw1aXho7?usp=sharing>`_, which runs through a working example to showcase chordparser's functions and help you get started on using it.
+Check out the `Colab notebook <https://colab.research.google.com/github/titus-ong/chordparser/blob/master/notebooks/chordparser-tutorial.ipynb>`_, which runs through a working example to showcase chordparser's functions and help you get started on using it.
 
 The full documentation can be found `here <https://chordparser.readthedocs.io/en/latest/>`_.
 

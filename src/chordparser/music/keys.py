@@ -13,7 +13,7 @@ class Key:
     mode : {'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}
         The mode of the `Key`.
     submode : {None, 'natural', 'harmonic', 'melodic'}
-        The submode of the `Key`. If the `mode` is not 'minor'/'aeolian', `submode` is None. Else, `submode` is one of the strings.
+        The submode of the `Key`. If the `mode` is not 'minor'/ 'aeolian', `submode` is None. Else, `submode` is one of the strings.
 
     Attributes
     ----------
@@ -22,7 +22,7 @@ class Key:
     mode : {'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}
         The mode of the `Key`.
     submode : {None, 'natural', 'harmonic', 'melodic'}
-        The submode of the `Key`. If the `mode` is not 'minor'/'aeolian', `submode` is None. Else, `submode` is one of the strings.
+        The submode of the `Key`. If the `mode` is not 'minor'/ 'aeolian', `submode` is None. Else, `submode` is one of the strings.
 
     """
 

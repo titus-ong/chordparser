@@ -26,7 +26,7 @@ class KeyEditor:
     def create_key(self, root, mode='major', submode=None):
         """Create a `Key` from a root note, mode and submode.
 
-        The root note must be a valid `Note` notation if type `str`. The submode refers to the different types of minor/aeolian mode, i.e. natural, harmonic and melodic. Hence, other than the 'minor'/'aeolian' mode, the submode must be None.
+        The root note must be a valid `Note` notation if type `str`. The submode refers to the different types of minor/aeolian mode, i.e. natural, harmonic and melodic. Hence, other than the 'minor'/ 'aeolian' mode, the submode must be None.
 
         Parameters
         ----------
@@ -35,7 +35,7 @@ class KeyEditor:
         mode : {'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}, Optional
             The mode of the `Key`.
         submode: {None, 'natural', 'harmonic', 'melodic'}, Optional
-            The submode of the `Key`. Default 'natural' for the 'minor'/'aeolian' mode and None for the other modes when optional.
+            The submode of the `Key`. Default 'natural' for the 'minor'/ 'aeolian' mode and None for the other modes when optional.
 
         Returns
         -------
@@ -45,9 +45,9 @@ class KeyEditor:
         Raises
         ------
         ModeError
-            If the `mode` is not 'minor'/'aeolian' and the `submode` has been specified.
+            If the `mode` is not 'minor'/ 'aeolian' and the `submode` has been specified.
         SyntaxError
-            If the `mode` is 'minor'/'aeolian' and the `submode` is invalid.
+            If the `mode` is 'minor'/ 'aeolian' and the `submode` is invalid.
 
         Examples
         --------
@@ -95,7 +95,7 @@ class KeyEditor:
     def relative_major(self, key):
         """Change a `Key` to its relative major.
 
-        The `Key`'s `mode` must be 'minor'/'aeolian'.
+        The `Key`'s `mode` must be 'minor'/ 'aeolian'.
 
         Parameters
         ----------
@@ -105,7 +105,7 @@ class KeyEditor:
         Raises
         ------
         ModeError
-            If the `Key` is not 'minor'/'aeolian'.
+            If the `Key` is not 'minor'/ 'aeolian'.
 
         Examples
         --------
@@ -125,7 +125,7 @@ class KeyEditor:
     def relative_minor(self, key, submode='natural'):
         """Change a `Key` to its relative minor.
 
-        The `Key`'s `mode` must be 'major'/'ionian'.
+        The `Key`'s `mode` must be 'major'/ 'ionian'.
 
         Parameters
         ----------
@@ -137,7 +137,7 @@ class KeyEditor:
         Raises
         ------
         ModeError
-            If the `Key` is not 'major'/'ionian'.
+            If the `Key` is not 'major'/ 'ionian'.
         SyntaxError
             If the `submode` is invalid.
 
@@ -164,7 +164,7 @@ class KeyEditor:
     def change_key(self, key, root=None, mode=None, submode=None, inplace=True):
         """Change a `Key`'s `root`, `mode` and/or `submode` attributes.
 
-        The root note must be a valid `Note` notation if type `str`. The submode refers to the different types of 'minor'/'aeolian' mode, i.e. 'natural', 'harmonic' and 'melodic'. Hence, other than the 'minor'/'aeolian' mode, the submode must be None.
+        The root note must be a valid `Note` notation if type `str`. The submode refers to the different types of 'minor'/ 'aeolian' mode, i.e. 'natural', 'harmonic' and 'melodic'. Hence, other than the 'minor'/ 'aeolian' mode, the submode must be None.
 
         Parameters
         ----------
@@ -175,7 +175,7 @@ class KeyEditor:
         mode : {None, 'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}, Optional
             The `mode` of the `Key` to be changed.
         submode: {None, 'natural', 'harmonic', 'melodic'}, Optional
-            The submode of the `Key` to be changed. Default 'natural' for the 'minor'/'aeolian' mode and None for the other modes when optional.
+            The submode of the `Key` to be changed. Default 'natural' for the 'minor'/ 'aeolian' mode and None for the other modes when optional.
         inplace : boolean, optional
             Selector to change the notation of current `Key` or to return a new `Key`. Default True when optional.
 

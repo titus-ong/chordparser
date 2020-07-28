@@ -55,7 +55,7 @@ class ScaleEditor:
     def change_scale(self, scale, *args, inplace=True, **kwargs):
         """Change a `Scale` based on its `Key`.
 
-        The parameters accepted are the same parameters accepted for changing a `Key`: the `root`, `mode` and `submode`. The `root` must be a valid `Note` notation if type `str`. The `submode` refers to the different types of 'minor'/'aeolian' mode, i.e. 'natural', 'harmonic' and 'melodic'. Hence, other than the 'minor'/'aeolian' `mode`, the `submode` must be None.
+        The parameters accepted are the same parameters accepted for changing a `Key`: the `root`, `mode` and `submode`. The `root` must be a valid `Note` notation if type `str`. The `submode` refers to the different types of 'minor'/ 'aeolian' mode, i.e. 'natural', 'harmonic' and 'melodic'. Hence, other than the 'minor'/ 'aeolian' `mode`, the `submode` must be None.
 
         Parameters
         ----------

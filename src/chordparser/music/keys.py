@@ -1,5 +1,3 @@
-from typing import Union
-
 from chordparser.music.notes import Note
 
 
@@ -15,7 +13,7 @@ class Key:
     mode : {'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}
         The mode of the `Key`.
     submode : {None, 'natural', 'harmonic', 'melodic'}
-        The submode of the `Key`. If the `mode` is not 'minor'/'aeolian', `submode` is None. Else, `submode` is one of the strings.
+        The submode of the `Key`. If the `mode` is not 'minor'/ 'aeolian', `submode` is None. Else, `submode` is one of the strings.
 
     Attributes
     ----------
@@ -24,14 +22,11 @@ class Key:
     mode : {'major', 'minor', 'ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'}
         The mode of the `Key`.
     submode : {None, 'natural', 'harmonic', 'melodic'}
-        The submode of the `Key`. If the `mode` is not 'minor'/'aeolian', `submode` is None. Else, `submode` is one of the strings.
+        The submode of the `Key`. If the `mode` is not 'minor'/ 'aeolian', `submode` is None. Else, `submode` is one of the strings.
 
     """
 
-    def __init__(
-            self, root, mode: str,
-            submode: Union[str, None]
-    ):
+    def __init__(self, root, mode, submode):
         self.root = root
         self.mode = mode
         self.submode = submode
@@ -41,7 +36,7 @@ class Key:
 
         See Also
         --------
-        chordparser.music.notes.Note : For a list of `Note` methods.
+        chordparser.Note : For a list of `Note` methods.
         """
         if attribute in Note.__dict__:
             return getattr(self.root, attribute)

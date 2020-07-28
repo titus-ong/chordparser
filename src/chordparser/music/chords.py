@@ -1,5 +1,3 @@
-from typing import Union, List, Tuple
-
 from chordparser.editors.notes_editor import NoteEditor
 from chordparser.editors.scales_editor import ScaleEditor
 from chordparser.music.keys import Key
@@ -19,7 +17,7 @@ class Chord:
     quality : Quality
         The `Chord` quality.
     add : list of (str, int), Optional
-        List of added notes.
+        List of added notes. The `str` is the accidental and the `int` is the scale degree of each added note.
     bass : Note, Optional
         Bass note.
     string : str, Optional
@@ -57,14 +55,7 @@ class Chord:
     _SE = ScaleEditor()
     _NE = NoteEditor()
 
-    def __init__(
-            self,
-            root: Note,
-            quality: Quality,
-            add: Union[List[Tuple[str, int]], None] = None,
-            bass: Union[Note, None] = None,
-            string: str = None,
-    ):
+    def __init__(self, root, quality, add=None, bass=None, string=None):
         self.root = root
         self.quality = quality
         self.add = add
@@ -188,7 +179,7 @@ class Chord:
         if not self.string:
             self.string = self._notation
 
-    def transpose(self, semitones: int, letter: int):
+    def transpose(self, semitones, letter):
         """Transpose a `Chord` according to semitone and letter intervals.
 
         Parameters
@@ -214,7 +205,7 @@ class Chord:
         self.build()
         return self
 
-    def transpose_simple(self, semitones: int, use_flats=False):
+    def transpose_simple(self, semitones, use_flats=False):
         """Transpose a `Chord` according to semitone intervals.
 
         Parameters

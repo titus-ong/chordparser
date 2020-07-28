@@ -1,4 +1,3 @@
-from typing import List
 import warnings
 
 from chordparser.editors.chord_roman_converter import ChordRomanConverter
@@ -28,10 +27,10 @@ class ChordAnalyser:
 
     def analyse_diatonic(
             self, chord, scale,
-            incl_submodes: bool = False,
+            incl_submodes=False,
             allow_power_sus=False,
             default_power_sus="M",
-    ) -> List[tuple]:
+    ):
         """Analyse if a `Chord` is diatonic to a `Scale`.
 
         There may be multiple tuples in the returned list if submodes are included.
@@ -115,7 +114,7 @@ class ChordAnalyser:
 
     def analyse_all(
             self, chord, scale,
-            incl_submodes: bool = False,
+            incl_submodes=False,
             allow_power_sus=False,
             default_power_sus="M",
     ):
@@ -185,8 +184,8 @@ class ChordAnalyser:
         return chords
 
     def analyse_secondary(
-            self, prev_chord, next_chord, scale,
-            incl_submodes: bool = False,
+            self, prev_chord, next_chord,
+            scale, incl_submodes=False,
             allow_power_sus=False,
             default_power_sus="M",
             limit=True,

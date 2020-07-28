@@ -127,7 +127,7 @@ class Note:
         """
         return Note._symbol_signs[self.symbol]
 
-    def accidental(self, value: int):
+    def accidental(self, value):
         """Change a `Note`'s accidental by specifying a `value` from -2 to 2.
 
         The range of `values` [-2, 2] correspond to the values a symbol can take, from doubleflat (-2) to doublesharp (2).
@@ -157,7 +157,7 @@ class Note:
         self.symbol = Note._symbols[value]
         return self
 
-    def shift_s(self, value: int):
+    def shift_s(self, value):
         """Shift a `Note`'s accidental.
 
         The `Note`'s `symbol_value()` must be in the range of [-2, 2] after the shift, which corresponds to the values a symbol can take from doubleflat (-2) to doublesharp (2).
@@ -188,7 +188,7 @@ class Note:
         self.symbol = Note._symbols[value]
         return self
 
-    def shift_l(self, value: int):
+    def shift_l(self, value):
         """Shift a `Note`'s letter.
 
         The `value` corresponds to the change in scale degree of the `Note`.
@@ -211,7 +211,7 @@ class Note:
         self.letter = new_letter
         return self
 
-    def transpose(self, semitones: int, letters: int):
+    def transpose(self, semitones, letters):
         """Transpose a `Note` according to semitone and letter intervals.
 
         Parameters
@@ -239,7 +239,7 @@ class Note:
         self.shift_s(shift)
         return self
 
-    def transpose_simple(self, semitones: int, use_flats=False):
+    def transpose_simple(self, semitones, use_flats=False):
         """Transpose a `Note` according to semitone intervals.
 
         Parameters

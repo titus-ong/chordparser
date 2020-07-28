@@ -1,6 +1,6 @@
 Parser
 ======
 
-.. autoclass:: chordparser.parser.Parser
+.. autoclass:: chordparser.Parser
     :members:
     :inherited-members:

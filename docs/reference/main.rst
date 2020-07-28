@@ -7,6 +7,6 @@ Reference
    :maxdepth: 2
 
    parser
-   music/main
-   helpers/main
-   errors/main
+   music
+   helpers
+   errors

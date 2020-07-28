@@ -16,4 +16,4 @@ from chordparser.parser import Parser
 
 __author__ = 'Titus Ong'
 __email__ = 'titusongyl@gmail.com'
-__version__ = '0.4.0'
+__version__ = '0.4.1'

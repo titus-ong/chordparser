@@ -1,6 +1,10 @@
 History
 =======
 
+0.4.1 (2020-07-28)
+~~~~~~~~~~~~~~~~~~
+* Fix imports for autodoc to show documentation properly
+
 0.4.0 (2020-07-28)
 ~~~~~~~~~~~~~~~~~~
 * Reorganised documentation to follow Divio documentation

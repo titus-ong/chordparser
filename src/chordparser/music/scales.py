@@ -43,7 +43,7 @@ class Scale:
     }
     _NE = NoteEditor()
 
-    def __init__(self, key: Key):
+    def __init__(self, key):
         self.key = key
         self.build()
 
@@ -76,7 +76,7 @@ class Scale:
             notes.append(new_note.transpose(interval, 1))
         return tuple(notes)
 
-    def transpose(self, semitones: int, letter: int):
+    def transpose(self, semitones, letter):
         """Transpose a `Scale` according to semitone and letter intervals.
 
         Parameters
@@ -100,7 +100,7 @@ class Scale:
         self.build()
         return self
 
-    def transpose_simple(self, semitones: int, use_flats=False):
+    def transpose_simple(self, semitones, use_flats=False):
         """Transpose a `Scale` according to semitone intervals.
 
         Parameters

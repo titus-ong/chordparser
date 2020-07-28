@@ -1,5 +1,4 @@
 import re
-from typing import Union
 
 from chordparser.editors.notes_editor import NoteEditor
 from chordparser.editors.quality_editor import QualityEditor
@@ -116,7 +115,7 @@ class ChordEditor:
             return None
         return self._NE.create_note(string)
 
-    def create_diatonic(self, scale_key: Union[Scale, Key], degree: int = 1):
+    def create_diatonic(self, scale_key, degree=1):
         """Create a diatonic `Chord` from a `Scale` or `Key`.
 
         Parameters
@@ -175,13 +174,9 @@ class ChordEditor:
         return Chord(root, quality, add, bass)
 
     def change_chord(
-            self,
-            chord,
-            root: Union[str, None] = None,
-            quality: Union[str, None] = None,
-            add: Union[str, None] = None,
-            remove: Union[str, None] = None,
-            bass: Union[str, bool, None] = None,
+            self, chord, root=None,
+            quality=None, add=None,
+            remove=None, bass=None,
             inplace=True,
     ):
         """Change a `Chord`'s attributes.

@@ -1,5 +1,3 @@
-from typing import Union
-
 from chordparser.editors.notes_editor import NoteEditor
 from chordparser.music.keys import Key
 from chordparser.music.notes import Note
@@ -25,12 +23,7 @@ class KeyEditor:
     _submodes = ('harmonic', 'melodic', 'natural')
     _NE = NoteEditor()
 
-    def create_key(
-            self,
-            root,
-            mode: str = 'major',
-            submode: Union[str, None] = None
-    ):
+    def create_key(self, root, mode='major', submode=None):
         """Create a `Key` from a root note, mode and submode.
 
         The root note must be a valid `Note` notation if type `str`. The submode refers to the different types of minor/aeolian mode, i.e. natural, harmonic and melodic. Hence, other than the 'minor'/'aeolian' mode, the submode must be None.

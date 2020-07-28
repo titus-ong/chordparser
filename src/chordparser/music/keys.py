@@ -1,5 +1,3 @@
-from typing import Union
-
 from chordparser.music.notes import Note
 
 
@@ -28,10 +26,7 @@ class Key:
 
     """
 
-    def __init__(
-            self, root, mode: str,
-            submode: Union[str, None]
-    ):
+    def __init__(self, root, mode, submode):
         self.root = root
         self.mode = mode
         self.submode = submode

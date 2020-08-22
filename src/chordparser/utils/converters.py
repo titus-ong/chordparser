@@ -14,3 +14,19 @@ symbol_to_unicode = {
     "": "",
     None: "",
 }
+
+symbol_to_int = {
+    flat: -1,
+    doubleflat: -2,
+    sharp: 1,
+    doublesharp: 2,
+    "": 0,
+}
+
+int_to_symbol = {
+    -1: flat,
+    -2: doubleflat,
+    1: sharp,
+    2: doublesharp,
+    0: "",
+}

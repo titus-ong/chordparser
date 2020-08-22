@@ -1,5 +1,7 @@
 import re
 
+from chordparser.music.letter import Letter
+from chordparser.music.symbol import Symbol
 from chordparser.utils.regex_patterns import (note_pattern,
                                               sharp_pattern,
                                               flat_pattern)
@@ -42,3 +44,39 @@ class NoteNotationParser:
     def get_regex_groups_count(self):
         regex = self._to_regex_object("C")
         return len(regex.groups())
+
+
+class Note:
+    _NNP = NoteNotationParser()
+
+    def __init__(self, notation):
+        letter, symbol = self._NNP.parse_notation(notation)
+        self._letter = Letter(letter)
+        self._symbol = Symbol(symbol)
+
+    @property
+    def letter(self):
+        return self._letter
+
+    @property
+    def symbol(self):
+        return self._symbol
+
+    def as_int(self):
+        """Return the `Note`'s value as an integer (basis: C = 0).
+
+        The integer value is based on the number of semitones above C.
+
+        Returns
+        -------
+        int
+            The integer `Note` value.
+
+        Examples
+        --------
+        >>> d = Note("D#")
+        >>> d.as_int()
+        3
+
+        """
+        return (self._letter.as_int() + self._symbol.as_int()) % 12

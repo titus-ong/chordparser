@@ -1,6 +1,7 @@
 import pytest
 
-from chordparser.note import NoteNotationParser
+from chordparser.utils.unicode_chars import sharp
+from chordparser.music.note import NoteNotationParser, Note
 
 
 class TestNNPParseNotation:
@@ -38,3 +39,23 @@ class TestNNPGetRegexGroupsCount:
         parser = NoteNotationParser()
         parser._pattern = "(a)(b)"
         assert 2 == parser.get_regex_groups_count()
+
+
+class TestNote:
+    def test_init(self):
+        note = Note("C#")
+        assert "C" == note.letter
+        assert sharp == note.symbol
+
+
+class TestNoteAsInt:
+    @pytest.mark.parametrize(
+        "note, value", [
+            ("C#", 1),
+            ("Bbb", 9),
+            ("B##", 1),
+        ]
+    )
+    def test_correct_int(self, note, value):
+        n = Note(note)
+        assert value == n.as_int()

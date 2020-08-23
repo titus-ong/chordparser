@@ -7,7 +7,6 @@ class NotationParser:
 
     def parse_notation(self, notation):
         regex = self._to_regex_object(notation)
-        print(self._pattern)
         if self._invalid_notation(regex):
             raise SyntaxError("invalid syntax")
         args = self._split_into_groups(regex)
@@ -28,9 +27,10 @@ class NotationParser:
         # To be implemented in concrete class
         raise NotImplementedError
 
-    def get_regex_pattern(self):
+    @property
+    def pattern(self):
         return self._pattern
 
-    def get_regex_groups_count(self):
+    def get_num_groups(self):
         regex = re.compile(self._pattern)
         return regex.groups

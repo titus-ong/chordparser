@@ -13,6 +13,8 @@ class Symbol(UserString):
 
     """
     def __init__(self, data):
+        if data not in symbol_to_unicode.keys():
+            raise ValueError(f"{data} is not a valid Symbol")
         self.data = symbol_to_unicode[data]
 
     def as_int(self):

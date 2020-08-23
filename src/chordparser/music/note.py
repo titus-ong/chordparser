@@ -22,6 +22,43 @@ class NoteNotationParser(NotationParser):
 
 
 class Note:
+    """A class representing a musical note.
+
+    The `Note` class composes of a `Letter` and `Symbol` object,
+    representing the letter and symbol part of the `Note` respectively.
+    It is created from a string of notation A-G with optional
+    accidental symbols b, bb, #, ## or their respective unicode
+    characters \u266d, \u266f, \U0001D12B, or \U0001D12A. Upon
+    creation, the symbols will be converted to unicode.
+
+    Parameters
+    ----------
+    notation : str
+        The notation of the `Note` to be created.
+
+    Attributes
+    ----------
+    letter : Letter
+        The letter part of the `Note`'s notation.
+    symbol : Symbol
+        The symbol part of the `Note`'s notation. If there is no
+        symbol, this will be a Symbol of an empty string.
+
+    Raises
+    ------
+    SyntaxError
+        If the notation is invalid.
+
+    Examples
+    --------
+    >>> note = Note("C#")
+    >>> note
+    C\u266f note
+    >>> str(note)
+    "C\u266f"
+
+    """
+
     _NNP = NoteNotationParser()
 
     def __init__(self, notation):
@@ -64,9 +101,9 @@ class Note:
 
         Parameters
         ----------
-        semitones
+        semitones : int
             The difference in semitones to the transposed `Note`.
-        letters
+        letters : int
             The difference in scale degrees to the transposed `Note`.
 
         Examples

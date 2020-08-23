@@ -32,5 +32,9 @@ class NotationParser:
         return self._pattern
 
     def get_num_groups(self):
-        regex = re.compile(self._pattern)
+        return NotationParser.get_num_groups_from(self._pattern)
+
+    @staticmethod
+    def get_num_groups_from(pattern):
+        regex = re.compile(pattern)
         return regex.groups

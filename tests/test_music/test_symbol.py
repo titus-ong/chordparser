@@ -4,6 +4,12 @@ from chordparser.music.symbol import Symbol
 from chordparser.utils.unicode_chars import flat, doublesharp
 
 
+class TestSymbol:
+    def test_wrong_symbol(self):
+        with pytest.raises(ValueError):
+            Symbol("###")
+
+
 class TestSymbolAsInt:
     @pytest.mark.parametrize(
         "symbol, value", [

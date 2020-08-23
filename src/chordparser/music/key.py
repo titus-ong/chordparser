@@ -131,7 +131,7 @@ class Mode:
         return [0]*len(natural_semitone_intervals)
 
     def __repr__(self):
-        return f"{str(self)} mode"
+        return f"{self} mode"
 
     def __str__(self):
         if self._submode:
@@ -239,8 +239,8 @@ class Key:
         self._mode = Mode(mode)
 
     @classmethod
-    def from_args(cls, tonic, mode, submode=""):
-        """Create a `Key` from its tonic, mode and submode arguments.
+    def from_components(cls, tonic, mode, submode=""):
+        """Create a `Key` from its tonic, mode and submode components.
 
         Parameters
         ----------
@@ -262,17 +262,17 @@ class Key:
 
         Examples
         --------
-        >>> key = Key.from_args("C", "major")
+        >>> key = Key.from_components("C", "major")
         >>> key
         C major key
 
-        >>> key = Key.from_args(Note("D"), "minor", "harmonic")
+        >>> key = Key.from_components(Note("D"), "minor", "harmonic")
         >>> key
         D harmonic minor key
 
         """
         # str() to avoid unwanted string from repr
-        notation = f"{str(tonic)} {str(submode)} {str(mode)}"
+        notation = f"{tonic} {submode} {mode}"
         return cls(notation)
 
     @property
@@ -433,10 +433,10 @@ class Key:
         self._tonic.transpose_simple(semitones, use_flats)
 
     def __repr__(self):
-        return f"{str(self)} key"
+        return f"{self} key"
 
     def __str__(self):
-        return f"{str(self._tonic)} {str(self._mode)}"
+        return f"{self._tonic} {self._mode}"
 
     def __eq__(self, other):
         """Compare with other `Keys`.

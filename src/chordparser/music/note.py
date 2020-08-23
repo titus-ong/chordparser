@@ -151,7 +151,7 @@ class Note:
         self._set(note)
 
     def __repr__(self):
-        return f"{str(self)} note"
+        return f"{self} note"
 
     def __str__(self):
         return f"{self._letter}{self._symbol}"

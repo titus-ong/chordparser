@@ -35,13 +35,6 @@ class TestNNPParseNotation:
             parser.parse_notation(notation)
 
 
-class TestNNPGetRegexGroupsCount:
-    def test_correct_number_of_groups(self):
-        parser = NoteNotationParser()
-        parser._pattern = "(a)(b)"
-        assert 2 == parser.get_regex_groups_count()
-
-
 class TestNote:
     def test_init(self):
         note = Note("C#")

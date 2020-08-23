@@ -32,6 +32,13 @@ class TestScaleDegree:
         assert 5 == sd.degree
 
 
+class TestScaleDegreeFromComps:
+    def test_creation(self):
+        sd = ScaleDegree.from_components(5, "b")
+        sd2 = ScaleDegree.from_components(5, Symbol("b"))
+        assert sd == sd2
+
+
 class TestScaleDegreeEquality:
     def test_equality_sd(self):
         sd = ScaleDegree("b5")

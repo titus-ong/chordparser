@@ -121,15 +121,15 @@ class TestKey:
         assert submode == key.mode.submode
 
 
-class TestKeyFromArgs:
+class TestKeyFromComps:
     def test_key_creation(self):
-        key = Key.from_args("C", "major")
+        key = Key.from_components("C", "major")
         assert "C" == key.tonic
         assert "major" == key.mode.mode
         assert "" == key.mode.submode
 
     def test_key_creation_2(self):
-        key = Key.from_args(Note("D"), "minor", "harmonic")
+        key = Key.from_components(Note("D"), "minor", "harmonic")
         assert "D" == key.tonic
         assert "minor" == key.mode.mode
         assert "harmonic" == key.mode.submode

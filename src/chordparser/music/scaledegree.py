@@ -42,6 +42,9 @@ class ScaleDegree:
 
     def __init__(self, notation):
         degree, symbol = self._SDNP.parse_notation(notation)
+        self._set(degree, symbol)
+
+    def _set(self, degree, symbol):
         self._degree = int(degree)
         self._symbol = Symbol(symbol)
 
@@ -53,11 +56,15 @@ class ScaleDegree:
     def symbol(self):
         return self._symbol
 
+    @classmethod
+    def from_components(cls, degree, symbol):
+        return cls(f"{symbol}{degree}")
+
     def __str__(self):
         return f"{self._symbol}{self._degree}"
 
     def __repr__(self):
-        return f"{str(self)} scale degree"
+        return f"{self} scale degree"
 
     def __eq__(self, other):
         """Compare with other `ScaleDegrees` or strings.

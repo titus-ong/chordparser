@@ -5,7 +5,6 @@ from chordparser.utils.converters import (symbol_to_unicode,
                                           int_to_symbol)
 
 
-
 class Symbol(UserString):
     """A class representing the symbol part of a `Note`.
 
@@ -46,9 +45,9 @@ class Symbol(UserString):
 
         Examples
         --------
-        >>> sharp = Symbol("#")
-        >>> sharp.shift_by(-2)
-        >>> sharp
+        >>> symbol = Symbol("#")
+        >>> symbol.shift_by(-2)
+        >>> symbol
         \u266D
 
         """

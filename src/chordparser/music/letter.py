@@ -39,12 +39,12 @@ class Letter(UserString):
 
         Examples
         --------
-        >>> d = Letter("D")
-        >>> d.shift_by(3)
-        >>> d
+        >>> letter = Letter("D")
+        >>> letter.shift_by(3)
+        >>> letter
         G
 
         """
-        position = natural_notes.index(self.data)
-        position = (position + shift) % 7
-        self.data = natural_notes[position]
+        old_position = natural_notes.index(self.data)
+        new_position = (old_position + shift) % 7
+        self.data = natural_notes[new_position]

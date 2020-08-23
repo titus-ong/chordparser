@@ -4,14 +4,13 @@ from chordparser.music.symbol import Symbol
 from chordparser.utils.converters import symbol_to_unicode
 from chordparser.utils.note_lists import sharp_scale, flat_scale
 from chordparser.utils.regex_patterns import (note_pattern,
-                                              sharp_pattern,
-                                              flat_pattern)
+                                              symbol_pattern)
 
 
 class NoteNotationParser(NotationParser):
     """Parse note notation into letter and symbol groups."""
     _pattern = (
-        f"({note_pattern})({flat_pattern}|{sharp_pattern})?"
+        f"({note_pattern})({symbol_pattern})?"
     )
 
     def _split_into_groups(self, regex):

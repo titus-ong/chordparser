@@ -44,7 +44,8 @@ class ModeNotationParser(NotationParserTemplate):
         return long_mode.lower()
 
     def _get_submode(self, submode, mode):
-        if submode and not self._is_minor(mode):
+        is_minor = self._is_minor(mode)
+        if submode and not is_minor:
             raise ModeError(f"'{mode}' does not have a submode")
         if not is_minor:
             return ""
@@ -271,7 +272,6 @@ class Key:
         D harmonic minor key
 
         """
-        # str() to avoid unwanted string from repr
         notation = f"{tonic} {submode} {mode}"
         return cls(notation)
 
@@ -282,6 +282,26 @@ class Key:
     @property
     def mode(self):
         return self._mode
+
+    def get_step_pattern(self):
+        """Return the semitone step pattern of the `Key`.
+
+        Submode accidentals are accounted for (i.e. harmonic or
+        melodic).
+
+        Returns
+        -------
+        tuple of int
+            The semitone step pattern of the key.
+
+        Examples
+        --------
+        >>> key = Key("C harmonic minor")
+        >>> key.get_step_pattern()
+        (2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1)
+
+        """
+        return self._mode.get_step_pattern()
 
     def set_mode(self, mode=None, submode=None):
         """Set the `Key`'s mode.

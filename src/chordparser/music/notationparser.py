@@ -32,7 +32,7 @@ class NotationParserTemplate:
         return self._pattern
 
     def get_num_groups(self):
-        return NotationParser.get_num_groups_from(self._pattern)
+        return NotationParserTemplate.get_num_groups_from(self._pattern)
 
     @staticmethod
     def get_num_groups_from(pattern):

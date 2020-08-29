@@ -1,4 +1,4 @@
-from chordparser.music.notationparser import NotationParser
+from chordparser.music.notationparser import NotationParserTemplate
 from chordparser.music.note import NoteNotationParser, Note
 from chordparser.utils.note_lists import (harmonic_intervals,
                                           melodic_intervals,
@@ -16,7 +16,7 @@ class ModeError(Exception):
     pass
 
 
-class ModeNotationParser(NotationParser):
+class ModeNotationParser(NotationParserTemplate):
     """Parse mode notation into mode and submode."""
 
     _pattern = (
@@ -31,7 +31,7 @@ class ModeNotationParser(NotationParser):
             regex.group(3), regex.group(4), regex.group(5)
         )
         submode = self._get_submode(
-            regex.group(2), self._is_minor(mode)
+            regex.group(2), mode
         )
         return mode, submode
 
@@ -43,17 +43,17 @@ class ModeNotationParser(NotationParser):
             return "minor"
         return long_mode.lower()
 
-    def _is_minor(self, mode):
-        return mode in ("minor", "aeolian")
-
-    def _get_submode(self, submode, is_minor):
-        if submode and not is_minor:
-            raise ModeError("Only minor can have a submode")
+    def _get_submode(self, submode, mode):
+        if submode and not self._is_minor(mode):
+            raise ModeError(f"'{mode}' does not have a submode")
         if not is_minor:
             return ""
         if is_minor and not submode:
             return "natural"
         return submode.lower()
+
+    def _is_minor(self, mode):
+        return mode in ("minor", "aeolian")
 
 
 class Mode:
@@ -172,7 +172,7 @@ class Mode:
         )
 
 
-class KeyNotationParser(NotationParser):
+class KeyNotationParser(NotationParserTemplate):
     """Parse key notation into tonic and mode groups."""
 
     _NNP = NoteNotationParser()
@@ -316,7 +316,9 @@ class Key:
 
         """
         if mode is None and submode is None:
-            raise TypeError("At least one argument must be specified")
+            raise TypeError(
+                "At least one argument must be specified (0 given)"
+                )
         if mode is None:
             mode = self._mode.mode
         mode_notation = self._create_mode_notation(mode, submode)
@@ -346,7 +348,7 @@ class Key:
 
         """
         if not self._is_minor():
-            raise ModeError(f"{self} is not minor")
+            raise ModeError(f"'{self}' is not minor")
         self.transpose(3, 2)
         self.set_mode("major")
 
@@ -384,7 +386,7 @@ class Key:
 
         """
         if not self._is_major():
-            raise ModeError(f"{self} is not major")
+            raise ModeError(f"'{self}' is not major")
         self.transpose(-3, -2)
         self.set_mode("minor", submode)
 

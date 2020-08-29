@@ -1,7 +1,7 @@
 import re
 
 
-class NotationParser:
+class NotationParserTemplate:
     """Abstract class for parsing notation."""
     _pattern = ""
 

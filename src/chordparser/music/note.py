@@ -1,5 +1,5 @@
 from chordparser.music.letter import Letter
-from chordparser.music.notationparser import NotationParser
+from chordparser.music.notationparser import NotationParserTemplate
 from chordparser.music.symbol import Symbol
 from chordparser.utils.converters import symbol_to_unicode
 from chordparser.utils.note_lists import sharp_scale, flat_scale
@@ -7,7 +7,7 @@ from chordparser.utils.regex_patterns import (note_pattern,
                                               symbol_pattern)
 
 
-class NoteNotationParser(NotationParser):
+class NoteNotationParser(NotationParserTemplate):
     """Parse note notation into letter and symbol groups."""
     _pattern = (
         f"({note_pattern})({symbol_pattern})?"

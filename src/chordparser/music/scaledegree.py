@@ -1,10 +1,10 @@
-from chordparser.music.notationparser import NotationParser
+from chordparser.music.notationparser import NotationParserTemplate
 from chordparser.music.symbol import Symbol
 from chordparser.utils.regex_patterns import (symbol_pattern,
                                               degree_pattern)
 
 
-class ScaleDegreeNotationParser(NotationParser):
+class ScaleDegreeNotationParser(NotationParserTemplate):
     """Parse scale degree notation into degree and symbol."""
 
     _pattern = f"({symbol_pattern})?({degree_pattern})"

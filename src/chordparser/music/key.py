@@ -304,6 +304,8 @@ class Key:
         ModeError
             If the submode does not match the mode (e.g. harmonic
             major).
+        TypeError
+            If neither the mode nor submode are specified.
 
         Examples
         --------
@@ -313,6 +315,8 @@ class Key:
         melodic minor mode
 
         """
+        if mode is None and submode is None:
+            raise TypeError("At least one argument must be specified")
         if mode is None:
             mode = self._mode.mode
         mode_notation = self._create_mode_notation(mode, submode)

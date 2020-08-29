@@ -23,6 +23,11 @@ class ScaleDegree:
     characters \u266d, \u266f, \U0001D12B, or \U0001D12A. Upon
     creation, the symbol will be converted to unicode.
 
+    Parameters
+    ----------
+    notation: str
+        The string notation of the `ScaleDegree`.
+
     Attributes
     ----------
     degree : int

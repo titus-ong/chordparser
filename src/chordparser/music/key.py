@@ -14,6 +14,13 @@ class ModeError(Exception):
 
 
 class Mode(Enum):
+    """Enum for the various modes, including major and minor.
+
+    The enum members available are MAJOR, MINOR, IONIAN, DORIAN,
+    PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN and LOCRIAN.
+
+    """
+
     # Values correspond to the step intervals
     MAJOR = (
         2, 2, 1, 2, 2, 2, 1,
@@ -60,6 +67,13 @@ class Mode(Enum):
 
 
 class Submode(Enum):
+    """Enum for the various minor submodes.
+
+    The enum members available are NATURAL, HARMONIC, MELODIC and NONE.
+    NONE applies to all non-minor modes.
+
+    """
+
     # The boolean corresponds to whether the submode is minor and the
     # tuple corresponds to changes in step intervals
     # The boolean helps to distinguish NATURAL from NONE

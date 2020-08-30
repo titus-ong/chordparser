@@ -142,8 +142,8 @@ class ModeGroup:
     """A class representing the mode of a key.
 
     The `ModeGroup` class consists of a mode enum {MAJOR, MINOR, IONIAN,
-    DORIAN, PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, LOCRIAN} and an
-    optional submode enum {NATURAL, HARMONIC, MELODIC, NONE}.
+    DORIAN, PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, LOCRIAN} and a
+    submode enum {NATURAL, HARMONIC, MELODIC, NONE}.
 
     Attributes
     ----------
@@ -287,8 +287,8 @@ class Key:
 
     The `Key` class composes of a `Note` object as its `tonic` and a
     `ModeGroup` object with the attributes `mode` and `submode`. It can
-    be created from its string notation or by specifying its tonic, mode
-    and submode using the class method Key.from_args().
+    be created from its string notation or by specifying its tonic,
+    mode and submode using the class method Key.from_components().
 
     Parameters
     ----------
@@ -316,11 +316,11 @@ class Key:
     --------
     >>> key = Key("C# minor")
     >>> key.tonic
-    C\u266f note
+    C\u266f Note
     >>> key.mode.mode
-    minor
+    Mode.MINOR
     >>> key.mode.submode
-    natural
+    Submode.NATURAL
 
     """
 
@@ -332,7 +332,7 @@ class Key:
         self._mode = ModeGroup(mode)
 
     @classmethod
-    def from_components(cls, tonic, mode, submode=""):
+    def from_components(cls, tonic, mode, submode=None):
         """Create a `Key` from its tonic, mode and submode components.
 
         Parameters
@@ -342,8 +342,8 @@ class Key:
         mode : str
             The mode of the `Key`.
         submode : str, Optional
-            The submode of the `Key`. Defaults to "" for non-minor and
-            'natural' for minor modes.
+            The submode of the `Key`. Defaults to NONE for non-minor
+            and NATURAL for minor modes.
 
         Raises
         ------
@@ -357,14 +357,15 @@ class Key:
         --------
         >>> key = Key.from_components("C", "major")
         >>> key
-        C major key
+        C major Key
 
         >>> key = Key.from_components(Note("D"), "minor", "harmonic")
         >>> key
-        D harmonic minor key
+        D harmonic minor Key
 
         """
-        notation = f"{tonic} {submode} {mode}"
+        mode_notation = Key._create_mode_notation(mode, submode)
+        notation = f"{tonic} {mode_notation}"
         return cls(notation)
 
     @property
@@ -398,9 +399,10 @@ class Key:
     def set_mode(self, mode=None, submode=None):
         """Set the `Key`'s mode.
 
-        The mode and submode arguments are optional. The mode will
-        default to the current `Key`'s mode, while the submode will
-        default to "natural" for minor and "" for non-minor.
+        Either only the mode or submode is specified, or both can be
+        specified.  The mode will default to the current `Key`'s mode,
+        while the submode will default to NATURAL for minor and NONE
+        for non-minor.
 
         Parameters
         ----------
@@ -424,7 +426,7 @@ class Key:
         >>> key = Key("C major")
         >>> key.set_mode("minor", "melodic")
         >>> key.mode
-        melodic minor mode
+        melodic minor ModeGroup
 
         """
         if mode is None and submode is None:
@@ -433,10 +435,11 @@ class Key:
                 )
         if mode is None:
             mode = self._mode.mode
-        mode_notation = self._create_mode_notation(mode, submode)
+        mode_notation = Key._create_mode_notation(mode, submode)
         self._mode = ModeGroup(mode_notation)
 
-    def _create_mode_notation(self, mode, submode):
+    @staticmethod
+    def _create_mode_notation(mode, submode):
         if submode:
             return f"{submode} {mode}"
         return mode
@@ -456,7 +459,7 @@ class Key:
         >>> key = Key("D minor")
         >>> key.to_relative_major()
         >>> key
-        F major key
+        F major Key
 
         """
         if not self._is_minor():
@@ -491,10 +494,11 @@ class Key:
         >>> key = Key("D major")
         >>> key.to_relative_minor()
         >>> key
-        B natural minor
+        B natural minor Key
         >>> key = Key("E major")
         >>> key.to_relative_minor("melodic")
-        C\u266f melodic minor
+        >>> key
+        C\u266f melodic minor Key
 
         """
         if not self._is_major():
@@ -520,10 +524,10 @@ class Key:
         >>> key = Key("C")
         >>> key.transpose(6, 3)
         >>> key
-        F\u266f major key
+        F\u266f major Key
         >>> key.transpose(0, 1)
         >>> key
-        G\u266d major key
+        G\u266d major Key
 
         """
         self._tonic.transpose(semitones, letters)
@@ -543,15 +547,15 @@ class Key:
         --------
         >>> key = Key("C")
         >>> key.transpose_simple(6)
-        F\u266f major key
+        F\u266f major Key
         >>> key.transpose_simple(2, use_flats=True)
-        A\u266d major key
+        A\u266d major Key
 
         """
         self._tonic.transpose_simple(semitones, use_flats)
 
     def __repr__(self):
-        return f"{self} key"
+        return f"{self} Key"
 
     def __str__(self):
         return f"{self._tonic} {self._mode}"

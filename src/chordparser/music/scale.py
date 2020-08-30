@@ -25,7 +25,7 @@ class Scale:
     --------
     >>> scale = Scale(Key("C major"))
     >>> scale
-    C major scale
+    C major Scale
 
     """
 
@@ -51,8 +51,8 @@ class Scale:
         --------
         >>> scale = Scale(Key("C major"))
         >>> scale.get_notes()
-        [C note, D note, E note, F note, G note, A note, B note,
-        C note, D note, E note, F note, G note, A note, B note, C note]
+        [C Note, D Note, E Note, F Note, G Note, A Note, B Note,
+        C Note, D Note, E Note, F Note, G Note, A Note, B Note, C Note]
 
         """
         notes = self._initialise_notes()
@@ -82,11 +82,11 @@ class Scale:
         --------
         >>> scale = Scale(Key("C major"))
         >>> scale.get_scale_degrees()
-        [1 scale degree, 2 scale degree, \u266d3 scale degree,
-        4 scale degree, 5 scale degree, \u266d6 scale degree,
-        \u266d7 scale degree, 1 scale degree, 2 scale degree,
-        \u266d3 scale degree, 4 scale degree, 5 scale degree,
-        \u266d6 scale degree, \u266d7 scale degree, 1 scale degree]
+        [1 Scale Degree, 2 Scale Degree, \u266d3 Scale Degree,
+        4 Scale Degree, 5 Scale Degree, \u266d6 Scale Degree,
+        \u266d7 Scale Degree, 1 Scale Degree, 2 Scale Degree,
+        \u266d3 Scale Degree, 4 Scale Degree, 5 Scale Degree,
+        \u266d6 Scale Degree, \u266d7 Scale Degree, 1 Scale Degree]
 
         """
         scale_degrees = self._initialise_scale_degrees()
@@ -126,10 +126,10 @@ class Scale:
         >>> scale = Scale(Key("C major"))
         >>> scale.transpose(6, 3)
         >>> scale
-        F\u266f major scale
+        F\u266f major Scale
         >>> scale.transpose(0, 1)
         >>> scale
-        G\u266d major scale
+        G\u266d major Scale
 
         """
         self._key.transpose(semitones, letters)
@@ -149,9 +149,9 @@ class Scale:
         --------
         >>> scale = Scale(Key("C major"))
         >>> scale.transpose_simple(6)
-        F\u266f major scale
+        F\u266f major Scale
         >>> scale.transpose_simple(2, use_flats=True)
-        A\u266d major scale
+        A\u266d major Scale
 
         """
         self._key.transpose_simple(semitones, use_flats)
@@ -174,7 +174,7 @@ class Scale:
         >>> scale = Scale(Key("C major"))
         >>> sd = ScaleDegree("b3")
         >>> scale.get_note_from_scale_degree(sd)
-        E\u266d note
+        E\u266d Note
 
         """
         major_scale = self._get_major_scale_of_self()
@@ -200,7 +200,7 @@ class Scale:
         >>> scale = Scale(Key("C major"))
         >>> note = Note("F#")
         >>> scale.get_scale_degree_from_note(note)
-        \u266f4 scale degree
+        \u266f4 Scale Degree
 
         """
         major_scale = self._get_major_scale_of_self()
@@ -218,7 +218,7 @@ class Scale:
         return new_scale
 
     def __repr__(self):
-        return f"{self._key} scale"
+        return f"{self._key} Scale"
 
     def __eq__(self, other):
         """Compare with other `Scales`.

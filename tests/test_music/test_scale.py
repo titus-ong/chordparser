@@ -58,19 +58,19 @@ class TestScaleTranspose:
     def test_correct_transpose(self):
         scale = Scale(Key("C major"))
         scale.transpose(6, 3)
-        assert "F\u266f major scale" == str(scale)
+        assert "F\u266f major Scale" == str(scale)
 
 
 class TestScaleTransposeSimple:
     def test_correct_transpose(self):
         scale = Scale(Key("C major"))
         scale.transpose_simple(6)
-        assert "F\u266f major scale" == str(scale)
+        assert "F\u266f major Scale" == str(scale)
 
     def test_correct_transpose_with_flats(self):
         scale = Scale(Key("C major"))
         scale.transpose_simple(8, use_flats=True)
-        assert "A\u266d major scale" == str(scale)
+        assert "A\u266d major Scale" == str(scale)
 
 
 class TestScaleGetNoteFromScaleDegree:

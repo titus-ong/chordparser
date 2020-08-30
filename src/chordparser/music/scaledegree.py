@@ -39,7 +39,7 @@ class ScaleDegree:
     --------
     >>> sd = ScaleDegree(1, "b")
     >>> sd
-    \u266d1 scale degree
+    \u266d1 Scale Degree
 
     """
 
@@ -69,7 +69,7 @@ class ScaleDegree:
         return f"{self._symbol}{self._degree}"
 
     def __repr__(self):
-        return f"{self} scale degree"
+        return f"{self} Scale Degree"
 
     def __eq__(self, other):
         """Compare with other `ScaleDegrees` or strings.

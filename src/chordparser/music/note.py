@@ -52,7 +52,7 @@ class Note:
     --------
     >>> note = Note("C#")
     >>> note
-    C\u266f note
+    C\u266f Note
     >>> str(note)
     "C\u266f"
 
@@ -110,10 +110,10 @@ class Note:
         >>> note = Note("C")
         >>> note.transpose(6, 3)
         >>> note
-        F\u266f note
+        F\u266f Note
         >>> note.transpose(0, 1)
         >>> note
-        G\u266d note
+        G\u266d Note
 
         """
         original_int = self.as_int()
@@ -138,9 +138,9 @@ class Note:
         --------
         >>> note = Note("C")
         >>> note.transpose_simple(6)
-        F\u266f note
+        F\u266f Note
         >>> note.transpose_simple(2, use_flats=True)
-        A\u266d note
+        A\u266d Note
 
         """
         if use_flats:
@@ -151,7 +151,7 @@ class Note:
         self._set(note)
 
     def __repr__(self):
-        return f"{self} note"
+        return f"{self} Note"
 
     def __str__(self):
         return f"{self._letter}{self._symbol}"

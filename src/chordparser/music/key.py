@@ -17,11 +17,11 @@ class Mode(Enum):
     """Enum for the various modes, including major and minor.
 
     The enum members available are MAJOR, MINOR, IONIAN, DORIAN,
-    PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN and LOCRIAN.
+    PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN and LOCRIAN. Their values
+    correspond to their step pattern.
 
     """
 
-    # Values correspond to the step intervals
     MAJOR = (
         2, 2, 1, 2, 2, 2, 1,
         2, 2, 1, 2, 2, 2, 1,
@@ -59,6 +59,10 @@ class Mode(Enum):
         1, 2, 2, 1, 2, 2, 2,
     )
 
+    @property
+    def step_pattern(self):
+        return self.value
+
     def __str__(self):
         return f"{self.name.lower()}"
 
@@ -70,12 +74,13 @@ class Submode(Enum):
     """Enum for the various minor submodes.
 
     The enum members available are NATURAL, HARMONIC, MELODIC and NONE.
-    NONE applies to all non-minor modes.
+    NONE applies to all non-minor modes. Their values are a tuple of a
+    boolean and a tuple. The boolean corresponds to whether the
+    submode is minor, while the tuple is the changes in their step
+    pattern relative to their mode.
 
     """
 
-    # The boolean corresponds to whether the submode is minor and the
-    # tuple corresponds to changes in step intervals
     # The boolean helps to distinguish NATURAL from NONE
     NATURAL = (
         True, (
@@ -101,6 +106,10 @@ class Submode(Enum):
             0, 0, 0, 0, 0, 0, 0,
         ),
     )
+
+    @property
+    def step_pattern(self):
+        return self.value[1]
 
     def __str__(self):
         if self is Submode.NONE:
@@ -219,8 +228,8 @@ class ModeGroup:
         (2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1)
 
         """
-        mode_pattern = self._mode.value
-        submode_pattern = self._submode.value[1]
+        mode_pattern = self._mode.step_pattern
+        submode_pattern = self._submode.step_pattern
         return self._combine_patterns(mode_pattern, submode_pattern)
 
     def _combine_patterns(self, mode_pattern, submode_pattern):

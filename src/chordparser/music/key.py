@@ -1,4 +1,4 @@
-from enum import Enum, auto
+from enum import Enum
 
 from chordparser.music.notationparser import NotationParserTemplate
 from chordparser.music.note import NoteNotationParser, Note

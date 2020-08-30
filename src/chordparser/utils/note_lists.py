@@ -17,26 +17,7 @@ flat_scale = (
     "C", f"D{flat}", "D", f"E{flat}", "E", "F", f"G{flat}", "G",
     f"A{flat}", "A", f"B{flat}", "B",
     )
-mode_order = {
-    "major": 0,
-    "ionian": 0,
-    "dorian": 1,
-    "phrygian": 2,
-    "lydian": 3,
-    "mixolydian": 4,
-    "aeolian": 5,
-    "minor": 5,
-    "locrian": 6,
-}
 natural_semitone_intervals = (
     2, 2, 1, 2, 2, 2, 1,
     2, 2, 1, 2, 2, 2, 1,
-)
-harmonic_intervals = (
-    0, 0, 0, 0, 0, 1, -1,
-    0, 0, 0, 0, 0, 1, -1,
-)
-melodic_intervals = (
-    0, 0, 0, 0, 1, 0, -1,
-    0, 0, 0, 0, 1, 0, -1,
 )

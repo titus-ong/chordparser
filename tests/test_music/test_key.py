@@ -1,7 +1,8 @@
 import pytest
 
-from chordparser.music.key import (ModeError, ModeNotationParser,
-                                   KeyNotationParser, Mode, Key)
+from chordparser.music.key import (ModeError, Mode, Submode,
+                                   ModeGroupNotationParser,
+                                   KeyNotationParser, ModeGroup, Key)
 from chordparser.music.note import Note
 from chordparser.utils.unicode_chars import (sharp, doublesharp,
                                              flat, doubleflat)
@@ -10,7 +11,7 @@ from chordparser.utils.unicode_chars import (sharp, doublesharp,
 class TestMNPParseNotation:
     @pytest.fixture
     def parser(self):
-        return ModeNotationParser()
+        return ModeGroupNotationParser()
 
     @pytest.mark.parametrize(
         "notation, expected_mode", [
@@ -28,7 +29,7 @@ class TestMNPParseNotation:
         "notation, expected_submode", [
             (" minor", "natural"),
             ("harmonic minor", "harmonic"),
-            (" major", ""),
+            (" major", "none"),
         ]
     )
     def test_correct_submode(self, parser, notation, expected_submode):
@@ -58,31 +59,41 @@ class TestModeStepPattern:
         ]
     )
     def test_correct_step_pattern(self, mode, steps):
-        m = Mode(mode)
+        m = ModeGroup(mode)
         assert steps == m.get_step_pattern()
 
 
 class TestModeStr:
     def test_correct_str(self):
-        m = Mode("harmonic minor")
+        m = ModeGroup("harmonic minor")
         assert "harmonic minor" == str(m)
 
     def test_correct_str_2(self):
-        m = Mode("major")
+        m = ModeGroup("major")
         assert "major" == str(m)
 
 
 class TestModeEquality:
     def test_equal(self):
-        m = Mode("harmonic minor")
-        m2 = Mode("harmonic minor")
+        m = ModeGroup("harmonic minor")
+        m2 = ModeGroup("harmonic minor")
+        assert m2 == m
+
+    def test_major_equal(self):
+        m = ModeGroup("major")
+        m2 = ModeGroup("ionian")
+        assert m2 == m
+
+    def test_minor_equal(self):
+        m = ModeGroup("minor")
+        m2 = ModeGroup("aeolian")
         assert m2 == m
 
     @pytest.mark.parametrize(
-        "other", [Mode("minor"), "harmonic minor", len]
+        "other", [ModeGroup("minor"), "harmonic minor", len]
     )
     def test_inequality(self, other):
-        c = Mode("harmonic minor")
+        c = ModeGroup("harmonic minor")
         assert other != c
 
 
@@ -108,10 +119,10 @@ class TestKNPParseNotation:
 class TestKey:
     @pytest.mark.parametrize(
         "notation, tonic, mode, submode", [
-            ("B", "B", "major", ""),
-            ("Db dorian", f"D{flat}", "dorian", ""),
-            ("F# minor", f"F{sharp}", "minor", "natural"),
-            ("G melodic minor", "G", "minor", "melodic"),
+            ("B", "B", Mode.MAJOR, Submode.NONE),
+            ("Db dorian", f"D{flat}", Mode.DORIAN, Submode.NONE),
+            ("F# minor", f"F{sharp}", Mode.MINOR, Submode.NATURAL),
+            ("G melodic minor", "G", Mode.MINOR, Submode.MELODIC),
         ]
     )
     def test_key_creation(self, notation, tonic, mode, submode):
@@ -125,34 +136,34 @@ class TestKeyFromComps:
     def test_key_creation(self):
         key = Key.from_components("C", "major")
         assert "C" == key.tonic
-        assert "major" == key.mode.mode
-        assert "" == key.mode.submode
+        assert Mode.MAJOR == key.mode.mode
+        assert Submode.NONE == key.mode.submode
 
     def test_key_creation_2(self):
         key = Key.from_components(Note("D"), "minor", "harmonic")
         assert "D" == key.tonic
-        assert "minor" == key.mode.mode
-        assert "harmonic" == key.mode.submode
+        assert Mode.MINOR == key.mode.mode
+        assert Submode.HARMONIC == key.mode.submode
 
 
 class TestKeySetMode:
     def test_with_mode_and_submode(self):
         key = Key("C")
         key.set_mode("minor", "melodic")
-        assert "minor" == key.mode.mode
-        assert "melodic" == key.mode.submode
+        assert Mode.MINOR == key.mode.mode
+        assert Submode.MELODIC == key.mode.submode
 
     def test_without_mode(self):
         key = Key("D minor")
         key.set_mode(submode="harmonic")
-        assert "minor" == key.mode.mode
-        assert "harmonic" == key.mode.submode
+        assert Mode.MINOR == key.mode.mode
+        assert Submode.HARMONIC == key.mode.submode
 
     def test_without_submode(self):
         key = Key("D melodic minor")
         key.set_mode(mode="dorian")
-        assert "dorian" == key.mode.mode
-        assert "" == key.mode.submode
+        assert Mode.DORIAN == key.mode.mode
+        assert Submode.NONE == key.mode.submode
 
 
 class TestKeyRelativeMajor:
@@ -171,6 +182,7 @@ class TestKeyRelativeMinor:
     def test_correct_relative(self):
         key = Key("D major")
         key.to_relative_minor()
+        print(key.mode)
         assert "B natural minor" == str(key)
 
     def test_correct_relative_2(self):

@@ -1,9 +1,7 @@
+from enum import Enum, auto
+
 from chordparser.music.notationparser import NotationParserTemplate
 from chordparser.music.note import NoteNotationParser, Note
-from chordparser.utils.note_lists import (harmonic_intervals,
-                                          melodic_intervals,
-                                          natural_semitone_intervals,
-                                          mode_order)
 from chordparser.utils.regex_patterns import (submode_pattern,
                                               mode_pattern,
                                               short_minor_pattern,
@@ -12,11 +10,94 @@ from chordparser.utils.regex_patterns import (submode_pattern,
 
 class ModeError(Exception):
     """Exception where a `Key`'s `mode` is invalid."""
-
     pass
 
 
-class ModeNotationParser(NotationParserTemplate):
+class Mode(Enum):
+    # Values correspond to the step intervals
+    MAJOR = (
+        2, 2, 1, 2, 2, 2, 1,
+        2, 2, 1, 2, 2, 2, 1,
+    )
+    IONIAN = (
+        2, 2, 1, 2, 2, 2, 1,
+        2, 2, 1, 2, 2, 2, 1,
+    )
+    DORIAN = (
+        2, 1, 2, 2, 2, 1, 2,
+        2, 1, 2, 2, 2, 1, 2,
+    )
+    PHRYGIAN = (
+        1, 2, 2, 2, 1, 2, 2,
+        1, 2, 2, 2, 1, 2, 2,
+    )
+    LYDIAN = (
+        2, 2, 2, 1, 2, 2, 1,
+        2, 2, 2, 1, 2, 2, 1,
+    )
+    MIXOLYDIAN = (
+        2, 2, 1, 2, 2, 1, 2,
+        2, 2, 1, 2, 2, 1, 2,
+    )
+    MINOR = (
+        2, 1, 2, 2, 1, 2, 2,
+        2, 1, 2, 2, 1, 2, 2,
+    )
+    AEOLIAN = (
+        2, 1, 2, 2, 1, 2, 2,
+        2, 1, 2, 2, 1, 2, 2,
+    )
+    LOCRIAN = (
+        1, 2, 2, 1, 2, 2, 2,
+        1, 2, 2, 1, 2, 2, 2,
+    )
+
+    def __str__(self):
+        return f"{self.name.lower()}"
+
+    def __repr__(self):
+        return f"Mode.{self.name}"
+
+
+class Submode(Enum):
+    # The boolean corresponds to whether the submode is minor and the
+    # tuple corresponds to changes in step intervals
+    # The boolean helps to distinguish NATURAL from NONE
+    NATURAL = (
+        True, (
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+        ),
+    )
+    HARMONIC = (
+        True, (
+            0, 0, 0, 0, 0, 1, -1,
+            0, 0, 0, 0, 0, 1, -1,
+        ),
+    )
+    MELODIC = (
+        True, (
+            0, 0, 0, 0, 1, 0, -1,
+            0, 0, 0, 0, 1, 0, -1,
+        ),
+    )
+    NONE = (
+        False, (
+            0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0,
+        ),
+    )
+
+    def __str__(self):
+        if self is Submode.NONE:
+            return ""
+        return f"{self.name.lower()}"
+
+    def __repr__(self):
+        return f"Submode.{self.name}"
+
+
+class ModeGroupNotationParser(NotationParserTemplate):
     """Parse mode notation into mode and submode."""
 
     _pattern = (
@@ -48,39 +129,55 @@ class ModeNotationParser(NotationParserTemplate):
         if submode and not is_minor:
             raise ModeError(f"'{mode}' does not have a submode")
         if not is_minor:
-            return ""
+            return "none"
         if is_minor and not submode:
             return "natural"
         return submode.lower()
 
     def _is_minor(self, mode):
-        return mode in ("minor", "aeolian")
+        return mode in {"minor", "aeolian"}
 
 
-class Mode:
+class ModeGroup:
     """A class representing the mode of a key.
 
-    The `Mode` class consists of a mode {major, minor, ionian, dorian,
-    phrygian, lydian, mixolydian, aeolian, locrian} and an optional
-    submode {natural, harmonic, melodic} (only applicable for minor
-    or aeolian mode).
+    The `ModeGroup` class consists of a mode enum {MAJOR, MINOR, IONIAN,
+    DORIAN, PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN, LOCRIAN} and an
+    optional submode enum {NATURAL, HARMONIC, MELODIC, NONE}.
 
     Attributes
     ----------
-    mode : str
+    mode : Mode
         The mode.
-    submode : str, Optional
-        The submode. It is an empty string for non-minor modes, and
-        defaults to 'natural' for minor modes.
+    submode : Submode
+        The submode. It defaults to NONE for non-minor modes, and
+        NATURAL for minor modes if the submode is not specified.
 
     """
 
-    _MNP = ModeNotationParser()
+    _MNP = ModeGroupNotationParser()
+    _mode_enum_converter = {
+        "major": Mode.MAJOR,
+        "ionian": Mode.IONIAN,
+        "dorian": Mode.DORIAN,
+        "phrygian": Mode.PHRYGIAN,
+        "lydian": Mode.LYDIAN,
+        "mixolydian": Mode.MIXOLYDIAN,
+        "aeolian": Mode.AEOLIAN,
+        "minor": Mode.MINOR,
+        "locrian": Mode.LOCRIAN,
+    }
+    _submode_enum_converter = {
+        "natural": Submode.NATURAL,
+        "harmonic": Submode.HARMONIC,
+        "melodic": Submode.MELODIC,
+        "none": Submode.NONE,
+    }
 
     def __init__(self, notation):
         mode, submode = self._MNP.parse_notation(notation)
-        self._mode = mode
-        self._submode = submode
+        self._mode = ModeGroup._mode_enum_converter[mode]
+        self._submode = ModeGroup._submode_enum_converter[submode]
 
     @property
     def mode(self):
@@ -91,7 +188,7 @@ class Mode:
         return self._submode
 
     def get_step_pattern(self):
-        """Return the semitone step pattern of the `Mode`.
+        """Return the semitone step pattern of the `ModeGroup`.
 
         Submode accidentals are accounted for (i.e. harmonic or
         melodic).
@@ -103,13 +200,13 @@ class Mode:
 
         Examples
         --------
-        >>> harm_minor = Mode("harmonic minor")
+        >>> harm_minor = ModeGroup("harmonic minor")
         >>> harm_minor.get_step_pattern()
         (2, 1, 2, 2, 1, 3, 1, 2, 1, 2, 2, 1, 3, 1)
 
         """
-        mode_pattern = self._get_mode_pattern()
-        submode_pattern = self._get_submode_pattern()
+        mode_pattern = self._mode.value
+        submode_pattern = self._submode.value[1]
         return self._combine_patterns(mode_pattern, submode_pattern)
 
     def _combine_patterns(self, mode_pattern, submode_pattern):
@@ -117,32 +214,19 @@ class Mode:
             sum(x) for x in zip(mode_pattern, submode_pattern)
         )
 
-    def _get_mode_pattern(self):
-        starting_idx = mode_order[self._mode]
-        return (
-            natural_semitone_intervals[starting_idx:]
-            + natural_semitone_intervals[:starting_idx]
-        )
-
-    def _get_submode_pattern(self):
-        if self._submode == "harmonic":
-            return harmonic_intervals
-        if self._submode == "melodic":
-            return melodic_intervals
-        return [0]*len(natural_semitone_intervals)
-
     def __repr__(self):
-        return f"{self} mode"
+        return f"{self} ModeGroup"
 
     def __str__(self):
-        if self._submode:
+        if self._submode is not Submode.NONE:
             return f"{self._submode} {self._mode}"
-        return self._mode
+        return str(self._mode)
 
     def __eq__(self, other):
-        """Compare with other `Modes`.
+        """Compare with other `ModeGroups`.
 
-        The two `Modes` must have the same mode and submode to be equal.
+        The two `ModeGroups` must have the same mode and submode to be
+        equal.
 
         Parameters
         ----------
@@ -156,16 +240,24 @@ class Mode:
 
         Examples
         --------
-        >>> m = Mode("harmonic minor")
-        >>> m2 = Mode("harmonic minor")
-        >>> m3 = Mode("minor")
+        >>> m = ModeGroup("harmonic minor")
+        >>> m2 = ModeGroup("harmonic minor")
+        >>> m3 = ModeGroup("minor")
         >>> m == m2
         True
         >>> m == m3
         False
 
+        Major and Ionian modes, and Minor and Aeolian modes, are
+        treated as the same mode.
+
+        >>> m = ModeGroup("major")
+        >>> m2 = ModeGroup("ionian")
+        >>> m == m2
+        True
+
         """
-        if not isinstance(other, Mode):
+        if not isinstance(other, ModeGroup):
             return NotImplemented
         return (
             self._mode == other.mode and
@@ -177,7 +269,7 @@ class KeyNotationParser(NotationParserTemplate):
     """Parse key notation into tonic and mode groups."""
 
     _NNP = NoteNotationParser()
-    _MNP = ModeNotationParser()
+    _MNP = ModeGroupNotationParser()
     _pattern = (
         f"({_NNP.pattern})"
         f"({_MNP.pattern})"
@@ -194,8 +286,8 @@ class Key:
     """A class representing a musical key.
 
     The `Key` class composes of a `Note` object as its `tonic` and a
-    `Mode` object with the attributes `mode` and `submode`. It can be
-    created from its string notation or by specifying its tonic, mode
+    `ModeGroup` object with the attributes `mode` and `submode`. It can
+    be created from its string notation or by specifying its tonic, mode
     and submode using the class method Key.from_args().
 
     Parameters
@@ -210,8 +302,8 @@ class Key:
     ----------
     tonic : Note
         The tonic of the `Key`.
-    mode : Mode
-        The mode of the `Key`.
+    mode : ModeGroup
+        The mode and submode of the `Key`.
 
     Raises
     ------
@@ -237,7 +329,7 @@ class Key:
     def __init__(self, notation):
         tonic, mode = self._KNP.parse_notation(notation)
         self._tonic = Note(tonic)
-        self._mode = Mode(mode)
+        self._mode = ModeGroup(mode)
 
     @classmethod
     def from_components(cls, tonic, mode, submode=""):
@@ -342,7 +434,7 @@ class Key:
         if mode is None:
             mode = self._mode.mode
         mode_notation = self._create_mode_notation(mode, submode)
-        self._mode = Mode(mode_notation)
+        self._mode = ModeGroup(mode_notation)
 
     def _create_mode_notation(self, mode, submode):
         if submode:
@@ -373,7 +465,7 @@ class Key:
         self.set_mode("major")
 
     def _is_minor(self):
-        return self.mode.mode in {"minor", "aeolian"}
+        return self.mode.mode in {Mode.MINOR, Mode.AEOLIAN}
 
     def to_relative_minor(self, submode="natural"):
         """Change the `Key` to its relative minor.
@@ -411,7 +503,7 @@ class Key:
         self.set_mode("minor", submode)
 
     def _is_major(self):
-        return self.mode.mode in {"major", "ionian"}
+        return self.mode.mode in {Mode.MAJOR, Mode.IONIAN}
 
     def transpose(self, semitones, letters):
         """Transpose the `Key` by some semitone and letter intervals.

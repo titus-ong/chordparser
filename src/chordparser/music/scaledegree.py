@@ -59,10 +59,6 @@ class ScaleDegree(HasSymbol):
     def degree(self):
         return self._degree
 
-    @property
-    def symbol(self):
-        return self._symbol
-
     @classmethod
     def from_components(cls, degree, symbol=""):
         """Create a `ScaleDegree` from its degree and symbol components.

@@ -74,10 +74,6 @@ class Note(HasSymbol):
     def letter(self):
         return self._letter
 
-    @property
-    def symbol(self):
-        return self._symbol
-
     def as_steps(self):
         """Return the number of steps of the `Note` above C.
 

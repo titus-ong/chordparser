@@ -1,8 +1,15 @@
+from abc import ABCMeta, abstractmethod
 import re
 
 
-class NotationParserTemplate:
+class NotationParserTemplate(metaclass=ABCMeta):
     """Abstract class for parsing notation."""
+
+    _pattern: str  # To be defined in concrete class
+
+    @property
+    def pattern(self):
+        return self._pattern
 
     def parse_notation(self, notation):
         regex = self._to_regex_object(notation)
@@ -22,13 +29,9 @@ class NotationParserTemplate:
     def _invalid_notation(self, regex):
         return not regex
 
+    @abstractmethod
     def _split_into_groups(self, regex):
-        # To be implemented in concrete class
-        raise NotImplementedError
-
-    @property
-    def pattern(self):
-        return self._pattern
+        pass
 
     def get_num_groups(self):
         regex = re.compile(self._pattern)

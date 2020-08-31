@@ -2,10 +2,13 @@ from chordparser.music.symbol import Symbol
 
 
 class HasSymbol:
+    """Abstract class that contains a `Symbol`."""
+
+    _symbol: Symbol  # To be defined in concrete class
+
     @property
     def symbol(self):
-        # To be implemented in concrete class
-        raise NotImplementedError
+        return self._symbol
 
     def raise_by(self, steps=1):
         """Raise the pitch by changing only its `Symbol`.

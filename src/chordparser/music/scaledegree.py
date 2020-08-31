@@ -1,7 +1,9 @@
+from chordparser.music.hassymbol import HasSymbol
 from chordparser.music.notationparser import NotationParserTemplate
 from chordparser.music.symbol import Symbol
 from chordparser.utils.regex_patterns import (symbol_pattern,
-                                              degree_pattern)
+                                              degree_pattern,
+                                              symbol_converter)
 
 
 class ScaleDegreeNotationParser(NotationParserTemplate):
@@ -14,14 +16,14 @@ class ScaleDegreeNotationParser(NotationParserTemplate):
         degree = regex.group(2)
         return degree, symbol
 
-class ScaleDegree:
+class ScaleDegree(HasSymbol):
     """A class representing a scale degree.
 
     The `ScaleDegree` consists of an integer (the degree) and a
-    Symbol. The degree has to be between 1 and 7, and the symbols
-    allowed are b, bb, #, ## or their respective unicode
-    characters \u266d, \u266f, \U0001D12B, or \U0001D12A. Upon
-    creation, the symbol will be converted to unicode.
+    Symbol. It is created from a string notation with an optional symbol
+    and a degree. The degree has to be between 1 and 7, and the symbols
+    allowed are b, bb, #, ## or their respective unicode characters
+    \u266d, \u266f, \U0001D12B, or \U0001D12A.
 
     Parameters
     ----------
@@ -37,7 +39,7 @@ class ScaleDegree:
 
     Examples
     --------
-    >>> sd = ScaleDegree(1, "b")
+    >>> sd = ScaleDegree("b1")
     >>> sd
     \u266d1 Scale Degree
 
@@ -51,7 +53,7 @@ class ScaleDegree:
 
     def _set(self, degree, symbol):
         self._degree = int(degree)
-        self._symbol = Symbol(symbol)
+        self._symbol = symbol_converter[symbol]
 
     @property
     def degree(self):
@@ -62,7 +64,27 @@ class ScaleDegree:
         return self._symbol
 
     @classmethod
-    def from_components(cls, degree, symbol):
+    def from_components(cls, degree, symbol=""):
+        """Create a `ScaleDegree` from its degree and symbol components.
+
+        Parameters
+        ----------
+        degree: int or str
+            The scale degree's integer value.
+        symbol: str, Optional
+            The symbol's string notation. Default "" when optional.
+
+        Examples
+        --------
+        >>> sd = ScaleDegree.from_components(3, "b")
+        >>> sd
+        \u266d3 Scale Degree
+
+        >>> sd = ScaleDegree.from_components("1")
+        >>> sd
+        1 Scale Degree
+
+        """
         return cls(f"{symbol}{degree}")
 
     def __str__(self):

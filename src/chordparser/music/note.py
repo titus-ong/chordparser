@@ -1,10 +1,14 @@
+from chordparser.music.hassymbol import HasSymbol
 from chordparser.music.letter import Letter
 from chordparser.music.notationparser import NotationParserTemplate
 from chordparser.music.symbol import Symbol
-from chordparser.utils.converters import symbol_to_unicode
 from chordparser.utils.note_lists import sharp_scale, flat_scale
 from chordparser.utils.regex_patterns import (note_pattern,
-                                              symbol_pattern)
+                                              symbol_pattern,
+                                              letter_converter,
+                                              symbol_converter)
+from chordparser.utils.unicode_chars import (sharp, doublesharp,
+                                             flat, doubleflat)
 
 
 class NoteNotationParser(NotationParserTemplate):
@@ -16,19 +20,18 @@ class NoteNotationParser(NotationParserTemplate):
     def _split_into_groups(self, regex):
         """Split into capitalised letter and symbol."""
         uppercase_letter = regex.group(1).upper()
-        symbol = symbol_to_unicode[regex.group(2)]
+        symbol = regex.group(2)
         return uppercase_letter, symbol
 
 
-class Note:
+class Note(HasSymbol):
     """A class representing a musical note.
 
-    The `Note` class composes of a `Letter` and `Symbol` object,
+    The `Note` class composes of a `Letter` and `Symbol`,
     representing the letter and symbol part of the `Note` respectively.
     It is created from a string of notation A-G with optional
     accidental symbols b, bb, #, ## or their respective unicode
-    characters \u266d, \u266f, \U0001D12B, or \U0001D12A. Upon
-    creation, the symbols will be converted to unicode.
+    characters \u266d, \u266f, \U0001D12B, or \U0001D12A.
 
     Parameters
     ----------
@@ -40,8 +43,7 @@ class Note:
     letter : Letter
         The letter part of the `Note`'s notation.
     symbol : Symbol
-        The symbol part of the `Note`'s notation. If there is no
-        symbol, this will be a Symbol of an empty string.
+        The symbol part of the `Note`'s notation.
 
     Raises
     ------
@@ -65,8 +67,8 @@ class Note:
 
     def _set(self, notation):
         letter, symbol = self._NNP.parse_notation(notation)
-        self._letter = Letter(letter)
-        self._symbol = Symbol(symbol)
+        self._letter = letter_converter[letter]
+        self._symbol = symbol_converter[symbol]
 
     @property
     def letter(self):
@@ -76,24 +78,22 @@ class Note:
     def symbol(self):
         return self._symbol
 
-    def as_int(self):
-        """Return the `Note`'s value as an integer (basis: C = 0).
-
-        The integer value is based on the number of semitones above C.
+    def as_steps(self):
+        """Return the number of steps of the `Note` above C.
 
         Returns
         -------
         int
-            The integer `Note` value.
+            The number of steps above C.
 
         Examples
         --------
         >>> d = Note("D#")
-        >>> d.as_int()
+        >>> d.as_steps()
         3
 
         """
-        return (self._letter.as_int() + self._symbol.as_int()) % 12
+        return (self._letter.as_steps() + self._symbol.as_steps()) % 12
 
     def transpose(self, semitones, letters):
         """Transpose the `Note` by some semitone and letter intervals.
@@ -116,12 +116,19 @@ class Note:
         G\u266d Note
 
         """
-        original_int = self.as_int()
-        self._letter.shift_by(letters)
-        positive_int_diff = (self.as_int() - original_int) % 12
+        original_steps = self.as_steps()
+        self._shift_letter(letters)
+        positive_step_diff = (self.as_steps() - original_steps) % 12
         positive_semitones = semitones % 12
-        semitone_difference = positive_semitones - positive_int_diff
-        self._symbol.shift_by(semitone_difference)
+        semitone_difference = positive_semitones - positive_step_diff
+        self.shift_by(semitone_difference)
+
+    def _shift_letter(self, letters):
+        """Shift the `Letter` along the natural note scale."""
+        old_index = self._letter.index()
+        new_index = (old_index + letters) % 7
+        letter_list = list(Letter)
+        self._letter = letter_list[new_index]
 
     def transpose_simple(self, semitones, use_flats=False):
         """Transpose the `Note` by some semitone interval.
@@ -147,7 +154,7 @@ class Note:
             notes = flat_scale
         else:
             notes = sharp_scale
-        note = notes[(self.as_int() + semitones) % 12]
+        note = notes[(self.as_steps() + semitones) % 12]
         self._set(note)
 
     def __repr__(self):

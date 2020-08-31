@@ -77,7 +77,7 @@ class TestScaleGetNoteFromScaleDegree:
     @pytest.mark.parametrize(
         "key, sd, note", [
             (Key("C minor"), ScaleDegree("#3"), Note("E#")),
-            (Key("Eb major"), ScaleDegree("2"), Note("F"))
+            (Key("Eb major"), ScaleDegree("1"), Note("Eb"))
         ]
     )
     def test_correct_note(self, key, sd, note):
@@ -89,7 +89,7 @@ class TestScaleGetScaleDegreeFromNote:
     @pytest.mark.parametrize(
         "key, sd, note", [
             (Key("C minor"), ScaleDegree("#3"), Note("E#")),
-            (Key("Eb major"), ScaleDegree("2"), Note("F"))
+            (Key("Eb major"), ScaleDegree("1"), Note("Eb"))
         ]
     )
     def test_correct_sd(self, key, sd, note):

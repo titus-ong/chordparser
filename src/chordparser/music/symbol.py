@@ -1,61 +1,44 @@
-from collections import UserString
+from enum import Enum
 
-from chordparser.utils.converters import (symbol_to_unicode,
-                                          symbol_to_int,
-                                          int_to_symbol)
+from chordparser.utils.unicode_chars import (sharp, doublesharp,
+                                             flat, doubleflat)
 
 
-class Symbol(UserString):
-    """A class representing the symbol part of a `Note`.
+class Symbol(Enum):
+    """Enum for the symbol part of a `Note`.
 
-    The `Symbol` is automatically converted to its unicode form. Only
-    symbols from doubleflats to doublesharps are allowed.
+    The enum members available are DOUBLEFLAT, FLAT, NATURAL, SHARP
+    and DOUBLESHARP. Their values correspond to their unicode
+    characters and their number of steps away from NATURAL.
 
     """
-    def __init__(self, data):
-        if data not in symbol_to_unicode.keys():
-            raise ValueError(f"'{data}' is not a valid Symbol")
-        self.data = symbol_to_unicode[data]
 
-    def as_int(self):
-        """Return the `Symbol`'s semitone value (basis: natural = 0).
+    DOUBLEFLAT = (doubleflat, -2)
+    FLAT = (flat, -1)
+    NATURAL = ("", 0)
+    SHARP = (sharp, 1)
+    DOUBLESHARP = (doublesharp, 2)
 
-        The integer value is based on the number of semitones above or
-        below the natural note.
+    def as_steps(self):
+        """Return the number of steps of the `Symbol` from NATURAL.
 
         Returns
         -------
         int
-            The integer `Symbol` value.
+            The number of steps from NATURAL.
 
         Examples
         --------
-        >>> sharp = Symbol("#")
-        >>> sharp.as_int()
+        >>> Symbol.SHARP.as_steps()
         1
+        >>> Symbol.FLAT.as_steps()
+        -1
 
         """
-        return symbol_to_int[self.data]
+        return self.value[1]
 
-    def shift_by(self, semitones):
-        """Shift the `Symbol` (i.e. raise or lower it).
+    def __str__(self):
+        return f"{self.value[0]}"
 
-        Parameters
-        ----------
-        semitones : int
-            The semitones to shift the `Symbol` by.
-
-        Examples
-        --------
-        >>> symbol = Symbol("#")
-        >>> symbol.shift_by(-2)
-        >>> symbol
-        \u266D
-
-        """
-        int_value = self.as_int() + semitones
-        if int_value not in int_to_symbol.keys():
-            raise ValueError(
-                "Symbol integer value is out of range"
-            )
-        self.data = int_to_symbol[int_value]
+    def __repr__(self):
+        return f"Symbol.{self.name}"

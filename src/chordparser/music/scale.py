@@ -3,6 +3,7 @@ from chordparser.music.note import Note
 from chordparser.music.scaledegree import ScaleDegree
 from chordparser.music.symbol import Symbol
 from chordparser.utils.note_lists import natural_semitone_intervals
+from chordparser.utils.notecomparer import NoteComparer
 
 
 class Scale:
@@ -98,18 +99,20 @@ class Scale:
         return [ScaleDegree("1")]
 
     def _add_scale_degree(self, scale_degrees, step):
-        prev_degree = scale_degrees[-1]
-        new_degree = prev_degree.degree % 7 + 1
-        step_difference = self._get_step_diff_from_major(new_degree, step)
-        new_symbol = Symbol(str(prev_degree.symbol))  # avoid same reference
-        new_symbol.shift_by(step_difference)
-        scale_degrees.append(
-            ScaleDegree.from_components(new_degree, new_symbol)
-        )
+        new_degree = self._get_new_degree(scale_degrees)
+        step_difference = self._get_step_diff_from_major(scale_degrees, step)
+        new_sd = ScaleDegree(str(new_degree))
+        new_sd.shift_by(step_difference)
+        scale_degrees.append(new_sd)
 
-    def _get_step_diff_from_major(self, new_degree, step):
-        step_reference = natural_semitone_intervals[new_degree-2]
-        return step - step_reference
+    def _get_new_degree(self, scale_degrees):
+        prev_sd = scale_degrees[-1]
+        return prev_sd.degree % 7 + 1
+
+    def _get_step_diff_from_major(self, scale_degrees, step):
+        prev_sd = scale_degrees[-1]
+        step_reference = natural_semitone_intervals[prev_sd.degree - 1]
+        return step - step_reference + prev_sd.symbol.as_steps()
 
     def transpose(self, semitones, letters):
         """Transpose the `Scale` by some semitone and letter intervals.
@@ -177,10 +180,16 @@ class Scale:
         E\u266d Note
 
         """
-        major_scale = self._get_major_scale_of_self()
-        note = major_scale.get_notes()[scale_degree.degree-1]
-        note.symbol.shift_by(scale_degree.symbol.as_int())
+        note = self._get_major_note_from_scale_degree(scale_degree)
+        self._change_accidental(note, scale_degree)
         return note
+
+    def _get_major_note_from_scale_degree(self, scale_degree):
+        major_scale = self._get_major_scale_of_self()
+        return major_scale.get_notes()[scale_degree.degree-1]
+
+    def _change_accidental(self, note, scale_degree):
+        note.shift_by(scale_degree.symbol.as_steps())
 
     def get_scale_degree_from_note(self, note):
         """Get `ScaleDegree` of a `Scale` by specifying a `Note`.
@@ -203,19 +212,32 @@ class Scale:
         \u266f4 Scale Degree
 
         """
-        major_scale = self._get_major_scale_of_self()
-        degree = min([
-            idx for (idx, n) in enumerate(major_scale.get_notes())
-            if n.letter == note.letter
-        ]) + 1
-        symbol = Symbol(str(note.symbol))
-        new_sd = ScaleDegree.from_components(degree, symbol)
+        major_note = self._get_major_note_from_note(note)
+        degree = self._get_degree_of(note)
+        step_difference = NoteComparer.get_semitone_intervals(
+            [major_note, note]
+        )[0]
+        new_sd = ScaleDegree(str(degree))
+        new_sd.shift_by(step_difference)
         return new_sd
+
+    def _get_major_note_from_note(self, note):
+        major_scale = self._get_major_scale_of_self()
+        return next(
+            n for n in major_scale.get_notes()
+            if n.letter == note.letter
+        )
 
     def _get_major_scale_of_self(self):
         new_scale = Scale(self._key)
         new_scale.key.set_mode(mode="major")
         return new_scale
+
+    def _get_degree_of(self, note):
+        return next(
+            idx for (idx, n) in enumerate(self.get_notes())
+            if n.letter == note.letter
+        ) + 1
 
     def __repr__(self):
         return f"{self._key} Scale"

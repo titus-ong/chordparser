@@ -28,14 +28,14 @@ class TestSDNPParseNotation:
 class TestScaleDegree:
     def test_creation(self):
         sd = ScaleDegree("b5")
-        assert Symbol("b") == sd.symbol
+        assert Symbol.FLAT == sd.symbol
         assert 5 == sd.degree
 
 
 class TestScaleDegreeFromComps:
     def test_creation(self):
         sd = ScaleDegree.from_components(5, "b")
-        sd2 = ScaleDegree.from_components(5, Symbol("b"))
+        sd2 = ScaleDegree.from_components(5, Symbol.FLAT)
         assert sd == sd2
 
 

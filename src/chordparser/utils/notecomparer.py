@@ -1,6 +1,3 @@
-from chordparser.utils.note_lists import natural_notes
-
-
 class NoteComparer:
     """A class that contains methods for comparing `Note` values.
 
@@ -45,7 +42,7 @@ class NoteComparer:
         intervals = []
         prev_note = notes[0]
         for note in notes:
-            semitone_interval = (note.as_int()-prev_note.as_int()) % 12
+            semitone_interval = (note.as_steps()-prev_note.as_steps()) % 12
             intervals.append(semitone_interval)
             prev_note = note
         intervals.pop(0)
@@ -93,9 +90,9 @@ class NoteComparer:
         """
         NoteComparer._check_array_len("get_letter_intervals", notes)
         intervals = []
-        prev_note_idx = natural_notes.index(notes[0].letter)
+        prev_note_idx = notes[0].letter.index()
         for note in notes:
-            note_idx = natural_notes.index(note.letter)
+            note_idx = note.letter.index()
             interval = (note_idx-prev_note_idx) % 7
             intervals.append(interval)
             prev_note_idx = note_idx

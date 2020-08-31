@@ -1,8 +1,10 @@
 import pytest
 
+from chordparser.music.letter import Letter
+from chordparser.music.symbol import Symbol
+from chordparser.music.note import NoteNotationParser, Note
 from chordparser.utils.unicode_chars import (sharp, doublesharp,
                                              flat, doubleflat)
-from chordparser.music.note import NoteNotationParser, Note
 
 
 class TestNNPParseNotation:
@@ -12,10 +14,10 @@ class TestNNPParseNotation:
 
     @pytest.mark.parametrize(
         "notation, expected_letter, expected_symbol", [
-            ("C", "C", ""),
-            ("d", "D", ""),
-            ("C#", "C", "\u266F"),
-            ("Db", "D", "\u266D"),
+            ("C", "C", None),
+            ("d", "D", None),
+            ("C#", "C", "#"),
+            ("Db", "D", "b"),
         ]
     )
     def test_correct_notation(
@@ -38,11 +40,11 @@ class TestNNPParseNotation:
 class TestNote:
     def test_init(self):
         note = Note("C#")
-        assert "C" == note.letter
-        assert sharp == note.symbol
+        assert Letter.C == note.letter
+        assert Symbol.SHARP == note.symbol
 
 
-class TestNoteAsInt:
+class TestNoteAsSteps:
     @pytest.mark.parametrize(
         "note, value", [
             ("C#", 1),
@@ -52,7 +54,21 @@ class TestNoteAsInt:
     )
     def test_correct_int(self, note, value):
         n = Note(note)
-        assert value == n.as_int()
+        assert value == n.as_steps()
+
+
+class TestNoteShiftLetter:
+    @pytest.mark.parametrize(
+        "shift, letter", [
+            (2, Letter.E),
+            (-1, Letter.B),
+            (15, Letter.D),
+        ]
+    )
+    def test_correct_shift(self, shift, letter):
+        this = Note("C")
+        this._shift_letter(shift)
+        assert letter == this.letter
 
 
 class TestNoteTranspose:

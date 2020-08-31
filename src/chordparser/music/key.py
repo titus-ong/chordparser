@@ -179,7 +179,7 @@ class ModeGroup:
     """
 
     _MNP = ModeGroupNotationParser()
-    _mode_enum_converter = {
+    _mode_converter = {
         "major": Mode.MAJOR,
         "ionian": Mode.IONIAN,
         "dorian": Mode.DORIAN,
@@ -190,7 +190,7 @@ class ModeGroup:
         "minor": Mode.MINOR,
         "locrian": Mode.LOCRIAN,
     }
-    _submode_enum_converter = {
+    _submode_converter = {
         "natural": Submode.NATURAL,
         "harmonic": Submode.HARMONIC,
         "melodic": Submode.MELODIC,
@@ -199,8 +199,8 @@ class ModeGroup:
 
     def __init__(self, notation):
         mode, submode = self._MNP.parse_notation(notation)
-        self._mode = ModeGroup._mode_enum_converter[mode]
-        self._submode = ModeGroup._submode_enum_converter[submode]
+        self._mode = ModeGroup._mode_converter[mode]
+        self._submode = ModeGroup._submode_converter[submode]
 
     @property
     def mode(self):

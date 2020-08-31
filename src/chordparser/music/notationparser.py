@@ -3,7 +3,6 @@ import re
 
 class NotationParserTemplate:
     """Abstract class for parsing notation."""
-    _pattern = ""
 
     def parse_notation(self, notation):
         regex = self._to_regex_object(notation)
@@ -32,9 +31,5 @@ class NotationParserTemplate:
         return self._pattern
 
     def get_num_groups(self):
-        return NotationParserTemplate.get_num_groups_from(self._pattern)
-
-    @staticmethod
-    def get_num_groups_from(pattern):
-        regex = re.compile(pattern)
+        regex = re.compile(self._pattern)
         return regex.groups

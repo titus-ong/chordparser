@@ -1,123 +1,18 @@
-from enum import Enum
-
+from chordparser.music.mode import Mode
 from chordparser.music.notationparser import NotationParserTemplate
 from chordparser.music.note import NoteNotationParser, Note
+from chordparser.music.submode import Submode
 from chordparser.utils.regex_patterns import (submode_pattern,
                                               mode_pattern,
                                               short_minor_pattern,
-                                              short_major_pattern)
+                                              short_major_pattern,
+                                              mode_converter,
+                                              submode_converter)
 
 
 class ModeError(Exception):
     """Exception where a `Key`'s `mode` is invalid."""
     pass
-
-
-class Mode(Enum):
-    """Enum for the various modes, including major and minor.
-
-    The enum members available are MAJOR, MINOR, IONIAN, DORIAN,
-    PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN and LOCRIAN. Their values
-    correspond to their step pattern.
-
-    """
-
-    MAJOR = (
-        2, 2, 1, 2, 2, 2, 1,
-        2, 2, 1, 2, 2, 2, 1,
-    )
-    IONIAN = (
-        2, 2, 1, 2, 2, 2, 1,
-        2, 2, 1, 2, 2, 2, 1,
-    )
-    DORIAN = (
-        2, 1, 2, 2, 2, 1, 2,
-        2, 1, 2, 2, 2, 1, 2,
-    )
-    PHRYGIAN = (
-        1, 2, 2, 2, 1, 2, 2,
-        1, 2, 2, 2, 1, 2, 2,
-    )
-    LYDIAN = (
-        2, 2, 2, 1, 2, 2, 1,
-        2, 2, 2, 1, 2, 2, 1,
-    )
-    MIXOLYDIAN = (
-        2, 2, 1, 2, 2, 1, 2,
-        2, 2, 1, 2, 2, 1, 2,
-    )
-    MINOR = (
-        2, 1, 2, 2, 1, 2, 2,
-        2, 1, 2, 2, 1, 2, 2,
-    )
-    AEOLIAN = (
-        2, 1, 2, 2, 1, 2, 2,
-        2, 1, 2, 2, 1, 2, 2,
-    )
-    LOCRIAN = (
-        1, 2, 2, 1, 2, 2, 2,
-        1, 2, 2, 1, 2, 2, 2,
-    )
-
-    @property
-    def step_pattern(self):
-        return self.value
-
-    def __str__(self):
-        return f"{self.name.lower()}"
-
-    def __repr__(self):
-        return f"Mode.{self.name}"
-
-
-class Submode(Enum):
-    """Enum for the various minor submodes.
-
-    The enum members available are NATURAL, HARMONIC, MELODIC and NONE.
-    NONE applies to all non-minor modes. Their values are a tuple of a
-    boolean and a tuple. The boolean corresponds to whether the
-    submode is minor, while the tuple is the changes in their step
-    pattern relative to their mode.
-
-    """
-
-    # The boolean helps to distinguish NATURAL from NONE
-    NATURAL = (
-        True, (
-            0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0,
-        ),
-    )
-    HARMONIC = (
-        True, (
-            0, 0, 0, 0, 0, 1, -1,
-            0, 0, 0, 0, 0, 1, -1,
-        ),
-    )
-    MELODIC = (
-        True, (
-            0, 0, 0, 0, 1, 0, -1,
-            0, 0, 0, 0, 1, 0, -1,
-        ),
-    )
-    NONE = (
-        False, (
-            0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0,
-        ),
-    )
-
-    @property
-    def step_pattern(self):
-        return self.value[1]
-
-    def __str__(self):
-        if self is Submode.NONE:
-            return ""
-        return f"{self.name.lower()}"
-
-    def __repr__(self):
-        return f"Submode.{self.name}"
 
 
 class ModeGroupNotationParser(NotationParserTemplate):
@@ -179,28 +74,11 @@ class ModeGroup:
     """
 
     _MNP = ModeGroupNotationParser()
-    _mode_converter = {
-        "major": Mode.MAJOR,
-        "ionian": Mode.IONIAN,
-        "dorian": Mode.DORIAN,
-        "phrygian": Mode.PHRYGIAN,
-        "lydian": Mode.LYDIAN,
-        "mixolydian": Mode.MIXOLYDIAN,
-        "aeolian": Mode.AEOLIAN,
-        "minor": Mode.MINOR,
-        "locrian": Mode.LOCRIAN,
-    }
-    _submode_converter = {
-        "natural": Submode.NATURAL,
-        "harmonic": Submode.HARMONIC,
-        "melodic": Submode.MELODIC,
-        "none": Submode.NONE,
-    }
 
     def __init__(self, notation):
         mode, submode = self._MNP.parse_notation(notation)
-        self._mode = ModeGroup._mode_converter[mode]
-        self._submode = ModeGroup._submode_converter[submode]
+        self._mode = mode_converter[mode]
+        self._submode = submode_converter[submode]
 
     @property
     def mode(self):

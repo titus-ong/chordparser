@@ -1,7 +1,9 @@
 from chordparser.utils.unicode_chars import (flat, doubleflat,
                                              sharp, doublesharp)
 from chordparser.music.letter import Letter
+from chordparser.music.mode import Mode
 from chordparser.music.symbol import Symbol
+from chordparser.music.submode import Submode
 
 
 note_pattern = "[A-G]"
@@ -36,4 +38,21 @@ symbol_converter = {
     "##": Symbol.DOUBLESHARP,
     doublesharp: Symbol.DOUBLESHARP,
     None: Symbol.NATURAL,
+}
+mode_converter = {
+    "major": Mode.MAJOR,
+    "ionian": Mode.IONIAN,
+    "dorian": Mode.DORIAN,
+    "phrygian": Mode.PHRYGIAN,
+    "lydian": Mode.LYDIAN,
+    "mixolydian": Mode.MIXOLYDIAN,
+    "aeolian": Mode.AEOLIAN,
+    "minor": Mode.MINOR,
+    "locrian": Mode.LOCRIAN,
+}
+submode_converter = {
+    "natural": Submode.NATURAL,
+    "harmonic": Submode.HARMONIC,
+    "melodic": Submode.MELODIC,
+    "none": Submode.NONE,
 }

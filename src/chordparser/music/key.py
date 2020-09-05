@@ -1,3 +1,5 @@
+import re
+
 from chordparser.music.mode import Mode
 from chordparser.music.notationparser import NotationParserTemplate
 from chordparser.music.note import NoteNotationParser, Note
@@ -17,6 +19,8 @@ class ModeError(Exception):
 
 class ModeGroupNotationParser(NotationParserTemplate):
     """Parse mode notation into mode and submode."""
+
+    _flags = re.UNICODE | re.IGNORECASE
 
     _pattern = (
         fr"(\s?({submode_pattern})?\s?({mode_pattern}))|"

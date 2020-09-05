@@ -15,7 +15,7 @@ class TestNNPParseNotation:
     @pytest.mark.parametrize(
         "notation, expected_letter, expected_symbol", [
             ("C", "C", None),
-            ("d", "D", None),
+            ("D", "D", None),
             ("C#", "C", "#"),
             ("Db", "D", "b"),
         ]

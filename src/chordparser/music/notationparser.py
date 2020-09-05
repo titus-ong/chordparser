@@ -7,6 +7,8 @@ class NotationParserTemplate(metaclass=ABCMeta):
 
     _pattern: str  # To be defined in concrete class
 
+    _flags = re.UNICODE
+
     @property
     def pattern(self):
         return self._pattern
@@ -22,7 +24,7 @@ class NotationParserTemplate(metaclass=ABCMeta):
         regex = re.match(
             f"{self._pattern}$",
             notation,
-            flags=re.UNICODE | re.IGNORECASE,
+            flags=self._flags,
         )
         return regex
 

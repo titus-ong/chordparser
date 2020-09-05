@@ -1,7 +1,7 @@
 import pytest
 
 from chordparser.music.hassymbol import HasSymbol
-from chordparser.music.symbol import Symbol
+from chordparser.music.notecomponents.symbol import Symbol
 
 
 class Symbolful(HasSymbol):

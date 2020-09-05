@@ -1,9 +1,9 @@
 from chordparser.utils.unicode_chars import (flat, doubleflat,
                                              sharp, doublesharp)
-from chordparser.music.letter import Letter
-from chordparser.music.mode import Mode
-from chordparser.music.symbol import Symbol
-from chordparser.music.submode import Submode
+from chordparser.music.notecomponents.letter import Letter
+from chordparser.music.keycomponents.mode import Mode
+from chordparser.music.notecomponents.symbol import Symbol
+from chordparser.music.keycomponents.submode import Submode
 
 
 note_pattern = "[A-G]"

@@ -2,7 +2,7 @@ import pytest
 
 from chordparser.music.scaledegree import (ScaleDegree,
                                            ScaleDegreeNotationParser)
-from chordparser.music.symbol import Symbol
+from chordparser.music.notecomponents.symbol import Symbol
 
 
 class TestSDNPParseNotation:

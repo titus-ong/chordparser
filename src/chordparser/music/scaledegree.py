@@ -1,6 +1,6 @@
 from chordparser.music.hassymbol import HasSymbol
 from chordparser.music.notationparser import NotationParserTemplate
-from chordparser.music.symbol import Symbol
+from chordparser.music.notecomponents.symbol import Symbol
 from chordparser.utils.regex_patterns import (symbol_pattern,
                                               degree_pattern,
                                               symbol_converter)

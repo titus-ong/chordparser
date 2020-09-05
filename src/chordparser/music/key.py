@@ -1,9 +1,9 @@
 import re
 
-from chordparser.music.mode import Mode
+from chordparser.music.keycomponents.mode import Mode
 from chordparser.music.notationparser import NotationParserTemplate
 from chordparser.music.note import NoteNotationParser, Note
-from chordparser.music.submode import Submode
+from chordparser.music.keycomponents.submode import Submode
 from chordparser.utils.regex_patterns import (submode_pattern,
                                               mode_pattern,
                                               short_minor_pattern,

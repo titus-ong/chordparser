@@ -1,4 +1,4 @@
-from chordparser.music.symbol import Symbol
+from chordparser.music.notecomponents.symbol import Symbol
 
 
 class HasSymbol:

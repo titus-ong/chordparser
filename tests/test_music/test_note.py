@@ -1,7 +1,7 @@
 import pytest
 
-from chordparser.music.letter import Letter
-from chordparser.music.symbol import Symbol
+from chordparser.music.notecomponents.letter import Letter
+from chordparser.music.notecomponents.symbol import Symbol
 from chordparser.music.note import NoteNotationParser, Note
 from chordparser.utils.unicode_chars import (sharp, doublesharp,
                                              flat, doubleflat)

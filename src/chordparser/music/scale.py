@@ -1,7 +1,7 @@
 from chordparser.music.key import Key
 from chordparser.music.note import Note
 from chordparser.music.scaledegree import ScaleDegree
-from chordparser.music.symbol import Symbol
+from chordparser.music.notecomponents.symbol import Symbol
 from chordparser.utils.note_lists import natural_semitone_intervals
 from chordparser.utils.notecomparer import NoteComparer
 

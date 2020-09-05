@@ -1,7 +1,7 @@
 from chordparser.music.hassymbol import HasSymbol
-from chordparser.music.letter import Letter
+from chordparser.music.notecomponents.letter import Letter
 from chordparser.music.notationparser import NotationParserTemplate
-from chordparser.music.symbol import Symbol
+from chordparser.music.notecomponents.symbol import Symbol
 from chordparser.utils.note_lists import sharp_scale, flat_scale
 from chordparser.utils.regex_patterns import (note_pattern,
                                               symbol_pattern,

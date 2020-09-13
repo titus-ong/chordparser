@@ -7,7 +7,7 @@ class BaseQuality(Enum):
     """Enum for the base quality of a `Chord`.
 
     The enum members available are MAJOR, MINOR, AUGMENTED, DIMINISHED,
-    SUS2, SUS4, DOMINANT and HALFDIMINISHED.
+    SUS2, SUS4, DOMINANT, HALFDIMINISHED and POWER.
 
     """
 
@@ -58,6 +58,12 @@ class BaseQuality(Enum):
         False,
         ("1", "b3", "b5"),
         "\u00f8",
+    )
+    POWER = (
+        str.upper,
+        False,
+        ("1", "5"),
+        "5",
     )
 
     def roman_letter_case_converter(self):

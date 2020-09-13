@@ -1,5 +1,11 @@
+from chordparser.music.chordcomponents.basequality import BaseQuality
 from chordparser.music.notationparser import NotationParserTemplate
 from chordparser.utils.regex_patterns import power_pattern
+
+
+power_enum_dict = {
+    "power": BaseQuality.POWER,
+}
 
 
 class PowerChordNotationParser(NotationParserTemplate):
@@ -8,4 +14,4 @@ class PowerChordNotationParser(NotationParserTemplate):
     _pattern = f"({power_pattern})"
 
     def _split_into_groups(self, regex):
-        return regex.group(1)
+        return "power"

@@ -5,8 +5,7 @@ class Mode(Enum):
     """Enum for the various modes, including major and minor.
 
     The enum members available are MAJOR, MINOR, IONIAN, DORIAN,
-    PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN and LOCRIAN. Their values
-    correspond to their step pattern.
+    PHRYGIAN, LYDIAN, MIXOLYDIAN, AEOLIAN and LOCRIAN.
 
     """
 

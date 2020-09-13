@@ -4,9 +4,7 @@ from enum import Enum
 class Letter(Enum):
     """Enum for the letter part of a `Note`.
 
-    The enum members available are C, D, E, F, G, A and B. Their values
-    correspond to their index in the natural note scale and their
-    semitone steps away from C.
+    The enum members available are C, D, E, F, G, A and B.
 
     """
 

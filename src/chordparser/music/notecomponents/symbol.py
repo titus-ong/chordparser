@@ -8,8 +8,7 @@ class Symbol(Enum):
     """Enum for the symbol part of a `Note`.
 
     The enum members available are DOUBLEFLAT, FLAT, NATURAL, SHARP
-    and DOUBLESHARP. Their values correspond to their unicode
-    characters and their number of steps away from NATURAL.
+    and DOUBLESHARP.
 
     """
 

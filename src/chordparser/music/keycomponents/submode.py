@@ -5,10 +5,7 @@ class Submode(Enum):
     """Enum for the various minor submodes.
 
     The enum members available are NATURAL, HARMONIC, MELODIC and NONE.
-    NONE applies to all non-minor modes. Their values are a tuple of a
-    boolean and a tuple. The boolean corresponds to whether the
-    submode is minor, while the tuple is the changes in their step
-    pattern relative to their mode.
+    NONE applies to all non-minor modes.
 
     """
 

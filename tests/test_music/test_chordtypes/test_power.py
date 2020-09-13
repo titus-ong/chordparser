@@ -10,7 +10,7 @@ class TestPCNPParseNotation:
 
     def test_correct_notation(self, parser):
         result = parser.parse_notation("5")
-        assert "5" == result
+        assert "power" == result
 
     def test_reject_wrong_notation(self, parser):
         with pytest.raises(SyntaxError):

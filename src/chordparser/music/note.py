@@ -13,6 +13,7 @@ from chordparser.utils.unicode_chars import (sharp, doublesharp,
 
 class NoteNotationParser(NotationParserTemplate):
     """Parse note notation into letter and symbol groups."""
+
     _pattern = (
         f"({note_pattern})({symbol_pattern})?"
     )

@@ -66,9 +66,9 @@ class BaseQuality(Enum):
         "5",
     )
 
-    def roman_letter_case_converter(self):
-        """Return the function to convert Roman numeral letter case."""
-        return self.value[0]
+    def roman_letter_case_converter(self, roman):
+        """Convert the Roman numeral letter case based on quality."""
+        return self.value[0](roman)
 
     def is_derived_from_scale(self):
         """Return if the quality is derived from a scale mode."""

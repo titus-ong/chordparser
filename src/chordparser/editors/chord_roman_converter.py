@@ -83,11 +83,12 @@ class ChordRomanConverter:
                 UserWarning
             )
             chord = self._CE.change_chord(chord, quality="Maj", inplace=False)
+            
         if isinstance(scale_key, Scale):
-            scale_root = scale_key.key.root
+            scale = scale_key
         else:
-            scale_root = scale_key.root
-        scale = self._SE.create_scale(scale_root, "major")
+            scale = self._SE.create_scale(scale_key.root, scale_key.mode)
+
         root = self._get_roman_root(chord, scale)
         quality = self._get_roman_quality(chord)
         inversion = self._get_roman_inversion(chord)

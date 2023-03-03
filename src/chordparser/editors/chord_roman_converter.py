@@ -87,7 +87,7 @@ class ChordRomanConverter:
         if isinstance(scale_key, Scale):
             scale = scale_key
         else:
-            scale = self._SE.create_scale(scale_key.root, scale_key.mode, scale_key.submode)
+            scale = self._SE.create_scale(scale_key)
 
         root = self._get_roman_root(chord, scale)
         quality = self._get_roman_quality(chord)

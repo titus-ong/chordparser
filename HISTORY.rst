@@ -1,6 +1,10 @@
 History
 =======
 
+0.4.2 (2023-03-26)
+~~~~~~~~~~~~~~~~~~
+* Fix incorrect roman scale conversion
+
 0.4.1 (2020-07-28)
 ~~~~~~~~~~~~~~~~~~
 * Fix imports for autodoc to show documentation properly
